@@ -15,7 +15,7 @@ const Dashboard = () => {
 
   <main className=" px-14" >
         <DashboardGrid />
-    <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 items-stretch">
       <div className="col-span-3">
         <SalesChart />
       </div>

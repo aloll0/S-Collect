@@ -129,15 +129,15 @@ const inventoryAlertsData: InventoryAlertsCard = {
 const InventoryAlert = () => {
   const { t } = useTranslation();
   return (
-    <div className='w-full rounded-lg bg-white p-8 shadow' >
+    <div className='w-full rounded-lg bg-white p-8 shadow h-[512px] ' >
       <div className='flex gap-2 items-center mb-6'>
         <TriangleAlert className='text-yellow' />
         <h3 className="text-xl font-bold">{t("inventoryAlerts")}</h3>
       </div>
-      <div className='bg-yellow-light text-yellow px-4 py-2.5 rounded-lg text-sm' >
+      <div className='bg-yellow-light text-yellow px-4 py-2.5 rounded-lg text-sm mb-6' >
         <p>{inventoryAlertsData.alertMessage}</p>
       </div>
-      <div className='mb-6 flex flex-col gap-3 '>
+      <div className='mb-6 flex flex-col gap-3 h-[75%] overflow-y-auto  '>
         {inventoryAlertsData.items.map((item) => (
           <InventoryCard key={item.id} cardData={item} />
         ))

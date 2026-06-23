@@ -61,14 +61,14 @@ export default function SalesChart() {
   };
 
   return (
-    <div className="w-full rounded-xl bg-white p-6 shadow">
+    <div className="w-full rounded-xl bg-white p-6 shadow h-[512px]" >
       <div className="mb-4 flex items-center gap-3">
         <label className="font-medium">{t("salesChart.pointStyle")}</label>
 
       
       </div>
 
-      <div className="h-[512px]">
+      <div className="h-[450px]">
         <Line data={data} options={options} />
       </div>
     </div>
