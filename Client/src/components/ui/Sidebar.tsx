@@ -22,10 +22,7 @@ const Sidebar = () => {
 
         {/* Main */}
         <div className="px-3">
-          <NavItem
-            icon={<LayoutDashboard size={18} />}
-            label="Dashboard"
-          />
+          <NavItem icon={<LayoutDashboard size={18} />} label="Dashboard" />
         </div>
 
         {/* Products */}
@@ -41,10 +38,7 @@ const Sidebar = () => {
           <p className="text-xs text-gray-500 px-3 mb-2">MANAGEMENT</p>
 
           <NavItem icon={<Boxes size={18} />} label="Inventory" />
-          <NavItem
-            icon={<ShoppingCart size={18} />}
-            label="Incoming Orders"
-          />
+          <NavItem icon={<ShoppingCart size={18} />} label="Incoming Orders" />
         </div>
 
         {/* Account */}
@@ -57,11 +51,7 @@ const Sidebar = () => {
 
       {/* Bottom logout */}
       <div className="p-3">
-        <NavItem
-          icon={<LogOut size={18} />}
-          label="Log Out"
-          danger
-        />
+        <NavItem icon={<LogOut size={18} />} label="Log Out" danger />
       </div>
     </div>
   );

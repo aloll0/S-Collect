@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from "react-router-dom";
-import AuthLeftPanel from "../../components/auth/AuthLeftPanel";
+import { useNavigate } from 'react-router-dom';
+import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
 
 // ─── Eye Icon ─────────────────────────────────────────────────────────────────
 const EyeIcon = ({ open }: { open: boolean }) => (
@@ -133,7 +133,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               <div className="flex justify-end">
                 <button
                   type="button"
-                  onClick={() => navigate("/forget-pass")}
+                  onClick={() => navigate('/forget-pass')}
                   className="text-label-sm text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
                 >
                   {t('login.forgotPassword')}
@@ -158,7 +158,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               {/* Register */}
               <button
                 type="button"
-                onClick={() => navigate("/register")}
+                onClick={() => navigate('/register')}
                 className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               >
                 {t('login.register')}
@@ -169,7 +169,6 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                   {error}
                 </div>
               )}
-
             </form>
 
             <p className="text-center mt-6 text-body-sm text-gray-500">

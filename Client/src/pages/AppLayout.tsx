@@ -5,7 +5,7 @@ import Header from '../components/ui/Header.js';
 const AppLayout = () => {
   return (
     <>
-      <main className="flex min-h-screen  "  >
+      <main className="flex min-h-screen  ">
         <Sidebar />
         <section className="flex-1 flex flex-col">
           <Header />

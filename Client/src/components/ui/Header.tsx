@@ -1,31 +1,29 @@
-import { Link } from "react-router-dom";
-import { User } from "lucide-react";
-import InputSearch from "./InputSearch";
-import { useTranslation } from "react-i18next";
+import { Link } from 'react-router-dom';
+import { User } from 'lucide-react';
+import InputSearch from './InputSearch';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
   const { i18n } = useTranslation();
 
   const today = new Date().toLocaleDateString(
-    i18n.language === "ar" ? "ar-EG" : "en-US",
+    i18n.language === 'ar' ? 'ar-EG' : 'en-US',
     {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     }
   );
 
-  const handleLanguageChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value;
 
     i18n.changeLanguage(lang);
 
-    localStorage.setItem("language", lang);
+    localStorage.setItem('language', lang);
 
-    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = lang;
   };
 

@@ -16,12 +16,10 @@ import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 
 function App() {
-
   const { i18n } = useTranslation();
 
   useEffect(() => {
-    document.documentElement.dir =
-      i18n.language === "ar" ? "rtl" : "ltr";
+    document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
   }, [i18n.language]);
   return (
     <>
@@ -29,7 +27,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forget-pass" element={<ForgetPass />} />
-        <Route path="/" element={<AppLayout />} >
+        <Route path="/" element={<AppLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="/products" element={<Products />} />
           <Route path="/inventory" element={<Inventory />} />

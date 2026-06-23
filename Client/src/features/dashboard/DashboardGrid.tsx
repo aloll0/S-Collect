@@ -2,24 +2,23 @@ import { TrendingUp, Box, PackagePlus, Package } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 
-
 const DashboardGrid = () => {
-const { t } = useTranslation();
+  const { t } = useTranslation();
 
-interface DashboardMetric {
-  title: string;
-  value: string;
-  unit: string;
-  icon: ComponentType<{ size?: number; color?: string }>;
-  colorTheme: {
-    primary: string;
-    light?: string;
-  };
-  trend?: {
-    percentage: string;
-    isPositive: boolean;
-  };
-}
+  interface DashboardMetric {
+    title: string;
+    value: string;
+    unit: string;
+    icon: ComponentType<{ size?: number; color?: string }>;
+    colorTheme: {
+      primary: string;
+      light?: string;
+    };
+    trend?: {
+      percentage: string;
+      isPositive: boolean;
+    };
+  }
 
   const dashboardMetrics: DashboardMetric[] = [
     {
@@ -85,10 +84,7 @@ interface DashboardMetric {
           >
             {/* Header */}
             <div className="flex items-center gap-2">
-              <metric.icon
-                size={20}
-                color={metric.colorTheme.primary}
-              />
+              <metric.icon size={20} color={metric.colorTheme.primary} />
               <span className="text-sm text-gray-500 font-medium">
                 {metric.title}
               </span>
@@ -116,9 +112,7 @@ interface DashboardMetric {
                       : 'bg-red-50 text-red-600'
                   }`}
                 >
-                  <span>
-                    {metric.trend.isPositive ? '↗' : '↘'}
-                  </span>
+                  <span>{metric.trend.isPositive ? '↗' : '↘'}</span>
                   {metric.trend.percentage}
                 </div>
               )}

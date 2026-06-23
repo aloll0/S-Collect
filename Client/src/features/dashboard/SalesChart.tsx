@@ -7,9 +7,9 @@ import {
   Title,
   Tooltip,
   Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-import { useTranslation } from "react-i18next";
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { useTranslation } from 'react-i18next';
 
 ChartJS.register(
   CategoryScale,
@@ -27,22 +27,22 @@ export default function SalesChart() {
   const { t } = useTranslation();
 
   const labels = [
-    t("salesChart.day1"),
-    t("salesChart.day2"),
-    t("salesChart.day3"),
-    t("salesChart.day4"),
-    t("salesChart.day5"),
-    t("salesChart.day6"),
+    t('salesChart.day1'),
+    t('salesChart.day2'),
+    t('salesChart.day3'),
+    t('salesChart.day4'),
+    t('salesChart.day5'),
+    t('salesChart.day6'),
   ];
 
   const data = {
     labels,
     datasets: [
       {
-        label: t("salesChart.sales"),
+        label: t('salesChart.sales'),
         data: chartValues,
-        borderColor: "#218c21",
-        backgroundColor: "#218c21",
+        borderColor: '#218c21',
+        backgroundColor: '#218c21',
         borderWidth: 3,
         tension: 0.4,
         fill: true,
@@ -61,11 +61,9 @@ export default function SalesChart() {
   };
 
   return (
-    <div className="w-full rounded-xl bg-white p-6 shadow h-[512px]" >
+    <div className="w-full rounded-xl bg-white p-6 shadow h-[512px]">
       <div className="mb-4 flex items-center gap-3">
-        <label className="font-medium">{t("salesChart.pointStyle")}</label>
-
-      
+        <label className="font-medium">{t('salesChart.pointStyle')}</label>
       </div>
 
       <div className="h-[450px]">

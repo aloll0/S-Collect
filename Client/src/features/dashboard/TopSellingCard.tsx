@@ -1,4 +1,4 @@
-import { t } from "i18next";
+import { t } from 'i18next';
 
 type ProductSale = {
   id: string;
@@ -30,7 +30,7 @@ const TopSellingCard = ({ cardData }: { cardData: ProductSale }) => {
 
         <div className="flex items-center gap-3">
           <span className="text-sm text-gray-500 whitespace-nowrap">
-            {cardData.unitsSold} {t("dashboardMetrics.unit.product")}
+            {cardData.unitsSold} {t('dashboardMetrics.unit.product')}
           </span>
 
           <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
