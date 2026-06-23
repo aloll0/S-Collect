@@ -43,6 +43,10 @@ body, html, #root {
     --red-light: #fff1f2; /* Token: Light Red    */
     --yellow: #f59e0b; /* Token: Yellow       */
     --yellow-light: #fef7eb; /* Token: Light Yellow */
+    --blue: #3b82f6; /* Token: Blue         */
+    --blue-light: #3a82f681; /* Token: Light Blue   */
+    --orange: #f97316; /* Token: Orange       */
+    --orange-light: #fff7ed; /* Token: Light Orange */
 
     /* Stroke width */
     --icon-stroke-width: 1.5; /* Token: Icon StrockNumber */

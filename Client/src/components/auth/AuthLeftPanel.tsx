@@ -13,21 +13,21 @@ const AuthLeftPanel = () => {
 
   return (
     <div
-      className="w-[40%] px-10 py-12 flex flex-col justify-center relative overflow-hidden min-h-screen bg-cover bg-center bg-no-repeat"
+      className=" px-10 py-12 flex flex-col  relative overflow-hidden min-h-screen bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage: "url('/bg_login.png')",
       }}
     >
       <div className="absolute inset-0 bg-black/60"></div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 mt-25 ml-12">
         <Logo />
 
         <div className="mt-12">
           <h1 className="text-white text-[32px] font-bold leading-tight mb-3">
             {t("panel.tagline1")}
             <br />
-            {t("panel.tagline2")}
+            {t("panel.tagline2")} 
           </h1>
 
           <p className="text-[#ddd] text-sm leading-relaxed mb-10">

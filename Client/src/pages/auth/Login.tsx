@@ -3,12 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import AuthLeftPanel from "../../components/auth/AuthLeftPanel";
 
-
-
-
-
 // ─── Eye Icon ─────────────────────────────────────────────────────────────────
-
 const EyeIcon = ({ open }: { open: boolean }) => (
   <svg
     width="16"
@@ -17,6 +12,7 @@ const EyeIcon = ({ open }: { open: boolean }) => (
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
+    className="icon-stroke"
   >
     {open ? (
       <>
@@ -34,7 +30,6 @@ const EyeIcon = ({ open }: { open: boolean }) => (
 );
 
 // ─── Login ────────────────────────────────────────────────────────────────────
-
 interface LoginProps {
   onGoToRegister?: () => void;
 }
@@ -67,9 +62,9 @@ const Login = ({ onGoToRegister }: LoginProps) => {
       <AuthLeftPanel />
 
       {/* Right panel */}
-      <div className="flex-1 bg-white flex items-center justify-center px-10 py-12">
+      <div className="flex-1 bg-gray-50 flex items-center justify-center px-10 py-12 flex justify-center items-start">
         <div className="container flex justify-center">
-          <div className="w-full max-w-[360px]">
+          <div className="w-full max-w-[360px] mt-25">
             {/* Avatar icon */}
             <div className="flex justify-center mb-6">
               <div className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center">
@@ -78,8 +73,9 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                   height="22"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#374151"
+                  stroke="currentColor"
                   strokeWidth="1.5"
+                  className="text-gray-700"
                 >
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
@@ -88,17 +84,17 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               </div>
             </div>
 
-            <h2 className="text-[22px] font-bold text-gray-900 text-center mb-2">
+            <h2 className="text-h5 text-gray-900 text-center mb-2">
               {t('login.title')}
             </h2>
-            <p className="text-gray-500 text-[13px] text-center leading-relaxed mb-8">
+            <p className="text-body-md text-gray-500 text-center leading-relaxed mb-8">
               {t('login.subtitle')}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email */}
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                <label className="block text-label-sm text-gray-700 mb-1.5">
                   {t('login.emailLabel')}
                 </label>
                 <input
@@ -106,13 +102,13 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                   placeholder={t('login.emailPlaceholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none focus:border-gray-900 transition-colors placeholder:text-gray-400"
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-body-md text-gray-900 outline-none focus:border-gray-900 transition-colors placeholder:text-gray-400"
                 />
               </div>
 
               {/* Password */}
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                <label className="block text-label-sm text-gray-700 mb-1.5">
                   {t('login.passwordLabel')}
                 </label>
                 <div className="relative">
@@ -121,7 +117,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                     placeholder={t('login.passwordPlaceholder')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none focus:border-gray-900 transition-colors placeholder:text-gray-400"
+                    className="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-lg text-body-md text-gray-900 outline-none focus:border-gray-900 transition-colors placeholder:text-gray-400"
                   />
                   <button
                     type="button"
@@ -134,10 +130,11 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               </div>
 
               {/* Forgot password */}
-              <div className="flex justify-end " onClick={()=>navigate("/forget-pass")} > 
+              <div className="flex justify-end">
                 <button
                   type="button"
-                  className="text-[13px] text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
+                  onClick={() => navigate("/forget-pass")}
+                  className="text-label-sm text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
                 >
                   {t('login.forgotPassword')}
                 </button>
@@ -147,35 +144,35 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-gray-900 text-white rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? t('login.signingIn') : t('login.signIn')}
               </button>
 
               <div className="relative flex items-center">
                 <div className="flex-1 border-t border-gray-300"></div>
-                <p className="mx-4 text-gray-400">or</p>
+                <p className="mx-4 text-gray-400 text-body-md">or</p>
                 <div className="flex-1 border-t border-gray-300"></div>
               </div>
 
               {/* Register */}
               <button
                 type="button"
-                // disabled={loading}
-                onClick={()=>navigate("/register")}
-                className="w-full py-3 bg-gray-900 text-white rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                onClick={() => navigate("/register")}
+                className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               >
                 {t('login.register')}
               </button>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg px-3.5 py-2.5 text-red-600 text-[13px]">
+                <div className="bg-red-light border border-red rounded-lg px-3.5 py-2.5 text-red text-body-sm">
                   {error}
                 </div>
               )}
+
             </form>
 
-            <p className="text-center mt-6 text-[13px] text-gray-500">
+            <p className="text-center mt-6 text-body-sm text-gray-500">
               {t('login.trouble')}{' '}
               <button className="text-gray-900 font-semibold hover:underline">
                 {t('login.contactSupport')}
@@ -183,7 +180,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
             </p>
 
             {onGoToRegister && (
-              <p className="text-center mt-3 text-[13px] text-gray-500">
+              <p className="text-center mt-3 text-body-sm text-gray-500">
                 {t('login.noAccount')}{' '}
                 <button
                   onClick={onGoToRegister}
