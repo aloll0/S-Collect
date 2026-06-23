@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 import DashboardGrid from "../features/dashboard/DashboardGrid";
+import SalesChart from "../features/dashboard/SalesChart";
+import InventoryAlert from "../features/dashboard/InventoryAlert";
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -11,8 +13,18 @@ const Dashboard = () => {
       </h1>
     </div>
 
-    <DashboardGrid />
+  <main className=" px-14" >
+        <DashboardGrid />
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+      <div className="col-span-3">
+        <SalesChart />
+      </div>
+      <div className="col-span-2">
+        <InventoryAlert />
+      </div>
+    </div>
 
+  </main>
 
   </div>;
 };
