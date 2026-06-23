@@ -116,7 +116,6 @@ const TopSelling = () => {
         <h2 className="text-xl font-bold">{t("topSelling.title")}</h2>
         <button className="text-sm text-primary flex items-center gap-2">
           {t("topSelling.viewAll")}
-          {window.dir === "ltr" ? <ArrowLeft className="size-4" /> : <ArrowRight className="size-4" />}
         </button>
       </div>
       <div className="flex flex-col gap-2 overflow-y-auto h-[85%] ">
