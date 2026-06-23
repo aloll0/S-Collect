@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Logo from "../../components/ui/Logo";
+import { Star, ShieldCheck, Grid2x2Check  } from "lucide-react";
 
-// ─── Logo ─────────────────────────────────────────────────────────────────────
 
-const Logo = () => (
-  <div className="flex items-center gap-1.5">
-    <img src="/logo.png" alt="Logo" />
-  </div>
-);
 
 // ─── Left Panel ───────────────────────────────────────────────────────────────
 
 const LeftPanel = () => {
   const { t } = useTranslation();
+
+    const features = [
+    { icon: <Star color="white" size={20}/>, label: t("panel.feature1") },
+    { icon: <ShieldCheck color="white" size={20}/>, label: t("panel.feature3") },
+    { icon: <Grid2x2Check  color="white" size={20}/>, label: t("panel.feature2") },
+  ];
 
   return (
     <div
@@ -48,6 +50,15 @@ const LeftPanel = () => {
               {t('panel.becomeVendorDesc')}
             </p>
           </div>
+
+          <div className="flex flex-col gap-3">
+          {features.map(({ icon, label }) => (
+            <div key={label} className="flex items-center gap-2.5">
+              <span className="text-[#888] text-xs">{icon}</span>
+              <span className="text-[#ccc] text-[13px]">{label}</span>
+            </div>
+          ))}
+        </div>
         </div>
       </div>
     </div>
@@ -142,12 +153,6 @@ const Login = ({ onGoToRegister }: LoginProps) => {
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg px-3.5 py-2.5 text-red-600 text-[13px]">
-                  {error}
-                </div>
-              )}
-
               {/* Email */}
               <div>
                 <label className="block text-[13px] font-medium text-gray-700 mb-1.5">
@@ -203,6 +208,11 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               >
                 {loading ? t('login.signingIn') : t('login.signIn')}
               </button>
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg px-3.5 py-2.5 text-red-600 text-[13px]">
+                  {error}
+                </div>
+              )}
             </form>
 
             <p className="text-center mt-6 text-[13px] text-gray-500">
