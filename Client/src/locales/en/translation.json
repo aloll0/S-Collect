@@ -1,4 +1,20 @@
 {
+  "dashboard": "Dashboard",
+  "products": "Products",
+  "orders": "Orders",
+  "logout": "Logout",
+  "dashboardMetrics": {
+    "totalSales": "Total Sales",
+    "numberOfOrders": "Number of Orders",
+    "newOrders": "New Orders",
+    "activeProducts": "Active Products",
+    "unit": {
+      "sar": "SAR",
+      "order": "Order",
+      "product": "Product"
+    }
+  }
+},
   "login": {
     "title": "Welcome Back",
     "subtitle": "Sign in to manage your store, orders, products, and sales performance.",
