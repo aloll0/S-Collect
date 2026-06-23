@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import AuthLeftPanel from "../../components/auth/AuthLeftPanel";
 
-
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface PersonalInfo {
@@ -25,7 +24,6 @@ interface PasswordInfo {
   confirmPassword: string;
 }
 
-
 // ─── Step Indicator ───────────────────────────────────────────────────────────
 
 const STEP_KEYS = ["register.step1", "register.step2", "register.step3"] as const;
@@ -34,7 +32,7 @@ const StepIndicator = ({ current }: { current: number }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="flex items-start mb-9">
+    <div className="flex items-start mb-12">
       {STEP_KEYS.map((key, i) => {
         const done = i < current;
         const active = i === current;
@@ -44,8 +42,8 @@ const StepIndicator = ({ current }: { current: number }) => {
             <div className="flex flex-col items-center gap-1.5">
               {/* Circle */}
               <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-                  done || active ? "bg-green-600" : "bg-gray-200"
+                className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                  done || active ? "bg-green" : "bg-gray-200"
                 }`}
               >
                 {done ? (
@@ -53,14 +51,14 @@ const StepIndicator = ({ current }: { current: number }) => {
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 ) : (
-                  <span className={`text-xs font-semibold ${active ? "text-white" : "text-gray-400"}`}>
+                  <span className={`text-caption-sm font-semibold ${active ? "text-gray-50" : "text-gray-400"}`}>
                     {i + 1}
                   </span>
                 )}
               </div>
               {/* Label */}
               <span
-                className={`text-[11px] whitespace-nowrap ${
+                className={`text-md whitespace-nowrap ${
                   active ? "text-gray-900 font-semibold" : "text-gray-400"
                 }`}
               >
@@ -71,8 +69,8 @@ const StepIndicator = ({ current }: { current: number }) => {
             {/* Connector line */}
             {i < STEP_KEYS.length - 1 && (
               <div
-                className={`flex-1 h-0.5 mt-3.5 mx-1.5 rounded-full transition-colors ${
-                  done ? "bg-green-600" : "bg-gray-200"
+                className={`flex-1 h-0.5 mt-6.5 mx-1.5 rounded-full transition-colors ${
+                  done ? "bg-green" : "bg-gray-200"
                 }`}
               />
             )}
@@ -97,27 +95,27 @@ interface InputProps {
 
 const Input = ({ label, placeholder, value, onChange, type = "text", required, error }: InputProps) => (
   <div>
-    <label className="block text-[13px] font-medium text-gray-700 mb-1.5">
+    <label className="block text-label-sm text-gray-700 mb-1.5">
       {label}
-      {required && <span className="text-red-500 ml-0.5">*</span>}
+      {required && <span className="text-red ml-0.5">*</span>}
     </label>
     <input
       type={type}
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={`w-full px-3 py-2.5 border rounded-lg text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
-        error ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+      className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
+        error ? "border-red bg-red-light" : "border-gray-300 bg-gray-50"
       }`}
     />
-    {error && <p className="text-red-500 text-[11px] mt-1">{error}</p>}
+    {error && <p className="text-red text-caption-sm mt-1">{error}</p>}
   </div>
 );
 
 // ─── Eye Icon ─────────────────────────────────────────────────────────────────
 
 const EyeIcon = ({ open }: { open: boolean }) => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="icon-stroke">
     {open ? (
       <>
         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
@@ -144,7 +142,7 @@ interface Step1Props {
 const Step1 = ({ data, onChange, errors }: Step1Props) => {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-8">
       <div className="grid grid-cols-2 gap-4">
         <Input
           label={t("register.firstNameLabel")}
@@ -214,15 +212,15 @@ const Step2 = ({ data, onChange, errors }: Step2Props) => {
 
       {/* Category select */}
       <div>
-        <label className="block text-[13px] font-medium text-gray-700 mb-1.5">
+        <label className="block text-label-sm text-gray-700 mb-1.5">
           {t("register.categoryLabel")}
-          <span className="text-red-500 ml-0.5">*</span>
+          <span className="text-red ml-0.5">*</span>
         </label>
         <select
           value={data.category}
           onChange={(e) => onChange("category", e.target.value)}
-          className={`w-full px-3 py-2.5 border rounded-lg text-sm outline-none transition-colors cursor-pointer focus:border-gray-900 ${
-            errors.category ? "border-red-300 bg-red-50 text-gray-900" : "border-gray-300 bg-white"
+          className={`w-full px-3 py-2.5 border rounded-lg text-body-md outline-none transition-colors cursor-pointer focus:border-gray-900 ${
+            errors.category ? "border-red bg-red-light text-gray-900" : "border-gray-300 bg-gray-50"
           } ${!data.category ? "text-gray-400" : "text-gray-900"}`}
         >
           <option value="">{t("register.categoryPlaceholder")}</option>
@@ -232,7 +230,7 @@ const Step2 = ({ data, onChange, errors }: Step2Props) => {
             </option>
           ))}
         </select>
-        {errors.category && <p className="text-red-500 text-[11px] mt-1">{errors.category}</p>}
+        {errors.category && <p className="text-red text-caption-sm mt-1">{errors.category}</p>}
       </div>
 
       <Input
@@ -244,20 +242,20 @@ const Step2 = ({ data, onChange, errors }: Step2Props) => {
 
       {/* Description textarea */}
       <div>
-        <label className="block text-[13px] font-medium text-gray-700 mb-1.5">
+        <label className="block text-label-sm text-gray-700 mb-1.5">
           {t("register.descriptionLabel")}
-          <span className="text-red-500 ml-0.5">*</span>
+          <span className="text-red ml-0.5">*</span>
         </label>
         <textarea
           placeholder={t("register.descriptionPlaceholder")}
           value={data.description}
           onChange={(e) => onChange("description", e.target.value)}
           rows={3}
-          className={`w-full px-3 py-2.5 border rounded-lg text-sm text-gray-900 outline-none resize-vertical transition-colors placeholder:text-gray-400 focus:border-gray-900 font-sans ${
-            errors.description ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+          className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none resize-vertical transition-colors placeholder:text-gray-400 focus:border-gray-900 font-sans ${
+            errors.description ? "border-red bg-red-light" : "border-gray-300 bg-gray-50"
           }`}
         />
-        {errors.description && <p className="text-red-500 text-[11px] mt-1">{errors.description}</p>}
+        {errors.description && <p className="text-red text-caption-sm mt-1">{errors.description}</p>}
       </div>
     </div>
   );
@@ -276,7 +274,7 @@ const PasswordStrength = ({ password }: { password: string }) => {
   ];
 
   const score = checks.filter((c) => c.ok).length;
-  const barColors = ["bg-gray-200", "bg-red-400", "bg-yellow-400", "bg-blue-400", "bg-green-500"];
+  const barColors = ["bg-gray-200", "bg-red", "bg-yellow", "bg-gray-400", "bg-green"];
   const strengthLabels = [
     "",
     t("register.passwordStrength.weak"),
@@ -285,7 +283,7 @@ const PasswordStrength = ({ password }: { password: string }) => {
     t("register.passwordStrength.strong"),
   ];
   const strengthTextColors = [
-    "", "text-red-500", "text-yellow-500", "text-blue-500", "text-green-600",
+    "", "text-red", "text-yellow", "text-gray-600", "text-green",
   ];
 
   if (!password) return null;
@@ -307,13 +305,13 @@ const PasswordStrength = ({ password }: { password: string }) => {
           {checks.map(({ label, ok }) => (
             <span
               key={label}
-              className={`text-[11px] flex items-center gap-0.5 ${ok ? "text-green-600" : "text-gray-400"}`}
+              className={`text-caption-sm flex items-center gap-0.5 ${ok ? "text-green" : "text-gray-400"}`}
             >
               {ok ? "✓" : "○"} {label}
             </span>
           ))}
         </div>
-        <span className={`text-[11px] font-semibold ${strengthTextColors[score]}`}>
+        <span className={`text-caption-sm font-semibold ${strengthTextColors[score]}`}>
           {strengthLabels[score]}
         </span>
       </div>
@@ -337,9 +335,9 @@ const Step3 = ({ data, onChange, errors }: Step3Props) => {
     <div className="flex flex-col gap-5">
       {/* Password */}
       <div>
-        <label className="block text-[13px] font-medium text-gray-700 mb-1.5">
+        <label className="block text-label-sm text-gray-700 mb-1.5">
           {t("register.passwordLabel")}
-          <span className="text-red-500 ml-0.5">*</span>
+          <span className="text-red ml-0.5">*</span>
         </label>
         <div className="relative">
           <input
@@ -347,8 +345,8 @@ const Step3 = ({ data, onChange, errors }: Step3Props) => {
             placeholder={t("register.passwordPlaceholder")}
             value={data.password}
             onChange={(e) => onChange("password", e.target.value)}
-            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
-              errors.password ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
+              errors.password ? "border-red bg-red-light" : "border-gray-300 bg-gray-50"
             }`}
           />
           <button
@@ -359,15 +357,15 @@ const Step3 = ({ data, onChange, errors }: Step3Props) => {
             <EyeIcon open={show.password} />
           </button>
         </div>
-        {errors.password && <p className="text-red-500 text-[11px] mt-1">{errors.password}</p>}
+        {errors.password && <p className="text-red text-caption-sm mt-1">{errors.password}</p>}
         <PasswordStrength password={data.password} />
       </div>
 
       {/* Confirm Password */}
       <div>
-        <label className="block text-[13px] font-medium text-gray-700 mb-1.5">
+        <label className="block text-label-sm text-gray-700 mb-1.5">
           {t("register.confirmPasswordLabel")}
-          <span className="text-red-500 ml-0.5">*</span>
+          <span className="text-red ml-0.5">*</span>
         </label>
         <div className="relative">
           <input
@@ -375,8 +373,8 @@ const Step3 = ({ data, onChange, errors }: Step3Props) => {
             placeholder={t("register.confirmPasswordPlaceholder")}
             value={data.confirmPassword}
             onChange={(e) => onChange("confirmPassword", e.target.value)}
-            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
-              errors.confirmPassword ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
+              errors.confirmPassword ? "border-red bg-red-light" : "border-gray-300 bg-gray-50"
             }`}
           />
           <button
@@ -388,7 +386,7 @@ const Step3 = ({ data, onChange, errors }: Step3Props) => {
           </button>
         </div>
         {errors.confirmPassword && (
-          <p className="text-red-500 text-[11px] mt-1">{errors.confirmPassword}</p>
+          <p className="text-red text-caption-sm mt-1">{errors.confirmPassword}</p>
         )}
       </div>
     </div>
@@ -402,19 +400,19 @@ const EmailSent = ({ email, onResend }: { email: string; onResend: () => void })
 
   return (
     <div className="text-center py-5">
-      <div className="w-16 h-16 rounded-full bg-green-50 border-2 border-green-200 inline-flex items-center justify-center mb-5">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="1.5">
+      <div className="w-16 h-16 rounded-full bg-green-light border-2 border-green/20 inline-flex items-center justify-center mb-5">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#218c21" strokeWidth="1.5">
           <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
           <polyline points="22,6 12,13 2,6" />
         </svg>
       </div>
 
-      <h2 className="text-xl font-bold text-gray-900 mb-2">{t("register.emailSentTitle")}</h2>
-      <p className="text-gray-500 text-sm leading-relaxed mb-1">{t("register.emailSentSubtitle")}</p>
-      <p className="text-gray-900 text-sm font-semibold mb-6">{email}</p>
-      <p className="text-gray-500 text-[13px] leading-relaxed mb-6">{t("register.emailSentBody")}</p>
+      <h2 className="text-h6 text-gray-900 mb-2">{t("register.emailSentTitle")}</h2>
+      <p className="text-body-md text-gray-500 leading-relaxed mb-1">{t("register.emailSentSubtitle")}</p>
+      <p className="text-body-md text-gray-900 font-semibold mb-6">{email}</p>
+      <p className="text-body-sm text-gray-500 leading-relaxed mb-6">{t("register.emailSentBody")}</p>
 
-      <div className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3.5 text-[13px] text-gray-500 text-left">
+      <div className="bg-gray-100 border border-gray-200 rounded-lg px-4 py-3.5 text-body-sm text-gray-500 text-left">
         <strong className="text-gray-700">{t("register.didntGetEmail")}</strong>
         <br />
         {t("register.checkSpam")}{" "}
@@ -506,11 +504,11 @@ const Register = ({ onGoToLogin }: RegisterProps) => {
   };
 
   return (
-    <div className="flex min-h-screen font-sans bg-[#2a2a2a]">
+    <div className="flex min-h-screen font-sans bg-gray-800">
       <AuthLeftPanel />
 
-      <div className="flex-1 bg-white flex items-center justify-center px-10 py-12 overflow-y-auto">
-        <div className="w-full max-w-[480px]">
+      <div className="flex-1 bg-gray-50 flex items-center justify-center px-10 py-12 overflow-y-auto flex justify-center items-start">
+        <div className="w-full max-w-[480px] mt-32">
           {submitted ? (
             <EmailSent email={personal.email} onResend={() => { /* resend logic */ }} />
           ) : (
@@ -544,7 +542,7 @@ const Register = ({ onGoToLogin }: RegisterProps) => {
                 {step > 0 && (
                   <button
                     onClick={() => setStep((s) => s - 1)}
-                    className="flex-1 py-3 bg-white text-gray-700 border border-gray-300 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors"
+                    className="flex-1 py-3 bg-gray-50 text-gray-700 border border-gray-300 rounded-lg text-label-md font-semibold hover:bg-gray-100 transition-colors"
                   >
                     {t("register.back")}
                   </button>
@@ -552,7 +550,7 @@ const Register = ({ onGoToLogin }: RegisterProps) => {
                 <button
                   onClick={handleContinue}
                   disabled={loading}
-                  className="flex-[2] py-3 bg-gray-900 text-white rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                  className="flex-[2] py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
                 >
                   {loading
                     ? t("register.creatingAccount")
@@ -562,7 +560,7 @@ const Register = ({ onGoToLogin }: RegisterProps) => {
                 </button>
               </div>
 
-              <p className="text-center mt-5 text-[13px] text-gray-500">
+              <p className="text-center mt-5 text-body-sm text-gray-500">
                 {t("register.alreadyHaveAccount")}{" "}
                 <Link to="/login" className="text-gray-900 font-semibold hover:underline">
                   {t("register.logIn")}
