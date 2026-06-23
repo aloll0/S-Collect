@@ -8,14 +8,18 @@ import Management from './pages/Mangement.js';
 import AddProduct from './pages/AddProduct.js';
 import { Toaster } from 'react-hot-toast';
 import NotFound from './pages/NotFound.js';
+import Login from './pages/login and register/Login.js';
+import Register from './pages/login and register/Register.js';
 import './App.css';
 
 function App() {
   return (
-    <>
+    <> 
       <Routes>
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<AppLayout />} >
+          <Route index element={<Dashboard />} />
           <Route path="/products" element={<Products />} />
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/settings" element={<Settings />} />

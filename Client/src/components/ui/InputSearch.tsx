@@ -7,10 +7,10 @@ const InputSearch = () => {
       <input
         type="text"
         placeholder="Search..."
-        className=" px-3 py-2 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-gray-600" />
-      <i className="absolute right-2 top-2.5">
+        className="bg-[var(--gray-50)] px-8 py-2 rounded-lg text-[var(--gray-700)] outline-none focus:ring-2 focus:ring-gray-600" />
+      <i className="absolute left-3 top-2.5">
         <Search
-          className="w-4 h-4"
+          className="w-4 h-4 text-[var(--gray-700)]" 
         />
       </i>
     </div>
