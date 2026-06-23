@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import Logo from "../../components/ui/Logo";
+import { Star, ShieldCheck, Grid2x2Check  } from "lucide-react";
+import { Link } from "react-router-dom";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -22,17 +25,7 @@ interface PasswordInfo {
   confirmPassword: string;
 }
 
-// ─── Logo ─────────────────────────────────────────────────────────────────────
 
-const Logo = () => (
-  <div className="flex items-center gap-1.5">
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-      <path d="M8 6 Q16 2 24 6 Q28 12 24 20 Q16 28 8 24 Q2 18 8 6Z" stroke="white" strokeWidth="1.5" fill="none" />
-      <path d="M12 10 Q20 8 22 16 Q20 24 12 22 Q6 18 12 10Z" stroke="white" strokeWidth="1" fill="none" opacity="0.5" />
-    </svg>
-    <span className="text-white text-[15px] tracking-wide">Collect S</span>
-  </div>
-);
 
 // ─── Left Panel ───────────────────────────────────────────────────────────────
 
@@ -40,23 +33,17 @@ const LeftPanel = () => {
   const { t } = useTranslation();
 
   const features = [
-    { icon: "◈", label: t("panel.feature1") },
-    { icon: "◎", label: t("panel.feature2") },
-    { icon: "◉", label: t("panel.feature3") },
+    { icon: <Star color="white" size={20}/>, label: t("panel.feature1") },
+    { icon: <ShieldCheck color="white" size={20}/>, label: t("panel.feature3") },
+    { icon: <Grid2x2Check  color="white" size={20}/>, label: t("panel.feature2") },
   ];
 
   return (
-    <div className="w-[38%] bg-[#1a1a1a] px-10 py-12 flex flex-col relative overflow-hidden">
-      <div className="absolute -bottom-10 left-5 w-[280px] h-[280px] opacity-[0.08] pointer-events-none">
-        <svg viewBox="0 0 280 280" fill="none">
-          <circle cx="140" cy="140" r="120" stroke="white" strokeWidth="1" />
-          <circle cx="140" cy="140" r="80" stroke="white" strokeWidth="1" />
-          <circle cx="140" cy="140" r="40" stroke="white" strokeWidth="1" />
-          <line x1="20" y1="140" x2="260" y2="140" stroke="white" strokeWidth="0.5" />
-          <line x1="140" y1="20" x2="140" y2="260" stroke="white" strokeWidth="0.5" />
-        </svg>
-      </div>
-
+    <div className="w-[38%] px-10 py-12 flex flex-col relative overflow-hidden min-h-full bg-cover bg-center bg-no-repeat"
+    style={{
+        backgroundImage: "url('/bg_login.png')",
+      }} >
+      {/* logo */}
       <Logo />
 
       <div className="mt-12">
@@ -627,12 +614,9 @@ const Register = ({ onGoToLogin }: RegisterProps) => {
 
               <p className="text-center mt-5 text-[13px] text-gray-500">
                 {t("register.alreadyHaveAccount")}{" "}
-                <button
-                  onClick={onGoToLogin}
-                  className="text-gray-900 font-semibold hover:underline"
-                >
+                <Link to="/login" className="text-gray-900 font-semibold hover:underline">
                   {t("register.logIn")}
-                </button>
+                </Link>
               </p>
             </>
           )}
