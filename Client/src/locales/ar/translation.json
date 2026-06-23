@@ -14,6 +14,10 @@
       "product": "منتج"
     }
   },
+  "topSelling": {
+    "title": "أكثر المنتجات مبيعاً",
+    "viewAll": "عرض الكل"
+  },
   "inventoryAlerts": "تنبيهات المخزون",
   "inventoryItem": {
     "alertMessage": "5 منتجات على وشك نفاد المخزون",
