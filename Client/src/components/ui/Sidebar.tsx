@@ -8,6 +8,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import type { ReactNode } from 'react';
 
 const Sidebar = () => {
   return (
@@ -21,12 +22,9 @@ const Sidebar = () => {
 
         {/* Main */}
         <div className="px-3">
-          <p className="text-xs text-gray-500 px-3 mb-2">MAIN</p>
-
           <NavItem
             icon={<LayoutDashboard size={18} />}
             label="Dashboard"
-            active
           />
         </div>
 
@@ -43,7 +41,10 @@ const Sidebar = () => {
           <p className="text-xs text-gray-500 px-3 mb-2">MANAGEMENT</p>
 
           <NavItem icon={<Boxes size={18} />} label="Inventory" />
-          <NavItem icon={<ShoppingCart size={18} />} label="Incoming Orders" />
+          <NavItem
+            icon={<ShoppingCart size={18} />}
+            label="Incoming Orders"
+          />
         </div>
 
         {/* Account */}
@@ -56,7 +57,11 @@ const Sidebar = () => {
 
       {/* Bottom logout */}
       <div className="p-3">
-        <NavItem icon={<LogOut size={18} />} label="Log Out" danger />
+        <NavItem
+          icon={<LogOut size={18} />}
+          label="Log Out"
+          danger
+        />
       </div>
     </div>
   );
@@ -64,26 +69,34 @@ const Sidebar = () => {
 
 export default Sidebar;
 
-/* Reusable item */
-const NavItem = ({ icon, label, active, danger }) => {
+interface NavItemProps {
+  icon: ReactNode;
+  label: string;
+  danger?: boolean;
+}
+
+const NavItem = ({ icon, label, danger = false }: NavItemProps) => {
+  const to =
+    label === 'Dashboard'
+      ? '/'
+      : `/${label.toLowerCase().replace(/\s+/g, '-')}`;
+
   return (
     <NavLink
-      to={
-        label === 'Dashboard'
-          ? '/'
-          : `/${label.toLowerCase().replace(/\s+/g, '-')}`
+      to={to}
+      className={({ isActive }) =>
+        `
+          flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer
+          transition
+          ${
+            isActive
+              ? 'bg-white/10'
+              : danger
+                ? 'text-red-400 hover:bg-red-500/10'
+                : 'hover:bg-white/5'
+          }
+        `
       }
-      className={`
-        flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer
-        transition
-        ${
-          active
-            ? 'bg-white/10'
-            : danger
-              ? 'text-red-400 hover:bg-red-500/10'
-              : 'hover:bg-white/5'
-        }
-      `}
     >
       {icon}
       <span className="text-sm">{label}</span>
