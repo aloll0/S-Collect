@@ -2,5 +2,16 @@
   "dashboard": "Dashboard",
   "products": "Products",
   "orders": "Orders",
-  "logout": "Logout"
+  "logout": "Logout",
+  "dashboardMetrics": {
+    "totalSales": "Total Sales",
+    "numberOfOrders": "Number of Orders",
+    "newOrders": "New Orders",
+    "activeProducts": "Active Products",
+    "unit": {
+      "sar": "SAR",
+      "order": "Order",
+      "product": "Product"
+    }
+  }
 }

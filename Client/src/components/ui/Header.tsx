@@ -10,7 +10,7 @@ const Header = () => {
   });
 
   return (
-    <header className="bg-[var(--gray-950)] shadow-md p-4 mb-4 text-white">
+    <header className="bg-(--gray-950) shadow-md p-4  text-white">
       <div className="container mx-auto flex justify-between items-center">
 
         {/* Left side */}

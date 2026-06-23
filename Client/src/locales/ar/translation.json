@@ -1,6 +1,17 @@
 {
-  "dashboard": "Dashboard",
-  "products": "Products",
-  "orders": "Orders",
-  "logout": "Logout"
+  "dashboard": "لوحة التحكم",
+  "products": "المنتجات",
+  "orders": "الطلبات",
+  "logout": "تسجيل الخروج",
+  "dashboardMetrics": {
+    "totalSales": "إجمالي المبيعات",
+    "numberOfOrders": "عدد الطلبات",
+    "newOrders": "الطلبات الجديدة",
+    "activeProducts": "المنتجات النشطة",
+    "unit": {
+      "sar": "ر.س",
+      "order": "طلب",
+      "product": "منتج"
+    }
+  }
 }
