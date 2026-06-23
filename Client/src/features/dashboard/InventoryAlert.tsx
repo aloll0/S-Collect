@@ -1,7 +1,7 @@
 import { TriangleAlert } from 'lucide-react';
-import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import InventoryCard from './InventoryCard';
+import { Link } from 'react-router-dom';
 
 interface InventoryItem {
   id: string;
@@ -17,16 +17,10 @@ interface InventoryItem {
 }
 
 interface InventoryAlertsCard {
-  title: string;
-  icon: ComponentType;
-  alertMessage: string;
   items: InventoryItem[];
 }
 
 const inventoryAlertsData: InventoryAlertsCard = {
-  title: "Inventory Alerts",
-  icon: TriangleAlert,
-  alertMessage: "5 products are running low on stock.",
   items: [
     {
       id: "1",
@@ -135,14 +129,17 @@ const InventoryAlert = () => {
         <h3 className="text-xl font-bold">{t("inventoryAlerts")}</h3>
       </div>
       <div className='bg-yellow-light text-yellow px-4 py-2.5 rounded-lg text-sm mb-6' >
-        <p>{inventoryAlertsData.alertMessage}</p>
+        <p>{t("inventoryItem.alertMessage")}</p>
       </div>
-      <div className='mb-6 flex flex-col gap-3 h-[75%] overflow-y-auto  '>
+      <div className='mb-6 flex flex-col gap-3 h-[60%] overflow-y-auto  '>
         {inventoryAlertsData.items.map((item) => (
           <InventoryCard key={item.id} cardData={item} />
         ))
         }
       </div>
+      <Link to={'/inventory'} className='w-full text-center rounded-lg border-2 block  py-3 mt-auto' >
+     {t("inventoryItem.manageInventory")}
+      </Link>
     </div>
   )
 }

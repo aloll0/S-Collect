@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:wght@400;700&display=swap');
+
 
 /* ============================================================
    DESIGN TOKENS – CSS Custom Properties
@@ -45,7 +45,7 @@ body, html, #root {
        ============================================================ */
 
     /* Font family */
-    --font-family-primary: 'Inter' , sans-serif; /* Token: Family/primary */
+    --font-family-primary: 'Inter', sans-serif; /* Token: Family/primary */
 
     /* Font weights */
     --font-weight-thin: 100; /* Token: Weights/Thin       */

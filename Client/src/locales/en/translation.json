@@ -15,12 +15,14 @@
     }
   },
   "inventoryAlerts": "Inventory Alerts",
-  "alertMessage": "5 products are running low on stock.",
   "inventoryItem": {
+    "alertMessage": "5 products are running low on stock.",
     "lowStock": "Low Stock",
     "outOfStock": "Out of Stock",
     "available": "Available",
-    "manageInventory": "Manage Inventory"
+    "manageInventory": "Manage Inventory",
+    "sku": "SKU",
+    "stock": "Stock"
   },
   "salesChart": {
     "pointStyle": "Point Style:",
