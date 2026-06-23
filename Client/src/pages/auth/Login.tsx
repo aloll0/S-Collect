@@ -1,69 +1,11 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Logo from "../../components/ui/Logo";
-import { Star, ShieldCheck, Grid2x2Check  } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import AuthLeftPanel from "../../components/auth/AuthLeftPanel";
 
 
 
-// ─── Left Panel ───────────────────────────────────────────────────────────────
 
-const LeftPanel = () => {
-  const { t } = useTranslation();
-
-    const features = [
-    { icon: <Star color="white" size={20}/>, label: t("panel.feature1") },
-    { icon: <ShieldCheck color="white" size={20}/>, label: t("panel.feature3") },
-    { icon: <Grid2x2Check  color="white" size={20}/>, label: t("panel.feature2") },
-  ];
-
-  return (
-    <div
-      className="w-[40%] px-10 py-12 flex flex-col relative overflow-hidden min-h-full bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: "url('/bg_login.png')",
-      }}
-    >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/60"></div>
-
-      {/* Content */}
-      <div className="relative z-10">
-        <Logo />
-
-        <div className="mt-12">
-          <h1 className="text-white text-[32px] font-bold leading-tight mb-3">
-            {t('panel.tagline1')}
-            <br />
-            {t('panel.tagline2')}
-          </h1>
-
-          <p className="text-[#ddd] text-sm leading-relaxed mb-10">
-            {t('panel.subtitle')}
-          </p>
-
-          <div className="mb-8">
-            <h3 className="text-white text-base font-semibold mb-2">
-              {t('panel.becomeVendor')}
-            </h3>
-
-            <p className="text-[#ddd] text-[13px] leading-relaxed mb-5">
-              {t('panel.becomeVendorDesc')}
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3">
-          {features.map(({ icon, label }) => (
-            <div key={label} className="flex items-center gap-2.5">
-              <span className="text-[#888] text-xs">{icon}</span>
-              <span className="text-[#ccc] text-[13px]">{label}</span>
-            </div>
-          ))}
-        </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // ─── Eye Icon ─────────────────────────────────────────────────────────────────
 
@@ -99,6 +41,7 @@ interface LoginProps {
 
 const Login = ({ onGoToRegister }: LoginProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -121,7 +64,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
 
   return (
     <div className="flex min-h-screen font-sans">
-      <LeftPanel />
+      <AuthLeftPanel />
 
       {/* Right panel */}
       <div className="flex-1 bg-white flex items-center justify-center px-10 py-12">
@@ -191,10 +134,10 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               </div>
 
               {/* Forgot password */}
-              <div>
+              <div className="flex justify-end " onClick={()=>navigate("/forget-pass")} > 
                 <button
                   type="button"
-                  className="text-[13px] text-gray-700 hover:text-gray-900 transition-colors"
+                  className="text-[13px] text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
                 >
                   {t('login.forgotPassword')}
                 </button>
@@ -208,6 +151,23 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               >
                 {loading ? t('login.signingIn') : t('login.signIn')}
               </button>
+
+              <div className="relative flex items-center">
+                <div className="flex-1 border-t border-gray-300"></div>
+                <p className="mx-4 text-gray-400">or</p>
+                <div className="flex-1 border-t border-gray-300"></div>
+              </div>
+
+              {/* Register */}
+              <button
+                type="button"
+                // disabled={loading}
+                onClick={()=>navigate("/register")}
+                className="w-full py-3 bg-gray-900 text-white rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+              >
+                {t('login.register')}
+              </button>
+
               {error && (
                 <div className="bg-red-50 border border-red-200 rounded-lg px-3.5 py-2.5 text-red-600 text-[13px]">
                   {error}

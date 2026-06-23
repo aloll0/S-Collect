@@ -8,8 +8,9 @@ import Management from './pages/Mangement.js';
 import AddProduct from './pages/AddProduct.js';
 import { Toaster } from 'react-hot-toast';
 import NotFound from './pages/NotFound.js';
-import Login from './pages/login and register/Login.js';
-import Register from './pages/login and register/Register.js';
+import Login from './pages/auth/Login.js';
+import Register from './pages/auth/Register.js';
+import ForgetPass from './pages/auth/ForgetPass.js';
 import './App.css';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
@@ -27,6 +28,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forget-pass" element={<ForgetPass />} />
         <Route path="/" element={<AppLayout />} >
           <Route index element={<Dashboard />} />
           <Route path="/products" element={<Products />} />
