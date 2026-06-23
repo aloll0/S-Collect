@@ -9,6 +9,13 @@ body, html, #root {
   box-sizing: border-box;
   background-color: var(--gray-100);
 }
+
+.container {
+  width: 100%;
+  max-width: 1720px;
+  margin-inline: auto;
+} 
+
 @layer base {
   :root {
     /* ============================================================
