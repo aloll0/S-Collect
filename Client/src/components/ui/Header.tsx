@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { User } from "lucide-react";
+import InputSearch from "./InputSearch";
 
 const Header = () => {
   const today = new Date().toLocaleDateString("en-US", {
@@ -22,12 +23,7 @@ const Header = () => {
         {/* Right side */}
         <div className="flex items-center gap-4">
 
-          {/* Search */}
-          <input
-            type="text"
-            placeholder="Search..."
-            className="px-3 py-2 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-gray-600"
-          />
+          <InputSearch />
 
           {/* Language dropdown */}
           <select className="bg-gray-800 text-white px-2 py-2 rounded-lg">
