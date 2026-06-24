@@ -7,6 +7,7 @@ import { AccountSettingsForm } from './settings/AccountSettingsForm';
 import { SuccessToast } from './settings/shared';
 import { cn } from './settings/utils';
 import { StoreProfileForm } from './settings/StoreProfileForm';
+import {  ChevronsRight } from "lucide-react";
 import type {
   AccountSettingsData,
   PasswordData,
@@ -100,7 +101,7 @@ export default function SettingsPage({
         </h1>
         <nav className="mt-3 text-sm flex items-center gap-1">
           <span className="text-[#090909]">{t('settings.title')}</span>
-          <span className="mx-0.5 text-[#737373]">&gt;&gt;</span>
+          <span className="mx-0.5 text-[#737373]"><ChevronsRight size={16}/></span>
           <span className="text-[#737373]">{breadcrumb}</span>
         </nav>
       </div>
