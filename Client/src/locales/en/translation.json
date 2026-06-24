@@ -3,6 +3,22 @@
   "products": "Products",
   "orders": "Orders",
   "logout": "Logout",
+  "sidebar": {
+    "sections": {
+      "main": "Main",
+      "products": "Products",
+      "management": "Management",
+      "account": "Account"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "management": "Management",
+      "addProduct": "Add Product",
+      "inventory": "Inventory",
+      "incomingOrders": "Incoming Orders",
+      "settings": "Settings"
+    }
+  },
   "dashboardMetrics": {
     "totalSales": "Total Sales",
     "numberOfOrders": "Number of Orders",
