@@ -17,10 +17,10 @@ export function SectionCard({ children }: { children: ReactNode }) {
 }
 
 const inputBase =
-  'w-full h-10 px-3 text-[13px] text-gray-900 bg-white border border-gray-200 rounded-md ' +
+  'w-full py-4 px-3 text-sm text-[#090909] bg-white/50 border border-[#E9E9E9] rounded-lg font-normal ' +
   'outline-none transition-colors placeholder:text-gray-400 ' +
-  'focus:border-gray-400 focus:ring-1 focus:ring-gray-200 ' +
-  'disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-default';
+  'focus:border-[#090909] focus:ring-1 focus:ring-gray-200 ' +
+  'disabled:bg-white/50 disabled:text-[#090909] disabled:cursor-default';
 
 const inputErrorCls =
   'border-red-400 bg-red-50 focus:border-red-400 focus:ring-red-100';
@@ -46,7 +46,7 @@ export function TextAreaInput({
   return (
     <textarea
       className={cn(
-        'w-full px-3 py-2 text-[13px] text-gray-900 bg-white border border-gray-200 rounded-md ' +
+        'w-full px-3 py-2 text-sm text-gray-900 bg-white border border-gray-200 rounded-md ' +
           'outline-none transition-colors placeholder:text-gray-400 resize-none ' +
           'focus:border-gray-400 focus:ring-1 focus:ring-gray-200',
         error ? inputErrorCls : '',
@@ -74,7 +74,7 @@ export function FieldWrap({
 }) {
   return (
     <div>
-      <p className="text-[12px] font-medium text-gray-700 mb-1.5">
+      <p className="text-sm font-semibold text-[#090909] mb-2">
         {label}
         {required && <span className="text-red-500 ml-0.5">*</span>}
       </p>

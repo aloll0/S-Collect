@@ -37,7 +37,7 @@ function LogoNormal({
 }) {
   const id = useId();
   return (
-    <div className="border border-gray-200 rounded-md bg-white px-4 py-3 flex items-center gap-3">
+    <div className="border border-gray-200 rounded-lg bg-white px-4 py-3 flex items-center gap-3">
       <div className="w-9 h-9 shrink-0 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center overflow-hidden">
         <img src={logoUrl} alt="logo" className="w-full h-full object-cover" />
       </div>
@@ -86,7 +86,7 @@ function LogoEmpty({ onUpload }: { onUpload: (f: File) => void }) {
         'flex flex-col items-center justify-center border-2 border-dashed rounded-lg py-7 cursor-pointer transition-colors',
         drag
           ? 'border-gray-400 bg-gray-50'
-          : 'border-gray-300 bg-white hover:bg-gray-50'
+          : 'border-gray-300 bg-white/50 hover:bg-gray-50'
       )}
       onDrop={(e: DragEvent<HTMLLabelElement>) => {
         e.preventDefault();
@@ -270,10 +270,10 @@ export function StoreProfileForm({
   return (
     <form onSubmit={handleSubmit} noValidate>
       <div className="mb-5">
-        <p className="text-[12px] text-gray-500 mb-2">Store Preview</p>
-        <div className="border border-gray-200 rounded-lg bg-white p-4">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 shrink-0 rounded-md bg-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden">
+        <p className="text-xs font-bold text-[#969696] mb-3">Store Preview</p>
+        <div className="border border-[#E9E9E9] rounded-lg bg-white/50 p-5">
+          <div className="flex items-start gap-5">
+            <div className="w-10 h-10 md:w-20 md:h-20 shrink-0 rounded-full bg-[#F8F8F8]  flex items-center justify-center overflow-hidden">
               {data.storeLogoUrl ? (
                 <img
                   src={data.storeLogoUrl}
@@ -281,17 +281,17 @@ export function StoreProfileForm({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <ImageIcon size={16} className="text-gray-400" />
+                <ImageIcon size={16} className="text-[#969696] w-8 h-8" />
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[13px] font-semibold text-gray-900 leading-tight">
+              <p className="text-base font-medium text-[#090909]">
                 {data.storeName || 'Store Name'}
               </p>
-              <p className="text-[12px] text-gray-500 mt-0.5 leading-tight line-clamp-2">
+              <p className="text-sm font-medium text-[#969696] mt-0.5  line-clamp-2">
                 {data.storeDescription || 'Store description'}
               </p>
-              <p className="text-[11px] text-gray-400 mt-1 flex items-center gap-1.5 flex-wrap">
+              <p className="text-xs text-[#969696] mt-1 flex items-center gap-1.5 flex-wrap font-normal">
                 {data.publicEmail && <span>{data.publicEmail}</span>}
                 {data.publicEmail && data.phoneNumber && <span>•</span>}
                 {data.phoneNumber && <span>{data.phoneNumber}</span>}
@@ -314,7 +314,7 @@ export function StoreProfileForm({
       </div>
 
       <div className="mb-4">
-        <p className="text-[12px] font-medium text-gray-700 mb-1.5">
+        <p className="text-sm font-bold text-[#090909] mb-2">
           Store Logo
         </p>
         {logoSection}
@@ -323,7 +323,7 @@ export function StoreProfileForm({
       <div className="mb-6">
         <label
           htmlFor="store-description"
-          className="block text-[12px] font-medium leading-5 text-gray-950 mb-3"
+          className="block text-sm font-bold text-[#090909] mb-3"
         >
           Store Description
         </label>
@@ -335,7 +335,7 @@ export function StoreProfileForm({
             disabled={isPending}
             onChange={(e) => update('storeDescription', e.target.value)}
             className={cn(
-              'w-full h-[140px] resize-none rounded-lg border bg-white px-4 pt-3.5 pb-8 text-[17px] leading-6 text-gray-950 shadow-none outline-none transition-colors placeholder:text-gray-400 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-default',
+              'w-full h-[140px] resize-none rounded-lg border bg-white/50 px-4 pt-3 pb-8 text-sm  text-[#090909] shadow-none outline-none transition-colors placeholder:text-gray-400 disabled:bg-white/50 disabled:text-[#969696] disabled:cursor-default',
               errors.storeDescription
                 ? 'border-red-400 bg-red-50 focus:border-red-400 focus:ring-1 focus:ring-red-100'
                 : 'border-gray-200 focus:border-gray-300 focus:ring-1 focus:ring-gray-100'
@@ -355,7 +355,7 @@ export function StoreProfileForm({
       </div>
 
       <div className="mb-6">
-        <h3 className="text-[14px] font-semibold text-gray-900 mb-3">
+        <h3 className="text-xl font-medium text-[#090909] mb-3">
           Contact Information
         </h3>
         <div className="grid grid-cols-2 gap-4">
@@ -387,7 +387,7 @@ export function StoreProfileForm({
           type="submit"
           disabled={isPending}
           className={cn(
-            'h-9 px-6 rounded-md text-[13px] font-semibold text-white transition-colors',
+            'py-3 px-4  rounded-lg text-sm font-semibold text-white transition-colors',
             hasErrors || isPending
               ? 'bg-gray-400 cursor-not-allowed'
               : 'bg-gray-950 hover:bg-gray-800'

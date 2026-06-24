@@ -54,10 +54,10 @@ function TabBtn({
       aria-selected={active}
       onClick={onClick}
       className={cn(
-        'h-9 px-5 rounded-md text-[13px] font-semibold transition-colors',
+        'py-[10px] px-6 rounded-lg text-sm font-semibold transition-colors',
         active
           ? 'bg-gray-950 text-white'
-          : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+          : 'bg-transparent text-[#545454] '
       )}
     >
       {children}
@@ -89,17 +89,17 @@ export default function SettingsPage({
     <div className="min-h-screen bg-gray-100">
       {toast && <SuccessToast message={toast} onClose={() => setToast(null)} />}
 
-      <div className="bg-white border-b border-gray-200 px-8 py-4">
-        <h1 className="text-[18px] font-bold text-gray-900">Settings</h1>
-        <nav className="mt-0.5 text-[12px] text-gray-400 flex items-center gap-1">
-          <span>Settings</span>
-          <span className="mx-0.5">&gt;&gt;</span>
-          <span className="text-gray-600">{breadcrumb}</span>
+      <div className="bg-white border-b border-gray-200 px-8 py-3">
+        <h1 className="text-2xl font-semibold text-[#090909]">Settings</h1>
+        <nav className="mt-3 text-sm  flex items-center gap-1">
+          <span className='text-[#090909]'>Settings</span>
+          <span className="mx-0.5 text-[#737373]">&gt;&gt;</span>
+          <span className=" text-[#737373]">{breadcrumb}</span>
         </nav>
       </div>
 
-      <div className="px-8 py-7 max-w-[640px]">
-        <div className="flex gap-2 mb-6" role="tablist">
+      <div className="px-8 py-7 max-w-[720px]">
+        <div className="flex  mb-6 p-1 w-fit bg-[#E9E9E9] rounded-lg" role="tablist">
           <TabBtn active={tab === 'store'} onClick={() => setTab('store')}>
             Store Profile
           </TabBtn>
