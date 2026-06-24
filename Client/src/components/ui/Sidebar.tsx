@@ -6,14 +6,11 @@ import {
   ShoppingCart,
   Settings,
   X,
-  Globe,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import Logo from '../ui/Logo';
 import LogoutButton from '../auth/LogoutButton';
-import i18n from '../../i18n';
-
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface NavItemProps {
@@ -78,17 +75,6 @@ const NavSection = ({ title, items, onItemClick }: NavSectionProps) => (
     </div>
   </div>
 );
-
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const lang = e.target.value;
-
-    i18n.changeLanguage(lang);
-
-    localStorage.setItem('language', lang);
-
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = lang;
-  };
 
 // ─── Navigation Data ──────────────────────────────────────────────────────────
 const NAV_SECTIONS: NavSectionProps[] = [
@@ -179,23 +165,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               onItemClick={onClose}
             />
           ))}
-          <div className="px-3 mt-5">
-
-          <div className="group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out relative overflow-hidden text-label-md ">
-            <Globe className="text-white" size={18} />
-
-            <select
-              value={i18n.language}
-              onChange={handleLanguageChange}
-              className=" text-white cursor-pointer"
-            >
-              <option value="en" className='text-black'>EN</option> 
-              <option value="ar" className='text-black'>AR</option>
-            </select>
-          </div>
-          </div>
         </nav>
-
 
         <div className="shrink-0 p-3">
           <LogoutButton />
