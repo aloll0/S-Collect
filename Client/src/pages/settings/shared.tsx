@@ -11,7 +11,7 @@ import { cn, getPasswordStrength } from './utils';
 
 export function SectionCard({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    <div className="settings-surface-enter bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-300 ease-out ">
       {children}
     </div>
   );
@@ -19,8 +19,8 @@ export function SectionCard({ children }: { children: ReactNode }) {
 
 const inputBase =
   'w-full py-4 px-3 text-sm text-[#090909] bg-white/50 border border-[#E9E9E9] rounded-lg font-normal ' +
-  'outline-none transition-colors placeholder:text-gray-400 ' +
-  'focus:border-[#090909] focus:ring-1 focus:ring-gray-200 ' +
+  'outline-none transition-all duration-200 ease-out placeholder:text-gray-400 ' +
+  'focus:border-[#090909] focus:ring-1 focus:ring-gray-200 focus:-translate-y-0.5 ' +
   'disabled:bg-white/50 disabled:text-[#090909] disabled:cursor-default';
 
 const inputErrorCls =
@@ -48,8 +48,8 @@ export function TextAreaInput({
     <textarea
       className={cn(
         'w-full px-3 py-2 text-sm text-gray-900 bg-white border border-gray-200 rounded-md ' +
-          'outline-none transition-colors placeholder:text-gray-400 resize-none ' +
-          'focus:border-gray-400 focus:ring-1 focus:ring-gray-200',
+          'outline-none transition-all duration-200 ease-out placeholder:text-gray-400 resize-none ' +
+          'focus:border-gray-400 focus:ring-1 focus:ring-gray-200 focus:-translate-y-0.5',
         error ? inputErrorCls : '',
         className
       )}
@@ -81,7 +81,9 @@ export function FieldWrap({
       </p>
       {children}
       {error ? (
-        <p className="mt-1 text-[12px] text-red-500">{error}</p>
+        <p className="settings-pop-enter mt-1 text-[12px] text-red-500">
+          {error}
+        </p>
       ) : helperText ? (
         <div className="flex justify-between mt-1">
           <p className="text-[11px] text-gray-400">{helperText}</p>
@@ -131,7 +133,7 @@ export function PasswordInput({
               ? t('settings.account.hidePassword')
               : t('settings.account.showPassword')
           }
-          className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
+          className="absolute inset-y-0 right-3 flex items-center text-gray-400 transition-all duration-200 hover:scale-110 hover:text-gray-600"
           onClick={() => setShow((v) => !v)}
         >
           <EyeOff size={15} />
@@ -205,7 +207,7 @@ export function SuccessToast({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="fixed top-4 right-4 z-50 w-[280px] bg-white border border-green-200 rounded-lg shadow-md p-3 flex items-start gap-2">
+    <div className="settings-toast-enter fixed top-4 right-4 z-50 w-[280px] bg-white border border-green-200 rounded-lg shadow-md p-3 flex items-start gap-2">
       <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center shrink-0 mt-0.5">
         <Check size={11} className="text-green-600 stroke-[3]" />
       </div>
