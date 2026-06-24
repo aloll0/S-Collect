@@ -48,6 +48,13 @@
     "forgotPassword": "نسيت كلمة المرور؟",
     "signIn": "تسجيل الدخول",
     "signingIn": "جارٍ تسجيل الدخول...",
+    "tryAgain": "حاول مرة أخرى لاحقاً",
+    "nextAttempt": "المحاولة التالية متاحة خلال 14 دقيقة",
+    "expiredTitle": "انتهت الجلسة",
+    "expiredSubtitle": "لحماية حسابك، انتهت جلستك. يرجى تسجيل الدخول مرة أخرى للمتابعة.",
+    "expiredAlert": "انتهت جلستك بسبب عدم النشاط.",
+    "lockedTitle": "تم قفل الحساب مؤقتاً",
+    "lockedSubtitle": "محاولات تسجيل دخول فاشلة كثيرة. يرجى الانتظار قبل المحاولة مرة أخرى.",
     "trouble": "هل تواجه مشكلة؟",
     "contactSupport": "تواصل مع الدعم",
     "noAccount": "ليس لديك حساب؟",
@@ -134,5 +141,108 @@
     "feature1": "الوصول إلى ملايين المشترين النشطين",
     "feature2": "مدفوعات آمنة وتلقائية",
     "feature3": "تحليلات تجارية متقدمة"
+  },
+   "addProduct": {
+    "title": "إضافة منتج",
+    "subtitle": "أضف منتجًا جديدًا إلى المخزون الخاص بك",
+
+    "productInformation": "معلومات المنتج",
+    "productMedia": "صور المنتج",
+    "productStatus": "حالة المنتج",
+    "pricingRules": "قواعد التسعير",
+
+    "nameAr": "اسم المنتج (بالعربية)",
+    "nameEn": "اسم المنتج (بالإنجليزية)",
+    "description": "الوصف",
+
+    "categories": "التصنيفات",
+    "sizes": "المقاسات",
+    "colors": "الألوان",
+
+    "addCategory": "إضافة تصنيف",
+    "addSize": "إضافة مقاس",
+    "addColor": "إضافة لون",
+
+    "basePrice": "السعر الأساسي",
+    "comparePrice": "السعر قبل الخصم",
+    "sku": "رمز المنتج",
+
+    "visibility": "الظهور",
+    "homepage": "الصفحة الرئيسية",
+    "promotions": "العروض",
+    "searchResults": "نتائج البحث",
+
+    "save": "حفظ التغييرات",
+    "cancel": "إلغاء",
+
+    "uploadImage": "رفع صورة",
+    "dragImage": "اسحب الصورة هنا أو اضغط للرفع",
+
+    "active": "نشط",
+    "inactive": "غير نشط"
+  },
+    "ordersPage": {
+    "title": "الطلبات الواردة",
+    "allOrders": "كل الطلبات",
+    "pending": "قيد الانتظار",
+    "processing": "قيد المعالجة",
+    "shipped": "تم الشحن",
+    "delivered": "تم التسليم",
+
+    "sortBy": "ترتيب حسب",
+    "newestFirst": "الأحدث أولاً",
+    "oldestFirst": "الأقدم أولاً",
+
+    "orderId": "رقم الطلب",
+    "orderDate": "تاريخ الطلب",
+    "customerName": "اسم العميل",
+    "totalAmount": "إجمالي المبلغ",
+    "orderStatus": "حالة الطلب",
+    "actions": "الإجراءات",
+
+    "viewDetails": "عرض التفاصيل",
+
+    "showing": "عرض",
+    "of": "من",
+    "results": "نتيجة",
+
+    "noOrders": "لا توجد طلبات بعد",
+    "noOrdersDesc": "ستظهر الطلبات هنا بمجرد استلام أول طلب",
+
+    "save": "حفظ",
+    "cancel": "إلغاء",
+
+    "addTrackingNumber": "إضافة رقم تتبع",
+    "trackingDescription": "الرجاء إدخال رقم التتبع لمساعدة العميل على متابعة الشحنة",
+    "trackingPlaceholder": "أدخل رقم التتبع",
+
+    "orderDetails": "تفاصيل الطلب",
+    "orderItems": "عناصر الطلب",
+    "orderTimeline": "سجل الطلب",
+    "orderInformation": "معلومات الطلب",
+    "customerInformation": "معلومات العميل",
+    "shippingAddress": "عنوان الشحن",
+    "orderSummary": "ملخص الطلب",
+
+    "paymentStatus": "حالة الدفع",
+    "trackingNumber": "رقم التتبع",
+
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+
+    "subtotal": "المجموع الفرعي",
+    "shippingFee": "رسوم الشحن",
+    "discount": "الخصم",
+    "tax": "الضريبة",
+    "grandTotal": "الإجمالي النهائي",
+
+    "updateOrderStatus": "تحديث حالة الطلب",
+    "updateOrderStatusDesc": "لا يمكن التراجع عن تغيير الحالة بعد الحفظ",
+    "trackingOptional": "رقم التتبع (اختياري)",
+    "updateButton": "تحديث حالة الطلب",
+
+    "updatedSuccessfully": "تم تحديث الطلب بنجاح",
+    "pendingLabel": "بانتظار التنفيذ"
   }
 }

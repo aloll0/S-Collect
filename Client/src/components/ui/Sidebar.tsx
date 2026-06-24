@@ -77,7 +77,7 @@ const NAV_SECTIONS: NavSectionProps[] = [
       {
         icon: <Package size={18} />,
         label: "Management",
-        to: "/products-management",
+        to: "/management",
       },
       {
         icon: <Plus size={18} />,
@@ -116,9 +116,9 @@ const NAV_SECTIONS: NavSectionProps[] = [
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 const Sidebar = () => {
   return (
-    <aside className="w-64 h-screen sticky top-0 flex flex-col bg-gray-950 border-r border-gray-800">
+    <aside className="w-64 h-screen sticky top-0 flex flex-col bg-[var(--gray-950)] ">
       {/* Logo */}
-      <div className="shrink-0 p-5 border-b border-gray-800">
+      <div className="shrink-0 pt-5 px-5"> 
         <Logo />
       </div>
 
@@ -130,7 +130,7 @@ const Sidebar = () => {
       </nav>
 
       {/* Logout - Fixed at bottom */}
-      <div className="shrink-0 p-3 border-t border-gray-800">
+      <div className="shrink-0 p-3">
         <NavItem
           icon={<LogOut size={18} />}
           label="Log Out"

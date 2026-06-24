@@ -14,6 +14,7 @@ import ForgetPass from './pages/auth/ForgetPass.js';
 import './App.css';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
+import Orders from './pages/Orders.js';
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/management" element={<Management />} />
           <Route path="/add-product" element={<AddProduct />} />
+          <Route path="/incoming-orders" element={<Orders />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
