@@ -142,7 +142,7 @@
     "feature2": "مدفوعات آمنة وتلقائية",
     "feature3": "تحليلات تجارية متقدمة"
   },
-   "addProduct": {
+  "addProduct": {
     "title": "إضافة منتج",
     "subtitle": "أضف منتجًا جديدًا إلى المخزون الخاص بك",
 
@@ -181,7 +181,7 @@
     "active": "نشط",
     "inactive": "غير نشط"
   },
-    "ordersPage": {
+  "ordersPage": {
     "title": "الطلبات الواردة",
     "allOrders": "كل الطلبات",
     "pending": "قيد الانتظار",
@@ -244,6 +244,75 @@
 
     "updatedSuccessfully": "تم تحديث الطلب بنجاح",
     "pendingLabel": "بانتظار التنفيذ"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "storeProfile": "ملف المتجر",
+    "accountSettings": "إعدادات الحساب",
+    "storePreview": "معاينة المتجر",
+    "storeName": "اسم المتجر",
+    "storeNamePlaceholder": "أدخل اسم المتجر",
+    "storeNameFallback": "اسم المتجر",
+    "storeLogo": "شعار المتجر",
+    "storeDescription": "وصف المتجر",
+    "storeDescriptionPlaceholder": "أدخل وصف المتجر",
+    "storeDescriptionFallback": "وصف المتجر",
+    "contactInformation": "معلومات التواصل",
+    "publicEmail": "البريد الإلكتروني العام",
+    "emailPlaceholder": "البريد الإلكتروني",
+    "phoneNumber": "رقم الهاتف",
+    "phonePlaceholder": "الهاتف",
+    "saveChanges": "حفظ التغييرات",
+    "saving": "جارٍ الحفظ...",
+    "logo": {
+      "alt": "شعار",
+      "replace": "استبدال",
+      "remove": "إزالة",
+      "upload": "اسحب وأفلت أو اضغط للرفع",
+      "hint": "الحد الأقصى 2 ميجابايت - JPG و PNG و WebP",
+      "fileFallback": "logo.png"
+    },
+    "account": {
+      "personalInformation": "المعلومات الشخصية",
+      "personalInformationDescription": "عرض معلومات الحساب الحالية.",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "emailAddress": "البريد الإلكتروني",
+      "emailLockedHint": "لا يمكن تغيير البريد الإلكتروني من هذه الصفحة. يرجى التواصل مع المسؤول لطلب تغييره.",
+      "requestEmailChange": "طلب تغيير البريد الإلكتروني",
+      "phoneNumber": "رقم الهاتف",
+      "changePassword": "تغيير كلمة المرور",
+      "changePasswordDescription": "تحديث كلمة مرور حسابك.",
+      "currentPassword": "كلمة المرور الحالية",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "toggleVisibility": "تبديل الظهور",
+      "showPassword": "إظهار كلمة المرور",
+      "hidePassword": "إخفاء كلمة المرور",
+      "passwordRequirement": "يجب أن تحتوي على 8 أحرف على الأقل، وحرف كبير واحد، ورقم واحد.",
+      "passwordGood": "جيدة",
+      "passwordWeak": "ضعيفة",
+      "passwordInfo": "سيؤدي تغيير كلمة المرور إلى تسجيل الخروج من جميع الجلسات النشطة الأخرى. لا يمكنك إعادة استخدام أي من آخر كلمتي مرور.",
+      "countryCode": "SA"
+    },
+    "toast": {
+      "storeProfileSaved": "تم تحديث ملف المتجر بنجاح.",
+      "accountSettingsSaved": "تم تحديث إعدادات الحساب بنجاح.",
+      "details": "تم حفظ التغييرات وستظهر في المتجر خلال دقيقتين.",
+      "close": "إغلاق"
+    },
+    "errors": {
+      "storeNameRequired": "اسم المتجر مطلوب.",
+      "storeDescriptionRequired": "وصف المتجر مطلوب.",
+      "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح.",
+      "invalidPhone": "يرجى إدخال رقم هاتف صحيح.",
+      "imageUpload": "تعذر رفع الصورة. يرجى التحقق من صيغة الملف وحجمه.",
+      "firstNameRequired": "الاسم الأول مطلوب.",
+      "lastNameRequired": "اسم العائلة مطلوب.",
+      "currentPasswordRequired": "كلمة المرور الحالية مطلوبة.",
+      "newPasswordWeak": "يجب أن تحتوي على 8 أحرف على الأقل، وحرف كبير واحد، ورقم واحد.",
+      "passwordMismatch": "كلمتا المرور غير متطابقتين."
+    }
   },
   "inventoryPage": {
     "title": "إدارة المخزون",

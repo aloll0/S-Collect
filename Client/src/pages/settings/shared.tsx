@@ -5,6 +5,7 @@ import {
   type TextareaHTMLAttributes,
   useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { cn, getPasswordStrength } from './utils';
 
@@ -107,6 +108,7 @@ export function PasswordInput({
   onChange: (v: string) => void;
 }) {
   const [show, setShow] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <FieldWrap
@@ -124,7 +126,11 @@ export function PasswordInput({
         />
         <button
           type="button"
-          aria-label={show ? 'Hide password' : 'Show password'}
+          aria-label={
+            show
+              ? t('settings.account.hidePassword')
+              : t('settings.account.showPassword')
+          }
           className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
           onClick={() => setShow((v) => !v)}
         >
@@ -142,6 +148,7 @@ export function PasswordStrengthBar({
   password: string;
   error?: string;
 }) {
+  const { t } = useTranslation();
   const strength = getPasswordStrength(password);
   const isGood = strength >= 4;
   const isWeak = strength >= 2 && strength < 4;
@@ -150,7 +157,11 @@ export function PasswordStrengthBar({
 
   const barColor = isGood ? 'bg-green-500' : 'bg-red-500';
   const barWidth = isGood ? '100%' : `${Math.min(strength * 20, 60)}%`;
-  const label = isGood ? 'Good' : isWeak ? 'Weak' : '';
+  const label = isGood
+    ? t('settings.account.passwordGood')
+    : isWeak
+      ? t('settings.account.passwordWeak')
+      : '';
   const labelColor = isGood ? 'text-green-600' : 'text-red-500';
 
   return (
@@ -171,8 +182,7 @@ export function PasswordStrengthBar({
             error ? 'text-red-500' : 'text-gray-400'
           )}
         >
-          Must contain at least 8 characters, one uppercase letter, and one
-          number.
+          {t('settings.account.passwordRequirement')}
         </p>
         {label && (
           <p
@@ -193,6 +203,7 @@ export function SuccessToast({
   message: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="fixed top-4 right-4 z-50 w-[280px] bg-white border border-green-200 rounded-lg shadow-md p-3 flex items-start gap-2">
       <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center shrink-0 mt-0.5">
@@ -203,13 +214,12 @@ export function SuccessToast({
           {message}
         </p>
         <p className="text-[11px] text-gray-500 mt-0.5 leading-4">
-          Changes have been saved and will be reflected in the marketplace
-          within 2 minutes.
+          {t('settings.toast.details')}
         </p>
       </div>
       <button
         type="button"
-        aria-label="Close"
+        aria-label={t('settings.toast.close')}
         className="shrink-0 text-gray-400 hover:text-gray-600"
         onClick={onClose}
       >
