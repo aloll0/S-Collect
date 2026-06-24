@@ -11,14 +11,14 @@ import { cn, getPasswordStrength } from './utils';
 
 export function SectionCard({ children }: { children: ReactNode }) {
   return (
-    <div className="settings-surface-enter bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-300 ease-out ">
+    <div className="settings-surface-enter bg-white/50 border border-gray-200 rounded-lg overflow-hidden transition-all duration-300 ease-out ">
       {children}
     </div>
   );
 }
 
 const inputBase =
-  'w-full py-4 px-3 text-sm text-[#090909] bg-white/50 border border-[#E9E9E9] rounded-lg font-normal ' +
+  'w-full py-2.5 md:py-3 px-3 text-sm text-[#090909] bg-white/50 border border-[#E9E9E9] rounded-lg font-normal ' +
   'outline-none transition-all duration-200 ease-out placeholder:text-gray-400 ' +
   'focus:border-[#090909] focus:ring-1 focus:ring-gray-200 focus:-translate-y-0.5 ' +
   'disabled:bg-white/50 disabled:text-[#090909] disabled:cursor-default';
