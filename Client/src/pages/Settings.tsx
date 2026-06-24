@@ -1,6 +1,7 @@
 'use client';
 
 import { type ReactNode, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { AccountSettingsForm } from './settings/AccountSettingsForm';
 import { SuccessToast } from './settings/shared';
@@ -54,10 +55,8 @@ function TabBtn({
       aria-selected={active}
       onClick={onClick}
       className={cn(
-        'py-[10px] px-6 rounded-lg text-sm font-semibold transition-colors',
-        active
-          ? 'bg-gray-950 text-white'
-          : 'bg-transparent text-[#545454] '
+        'py-2.5 px-6 rounded-lg text-sm font-semibold transition-colors',
+        active ? 'bg-gray-950 text-white' : 'bg-transparent text-[#545454] '
       )}
     >
       {children}
@@ -71,6 +70,7 @@ export default function SettingsPage({
   onStoreProfileSave = async () => undefined,
   onAccountSettingsSave = async () => undefined,
 }: SettingsPageProps) {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<'store' | 'account'>('store');
   const [toast, setToast] = useState<string | null>(null);
 
@@ -83,28 +83,36 @@ export default function SettingsPage({
     [initialAccountSettings]
   );
 
-  const breadcrumb = tab === 'store' ? 'Store Profile' : 'Account Settings';
+  const breadcrumb =
+    tab === 'store'
+      ? t('settings.storeProfile')
+      : t('settings.accountSettings');
 
   return (
     <div className="min-h-screen bg-gray-100">
       {toast && <SuccessToast message={toast} onClose={() => setToast(null)} />}
 
       <div className="bg-white border-b border-gray-200 px-8 py-3">
-        <h1 className="text-2xl font-semibold text-[#090909]">Settings</h1>
-        <nav className="mt-3 text-sm  flex items-center gap-1">
-          <span className='text-[#090909]'>Settings</span>
+        <h1 className="text-2xl font-semibold text-[#090909]">
+          {t('settings.title')}
+        </h1>
+        <nav className="mt-3 text-sm flex items-center gap-1">
+          <span className="text-[#090909]">{t('settings.title')}</span>
           <span className="mx-0.5 text-[#737373]">&gt;&gt;</span>
-          <span className=" text-[#737373]">{breadcrumb}</span>
+          <span className="text-[#737373]">{breadcrumb}</span>
         </nav>
       </div>
 
       <div className="px-8 py-7 max-w-[720px]">
-        <div className="flex  mb-6 p-1 w-fit bg-[#E9E9E9] rounded-lg" role="tablist">
+        <div
+          className="flex mb-6 p-1 w-fit bg-[#E9E9E9] rounded-lg"
+          role="tablist"
+        >
           <TabBtn active={tab === 'store'} onClick={() => setTab('store')}>
-            Store Profile
+            {t('settings.storeProfile')}
           </TabBtn>
           <TabBtn active={tab === 'account'} onClick={() => setTab('account')}>
-            Account Settings
+            {t('settings.accountSettings')}
           </TabBtn>
         </div>
 
@@ -113,14 +121,14 @@ export default function SettingsPage({
             key="store"
             initialData={storeData}
             onSave={onStoreProfileSave}
-            onSuccess={() => setToast('Store Profile updated successfully.')}
+            onSuccess={() => setToast(t('settings.toast.storeProfileSaved'))}
           />
         ) : (
           <AccountSettingsForm
             key="account"
             initialData={accountData}
             onSave={onAccountSettingsSave}
-            onSuccess={() => setToast('Account Settings updated successfully.')}
+            onSuccess={() => setToast(t('settings.toast.accountSettingsSaved'))}
           />
         )}
       </div>

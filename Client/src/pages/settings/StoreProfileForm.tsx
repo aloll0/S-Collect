@@ -7,20 +7,26 @@ import {
   useState,
   useTransition,
 } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 
 import { FieldWrap, TextInput } from './shared';
 import type { StoreProfileData, ValidationErrors } from './types';
 import { cn, isValidEmail, isValidPhoneNumber } from './utils';
 
-function validateStoreProfile(data: StoreProfileData): ValidationErrors {
+function validateStoreProfile(
+  data: StoreProfileData,
+  t: TFunction
+): ValidationErrors {
   const e: ValidationErrors = {};
-  if (!data.storeName.trim()) e.storeName = 'Store name is required.';
+  if (!data.storeName.trim())
+    e.storeName = t('settings.errors.storeNameRequired');
   if (!data.storeDescription.trim())
-    e.storeDescription = 'Store description is required.';
+    e.storeDescription = t('settings.errors.storeDescriptionRequired');
   if (!isValidEmail(data.publicEmail))
-    e.publicEmail = 'Please enter a valid email address.';
+    e.publicEmail = t('settings.errors.invalidEmail');
   if (!isValidPhoneNumber(data.phoneNumber))
-    e.phoneNumber = 'Please enter a valid phone number.';
+    e.phoneNumber = t('settings.errors.invalidPhone');
   return e;
 }
 
@@ -36,10 +42,15 @@ function LogoNormal({
   onRemove: () => void;
 }) {
   const id = useId();
+  const { t } = useTranslation();
   return (
     <div className="border border-gray-200 rounded-lg bg-white px-4 py-3 flex items-center gap-3">
       <div className="w-9 h-9 shrink-0 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center overflow-hidden">
-        <img src={logoUrl} alt="logo" className="w-full h-full object-cover" />
+        <img
+          src={logoUrl}
+          alt={t('settings.logo.alt')}
+          className="w-full h-full object-cover"
+        />
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-[13px] font-semibold text-gray-800 leading-tight">
@@ -50,7 +61,7 @@ function LogoNormal({
             htmlFor={id}
             className="text-[12px] text-gray-500 cursor-pointer hover:text-gray-700"
           >
-            Replace
+            {t('settings.logo.replace')}
             <input
               id={id}
               type="file"
@@ -68,7 +79,7 @@ function LogoNormal({
             className="text-[12px] text-red-500 hover:text-red-700"
             onClick={onRemove}
           >
-            Remove
+            {t('settings.logo.remove')}
           </button>
         </div>
       </div>
@@ -79,6 +90,7 @@ function LogoNormal({
 function LogoEmpty({ onUpload }: { onUpload: (f: File) => void }) {
   const id = useId();
   const [drag, setDrag] = useState(false);
+  const { t } = useTranslation();
   return (
     <label
       htmlFor={id}
@@ -112,10 +124,10 @@ function LogoEmpty({ onUpload }: { onUpload: (f: File) => void }) {
         }}
       />
       <p className="text-[13px] font-medium text-gray-700">
-        Drag & drop or click to upload
+        {t('settings.logo.upload')}
       </p>
       <p className="text-[12px] text-gray-400 mt-0.5">
-        Maximum size 2MB — JPG, PNG, WebP
+        {t('settings.logo.hint')}
       </p>
     </label>
   );
@@ -130,6 +142,7 @@ function LogoError({
 }) {
   const id = useId();
   const [drag, setDrag] = useState(false);
+  const { t } = useTranslation();
   return (
     <div>
       <label
@@ -169,10 +182,10 @@ function LogoError({
           </span>
         </div>
         <p className="text-[13px] font-medium text-gray-700">
-          Drag & drop or click to upload
+          {t('settings.logo.upload')}
         </p>
         <p className="text-[12px] text-gray-400 mt-0.5">
-          Maximum size 2MB — JPG, PNG, WebP
+          {t('settings.logo.hint')}
         </p>
       </label>
       <p className="mt-1.5 text-[12px] text-red-500">{error}</p>
@@ -189,6 +202,7 @@ export function StoreProfileForm({
   onSave: (d: StoreProfileData) => Promise<void>;
   onSuccess: () => void;
 }) {
+  const { t } = useTranslation();
   const [data, setData] = useState(initialData);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isPending, startTransition] = useTransition();
@@ -201,31 +215,33 @@ export function StoreProfileForm({
     []
   );
 
-  const handleLogoUpload = useCallback((file: File) => {
-    if (!file.type.startsWith('image/') || file.size > 2 * 1024 * 1024) {
-      setErrors((e) => ({
-        ...e,
-        storeLogoUrl:
-          'Unable to upload image. Please check the file format and size.',
-      }));
+  const handleLogoUpload = useCallback(
+    (file: File) => {
+      if (!file.type.startsWith('image/') || file.size > 2 * 1024 * 1024) {
+        setErrors((e) => ({
+          ...e,
+          storeLogoUrl: t('settings.errors.imageUpload'),
+        }));
+        setData((d) => {
+          if (d.storeLogoUrl?.startsWith('blob:'))
+            URL.revokeObjectURL(d.storeLogoUrl);
+          return { ...d, storeLogoUrl: null };
+        });
+        return;
+      }
       setData((d) => {
         if (d.storeLogoUrl?.startsWith('blob:'))
           URL.revokeObjectURL(d.storeLogoUrl);
-        return { ...d, storeLogoUrl: null };
+        return {
+          ...d,
+          storeLogoUrl: URL.createObjectURL(file),
+          storeLogoFileName: file.name,
+        };
       });
-      return;
-    }
-    setData((d) => {
-      if (d.storeLogoUrl?.startsWith('blob:'))
-        URL.revokeObjectURL(d.storeLogoUrl);
-      return {
-        ...d,
-        storeLogoUrl: URL.createObjectURL(file),
-        storeLogoFileName: file.name,
-      };
-    });
-    setErrors((e) => ({ ...e, storeLogoUrl: undefined }));
-  }, []);
+      setErrors((e) => ({ ...e, storeLogoUrl: undefined }));
+    },
+    [t]
+  );
 
   const handleLogoRemove = useCallback(() => {
     setData((d) => {
@@ -239,7 +255,7 @@ export function StoreProfileForm({
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      const errs = validateStoreProfile(data);
+      const errs = validateStoreProfile(data, t);
       if (Object.values(errs).some(Boolean)) {
         setErrors(errs);
         return;
@@ -249,7 +265,7 @@ export function StoreProfileForm({
         onSuccess();
       });
     },
-    [data, onSave, onSuccess]
+    [data, onSave, onSuccess, t]
   );
 
   const hasErrors = Object.values(errors).some(Boolean);
@@ -259,7 +275,7 @@ export function StoreProfileForm({
   ) : data.storeLogoUrl ? (
     <LogoNormal
       logoUrl={data.storeLogoUrl}
-      fileName={data.storeLogoFileName ?? 'logo.png'}
+      fileName={data.storeLogoFileName ?? t('settings.logo.fileFallback')}
       onReplace={handleLogoUpload}
       onRemove={handleLogoRemove}
     />
@@ -270,14 +286,16 @@ export function StoreProfileForm({
   return (
     <form onSubmit={handleSubmit} noValidate>
       <div className="mb-5">
-        <p className="text-xs font-bold text-[#969696] mb-3">Store Preview</p>
+        <p className="text-xs font-bold text-[#969696] mb-3">
+          {t('settings.storePreview')}
+        </p>
         <div className="border border-[#E9E9E9] rounded-lg bg-white/50 p-5">
           <div className="flex items-start gap-5">
             <div className="w-10 h-10 md:w-20 md:h-20 shrink-0 rounded-full bg-[#F8F8F8]  flex items-center justify-center overflow-hidden">
               {data.storeLogoUrl ? (
                 <img
                   src={data.storeLogoUrl}
-                  alt="logo"
+                  alt={t('settings.logo.alt')}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -286,10 +304,11 @@ export function StoreProfileForm({
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-base font-medium text-[#090909]">
-                {data.storeName || 'Store Name'}
+                {data.storeName || t('settings.storeNameFallback')}
               </p>
               <p className="text-sm font-medium text-[#969696] mt-0.5  line-clamp-2">
-                {data.storeDescription || 'Store description'}
+                {data.storeDescription ||
+                  t('settings.storeDescriptionFallback')}
               </p>
               <p className="text-xs text-[#969696] mt-1 flex items-center gap-1.5 flex-wrap font-normal">
                 {data.publicEmail && <span>{data.publicEmail}</span>}
@@ -302,11 +321,15 @@ export function StoreProfileForm({
       </div>
 
       <div className="mb-4">
-        <FieldWrap label="Store Name" required error={errors.storeName}>
+        <FieldWrap
+          label={t('settings.storeName')}
+          required
+          error={errors.storeName}
+        >
           <TextInput
             value={data.storeName}
             error={errors.storeName}
-            placeholder="Enter store name"
+            placeholder={t('settings.storeNamePlaceholder')}
             disabled={isPending}
             onChange={(e) => update('storeName', e.target.value)}
           />
@@ -315,7 +338,7 @@ export function StoreProfileForm({
 
       <div className="mb-4">
         <p className="text-sm font-bold text-[#090909] mb-2">
-          Store Logo
+          {t('settings.storeLogo')}
         </p>
         {logoSection}
       </div>
@@ -325,13 +348,13 @@ export function StoreProfileForm({
           htmlFor="store-description"
           className="block text-sm font-bold text-[#090909] mb-3"
         >
-          Store Description
+          {t('settings.storeDescription')}
         </label>
         <div className="relative">
           <textarea
             id="store-description"
             value={data.storeDescription}
-            placeholder="Enter store description"
+            placeholder={t('settings.storeDescriptionPlaceholder')}
             disabled={isPending}
             onChange={(e) => update('storeDescription', e.target.value)}
             className={cn(
@@ -356,25 +379,31 @@ export function StoreProfileForm({
 
       <div className="mb-6">
         <h3 className="text-xl font-medium text-[#090909] mb-3">
-          Contact Information
+          {t('settings.contactInformation')}
         </h3>
         <div className="grid grid-cols-2 gap-4">
-          <FieldWrap label="Public Email" error={errors.publicEmail}>
+          <FieldWrap
+            label={t('settings.publicEmail')}
+            error={errors.publicEmail}
+          >
             <TextInput
               type="email"
               value={data.publicEmail}
               error={errors.publicEmail}
-              placeholder="Email"
+              placeholder={t('settings.emailPlaceholder')}
               disabled={isPending}
               onChange={(e) => update('publicEmail', e.target.value)}
             />
           </FieldWrap>
-          <FieldWrap label="Phone Number" error={errors.phoneNumber}>
+          <FieldWrap
+            label={t('settings.phoneNumber')}
+            error={errors.phoneNumber}
+          >
             <TextInput
               type="tel"
               value={data.phoneNumber}
               error={errors.phoneNumber}
-              placeholder="Phone"
+              placeholder={t('settings.phonePlaceholder')}
               disabled={isPending}
               onChange={(e) => update('phoneNumber', e.target.value)}
             />
@@ -393,7 +422,7 @@ export function StoreProfileForm({
               : 'bg-gray-950 hover:bg-gray-800'
           )}
         >
-          {isPending ? 'Saving…' : 'Save Changes'}
+          {isPending ? t('settings.saving') : t('settings.saveChanges')}
         </button>
       </div>
     </form>

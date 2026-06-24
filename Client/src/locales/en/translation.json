@@ -142,7 +142,7 @@
     "feature2": "Secure automated payments",
     "feature3": "Advanced merchant analytics"
   },
-   "addProduct": {
+  "addProduct": {
     "title": "Add Product",
     "subtitle": "Add a new product to your inventory",
 
@@ -181,7 +181,7 @@
     "active": "Active",
     "inactive": "Inactive"
   },
-    "ordersPage": {
+  "ordersPage": {
     "title": "Incoming Orders",
     "allOrders": "All Orders",
     "pending": "Pending",
@@ -244,6 +244,74 @@
 
     "updatedSuccessfully": "Order updated successfully",
     "pendingLabel": "Pending"
+  },
+  "settings": {
+    "title": "Settings",
+    "storeProfile": "Store Profile",
+    "accountSettings": "Account Settings",
+    "storePreview": "Store Preview",
+    "storeName": "Store Name",
+    "storeNamePlaceholder": "Enter store name",
+    "storeNameFallback": "Store Name",
+    "storeLogo": "Store Logo",
+    "storeDescription": "Store Description",
+    "storeDescriptionPlaceholder": "Enter store description",
+    "storeDescriptionFallback": "Store description",
+    "contactInformation": "Contact Information",
+    "publicEmail": "Public Email",
+    "emailPlaceholder": "Email",
+    "phoneNumber": "Phone Number",
+    "phonePlaceholder": "Phone",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "logo": {
+      "alt": "logo",
+      "replace": "Replace",
+      "remove": "Remove",
+      "upload": "Drag & drop or click to upload",
+      "hint": "Maximum size 2MB - JPG, PNG, WebP",
+      "fileFallback": "logo.png"
+    },
+    "account": {
+      "personalInformation": "Personal Information",
+      "personalInformationDescription": "Display current account information.",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "emailAddress": "Email Address",
+      "emailLockedHint": "Email address cannot be changed from this page. Please contact the administrator to request an email change.",
+      "requestEmailChange": "Request email change",
+      "phoneNumber": "Phone Number",
+      "changePassword": "Change Password",
+      "changePasswordDescription": "Update your account password.",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "toggleVisibility": "Toggle visibility",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "passwordRequirement": "Must contain at least 8 characters, one uppercase letter, and one number.",
+      "passwordGood": "Good",
+      "passwordWeak": "Weak",
+      "passwordInfo": "Changing your password will sign out all other active sessions. You cannot reuse either of your last two passwords."
+    },
+    "toast": {
+      "storeProfileSaved": "Store Profile updated successfully.",
+      "accountSettingsSaved": "Account Settings updated successfully.",
+      "details": "Changes have been saved and will be reflected in the marketplace within 2 minutes.",
+      "close": "Close"
+    },
+    "errors": {
+      "storeNameRequired": "Store name is required.",
+      "storeDescriptionRequired": "Store description is required.",
+      "invalidEmail": "Please enter a valid email address.",
+      "invalidPhone": "Please enter a valid phone number.",
+      "imageUpload": "Unable to upload image. Please check the file format and size.",
+      "firstNameRequired": "First name is required.",
+      "lastNameRequired": "Last name is required.",
+      "currentPasswordRequired": "Current password is required.",
+      "newPasswordWeak": "Must contain at least 8 characters, one uppercase letter, and one number.",
+      "passwordMismatch": "Passwords do not match."
+    }
   },
   "inventoryPage": {
     "title": "Inventory Management",

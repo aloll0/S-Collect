@@ -7,6 +7,8 @@ import {
   Lock,
 } from 'lucide-react';
 import { type FormEvent, useCallback, useState, useTransition } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 
 import {
   FieldWrap,
@@ -30,22 +32,23 @@ const emptyPasswordData: PasswordData = {
 
 function validateAccountSettings(
   data: AccountSettingsData,
-  pw: PasswordData
+  pw: PasswordData,
+  t: TFunction
 ): ValidationErrors {
   const e: ValidationErrors = {};
   const hasPw = Boolean(
     pw.currentPassword || pw.newPassword || pw.confirmPassword
   );
-  if (!data.firstName.trim()) e.firstName = 'First name is required.';
-  if (!data.lastName.trim()) e.lastName = 'Last name is required.';
+  if (!data.firstName.trim())
+    e.firstName = t('settings.errors.firstNameRequired');
+  if (!data.lastName.trim()) e.lastName = t('settings.errors.lastNameRequired');
   if (hasPw) {
     if (!pw.currentPassword)
-      e.currentPassword = 'Current password is required.';
+      e.currentPassword = t('settings.errors.currentPasswordRequired');
     if (getPasswordStrength(pw.newPassword) < 4)
-      e.newPassword =
-        'Must contain at least 8 characters, one uppercase letter, and one number.';
+      e.newPassword = t('settings.errors.newPasswordWeak');
     if (pw.newPassword !== pw.confirmPassword)
-      e.confirmPassword = 'Passwords do not match.';
+      e.confirmPassword = t('settings.errors.passwordMismatch');
   }
   return e;
 }
@@ -59,6 +62,7 @@ export function AccountSettingsForm({
   onSave: (d: AccountSettingsData & PasswordData) => Promise<void>;
   onSuccess: () => void;
 }) {
+  const { t } = useTranslation();
   const [pw, setPw] = useState(emptyPasswordData);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [pwOpen, setPwOpen] = useState(false);
@@ -72,7 +76,7 @@ export function AccountSettingsForm({
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      const errs = validateAccountSettings(initialData, pw);
+      const errs = validateAccountSettings(initialData, pw, t);
       if (Object.values(errs).some(Boolean)) {
         setErrors(errs);
         if (errs.currentPassword || errs.newPassword || errs.confirmPassword)
@@ -85,7 +89,7 @@ export function AccountSettingsForm({
         onSuccess();
       });
     },
-    [initialData, pw, onSave, onSuccess]
+    [initialData, pw, onSave, onSuccess, t]
   );
 
   return (
@@ -93,16 +97,16 @@ export function AccountSettingsForm({
       <SectionCard>
         <div className="p-5">
           <p className="text-[14px] font-semibold text-gray-900">
-            Personal Information
+            {t('settings.account.personalInformation')}
           </p>
           <p className="text-[12px] text-gray-500 mt-0.5 mb-4">
-            Display current account information.
+            {t('settings.account.personalInformationDescription')}
           </p>
 
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <p className="text-[12px] font-medium text-gray-700 mb-1.5">
-                First Name
+                {t('settings.account.firstName')}
               </p>
               <div className="h-10 px-3 flex items-center border border-gray-200 rounded-md bg-white">
                 <span className="text-[13px] text-gray-900">
@@ -112,7 +116,7 @@ export function AccountSettingsForm({
             </div>
             <div>
               <p className="text-[12px] font-medium text-gray-700 mb-1.5">
-                Last Name
+                {t('settings.account.lastName')}
               </p>
               <div className="h-10 px-3 flex items-center border border-gray-200 rounded-md bg-white">
                 <span className="text-[13px] text-gray-900">
@@ -124,7 +128,7 @@ export function AccountSettingsForm({
 
           <div className="mb-4">
             <p className="text-[12px] font-medium text-gray-700 mb-1.5">
-              Email Address
+              {t('settings.account.emailAddress')}
             </p>
             <div className="relative">
               <div className="h-10 px-3 pr-10 flex items-center border border-gray-200 rounded-md bg-white">
@@ -137,21 +141,20 @@ export function AccountSettingsForm({
               </span>
             </div>
             <p className="text-[11px] text-gray-400 mt-1 leading-4">
-              Email address cannot be changed from this page. Please contact the
-              administrator to request an email change.
+              {t('settings.account.emailLockedHint')}
             </p>
             <button
               type="button"
               className="mt-1 flex items-center gap-0.5 text-[12px] text-gray-500 hover:text-gray-700"
             >
-              Request email change
+              {t('settings.account.requestEmailChange')}
               <ArrowRight size={11} className="mt-0.5" />
             </button>
           </div>
 
           <div>
             <p className="text-[12px] font-medium text-gray-700 mb-1.5">
-              Phone Number
+              {t('settings.account.phoneNumber')}
             </p>
             <div className="h-10 px-3 flex items-center gap-2 border border-gray-200 rounded-md bg-white">
               <span className="text-[9px] font-bold text-white bg-green-600 rounded px-1.5 py-0.5 leading-none shrink-0">
@@ -171,10 +174,10 @@ export function AccountSettingsForm({
           <div className="flex items-start justify-between">
             <div>
               <p className="text-[14px] font-semibold text-gray-900">
-                Change Password
+                {t('settings.account.changePassword')}
               </p>
               <p className="text-[12px] text-gray-500 mt-0.5">
-                Update your account password.
+                {t('settings.account.changePasswordDescription')}
               </p>
             </div>
             <button
@@ -190,14 +193,17 @@ export function AccountSettingsForm({
           {pwOpen && (
             <div className="mt-5 space-y-4">
               <PasswordInput
-                label="Current Password"
+                label={t('settings.account.currentPassword')}
                 value={pw.currentPassword}
                 error={errors.currentPassword}
                 onChange={(v) => updatePw('currentPassword', v)}
               />
 
               <div>
-                <FieldWrap label="New Password" error={errors.newPassword}>
+                <FieldWrap
+                  label={t('settings.account.newPassword')}
+                  error={errors.newPassword}
+                >
                   <div className="relative">
                     <TextInput
                       type="password"
@@ -210,7 +216,7 @@ export function AccountSettingsForm({
                     />
                     <button
                       type="button"
-                      aria-label="Toggle visibility"
+                      aria-label={t('settings.account.toggleVisibility')}
                       className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
                     >
                       <EyeOff size={15} />
@@ -224,7 +230,7 @@ export function AccountSettingsForm({
               </div>
 
               <PasswordInput
-                label="Confirm Password"
+                label={t('settings.account.confirmPassword')}
                 value={pw.confirmPassword}
                 error={errors.confirmPassword}
                 onChange={(v) => updatePw('confirmPassword', v)}
@@ -233,8 +239,7 @@ export function AccountSettingsForm({
               <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-md px-3 py-2.5">
                 <Info size={14} className="text-blue-500 shrink-0 mt-0.5" />
                 <p className="text-[12px] text-blue-700 leading-4">
-                  Changing your password will sign out all other active
-                  sessions. You cannot reuse either of your last two passwords.
+                  {t('settings.account.passwordInfo')}
                 </p>
               </div>
             </div>
@@ -255,7 +260,7 @@ export function AccountSettingsForm({
               <span>•</span>
             </span>
           ) : (
-            'Save Changes'
+            t('settings.saveChanges')
           )}
         </button>
       </div>
