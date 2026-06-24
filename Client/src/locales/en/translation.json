@@ -48,6 +48,13 @@
     "forgotPassword": "Forgot Password?",
     "signIn": "Sign In",
     "signingIn": "Signing in...",
+    "tryAgain": "Try Again Later",
+    "nextAttempt": "Next attempt available in 14 minutes",
+    "expiredTitle": "Session Expired",
+    "expiredSubtitle": "For your security, your session has ended. Please sign in again to continue.",
+    "expiredAlert": "Your session expired due to inactivity.",
+    "lockedTitle": "Account Temporarily Locked",
+    "lockedSubtitle": "Too many failed login attempts. Please wait before trying again.",
     "trouble": "Having trouble?",
     "contactSupport": "Contact support",
     "noAccount": "Don't have an account?",
@@ -134,5 +141,108 @@
     "feature1": "Reach millions of active buyers",
     "feature2": "Secure automated payments",
     "feature3": "Advanced merchant analytics"
+  },
+   "addProduct": {
+    "title": "Add Product",
+    "subtitle": "Add a new product to your inventory",
+
+    "productInformation": "Product Information",
+    "productMedia": "Product Media",
+    "productStatus": "Product Status",
+    "pricingRules": "Pricing Rules",
+
+    "nameAr": "Product Name (Arabic)",
+    "nameEn": "Product Name (English)",
+    "description": "Description",
+
+    "categories": "Categories",
+    "sizes": "Sizes",
+    "colors": "Colors",
+
+    "addCategory": "Add Category",
+    "addSize": "Add Size",
+    "addColor": "Add Color",
+
+    "basePrice": "Base Price",
+    "comparePrice": "Compare-at Price",
+    "sku": "SKU",
+
+    "visibility": "Visibility",
+    "homepage": "Homepage",
+    "promotions": "Promotions",
+    "searchResults": "Search Results",
+
+    "save": "Save Changes",
+    "cancel": "Cancel",
+
+    "uploadImage": "Upload Image",
+    "dragImage": "Drag image here or click to upload",
+
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+    "ordersPage": {
+    "title": "Incoming Orders",
+    "allOrders": "All Orders",
+    "pending": "Pending",
+    "processing": "Processing",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+
+    "sortBy": "Sort by",
+    "newestFirst": "Newest First",
+    "oldestFirst": "Oldest First",
+
+    "orderId": "Order ID",
+    "orderDate": "Order Date",
+    "customerName": "Customer Name",
+    "totalAmount": "Total Amount",
+    "orderStatus": "Order Status",
+    "actions": "Actions",
+
+    "viewDetails": "View Details",
+
+    "showing": "Showing",
+    "of": "of",
+    "results": "results",
+
+    "noOrders": "No orders yet",
+    "noOrdersDesc": "They will appear here once you receive your first order",
+
+    "save": "Save",
+    "cancel": "Cancel",
+
+    "addTrackingNumber": "Add Tracking Number",
+    "trackingDescription": "Please enter the tracking number for this shipment to help the buyer track their order",
+    "trackingPlaceholder": "Enter tracking number",
+
+    "orderDetails": "Order Details",
+    "orderItems": "Order Items",
+    "orderTimeline": "Order Timeline",
+    "orderInformation": "Order Information",
+    "customerInformation": "Customer Information",
+    "shippingAddress": "Shipping Address",
+    "orderSummary": "Order Summary",
+
+    "paymentStatus": "Payment Status",
+    "trackingNumber": "Tracking Number",
+
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+
+    "subtotal": "Subtotal",
+    "shippingFee": "Shipping Fee",
+    "discount": "Discount",
+    "tax": "Tax",
+    "grandTotal": "Grand Total",
+
+    "updateOrderStatus": "Update Order Status",
+    "updateOrderStatusDesc": "Status changes are irreversible and cannot be undone",
+    "trackingOptional": "Tracking Number (Optional)",
+    "updateButton": "Update Order Status",
+
+    "updatedSuccessfully": "Order updated successfully",
+    "pendingLabel": "Pending"
   }
 }

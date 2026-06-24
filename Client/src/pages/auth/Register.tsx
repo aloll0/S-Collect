@@ -430,11 +430,11 @@ const EmailSent = ({ email, onResend }: { email: string; onResend: () => void })
 
 // ─── Register ─────────────────────────────────────────────────────────────────
 
-interface RegisterProps {
-  onGoToLogin?: () => void;
-}
+interface RegisterProps {}
 
-const Register = ({ onGoToLogin }: RegisterProps) => {
+
+const Register = ({}: RegisterProps) => {
+
   const { t } = useTranslation();
 
   const [step, setStep] = useState(0);
