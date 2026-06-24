@@ -92,17 +92,17 @@ export function AccountSettingsForm({
       className="space-y-3 settings-surface-enter"
     >
       <SectionCard>
-        <div className="p-5">
-          <p className="text-[14px] font-semibold text-gray-900">
+        <div className="md:p-5 px-4 py-6">
+          <p className="text-base font-bold text-[#090909">
             {t('settings.account.personalInformation')}
           </p>
-          <p className="text-[12px] text-gray-500 mt-0.5 mb-4">
+          <p className="text-xs text-[#737373] mt-1  mb-2 md:mb-4 font-normal">
             {t('settings.account.personalInformationDescription')}
           </p>
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <p className="text-[12px] font-medium text-gray-700 mb-1.5">
+              <p className="text-xs font-bold text-[#090909] mb-1.5">
                 {t('settings.account.firstName')}
               </p>
               <div className="h-10 px-3 flex items-center border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
@@ -112,7 +112,7 @@ export function AccountSettingsForm({
               </div>
             </div>
             <div>
-              <p className="text-[12px] font-medium text-gray-700 mb-1.5">
+              <p className="text-xs font-bold text-[#090909] mb-1.5">
                 {t('settings.account.lastName')}
               </p>
               <div className="h-10 px-3 flex items-center border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
@@ -124,7 +124,7 @@ export function AccountSettingsForm({
           </div>
 
           <div className="mb-4">
-            <p className="text-[12px] font-medium text-gray-700 mb-1.5">
+            <p className="text-xs font-bold text-[#090909] mb-1.5">
               {t('settings.account.emailAddress')}
             </p>
             <div className="relative">
@@ -150,7 +150,7 @@ export function AccountSettingsForm({
           </div>
 
           <div>
-            <p className="text-[12px] font-medium text-gray-700 mb-1.5">
+            <p className="text-xs font-bold text-[#090909] mb-1.5">
               {t('settings.account.phoneNumber')}
             </p>
             <div className="h-10 px-3 flex items-center gap-2 border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
@@ -167,13 +167,13 @@ export function AccountSettingsForm({
       </SectionCard>
 
       <SectionCard>
-        <div className="p-5">
+        <div className="md:p-5 px-4 py-6">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-[14px] font-semibold text-gray-900">
+              <p className="text-base font-bold text-[#090909]">
                 {t('settings.account.changePassword')}
               </p>
-              <p className="text-[12px] text-gray-500 mt-0.5">
+              <p className="text-xs font-normal text-[#545454] mt-1">
                 {t('settings.account.changePasswordDescription')}
               </p>
             </div>
@@ -264,11 +264,11 @@ export function AccountSettingsForm({
         </div>
       </SectionCard>
 
-      <div className="settings-surface-enter settings-stagger-2 flex justify-end pt-1">
+      <div className="settings-surface-enter settings-stagger-2 flex justify-center md:justify-end pt-1">
         <button
           type="submit"
           disabled={isPending}
-          className="h-9 px-6 rounded-md bg-gray-950 text-[13px] font-semibold text-white  disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 transition-all duration-200 ease-out active:scale-95 min-w-[130px] flex items-center justify-center"
+          className="py-3 px-4 rounded-lg text-sm font-semibold text-white bg-[#090909] md:w-fit w-full disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 transition-all duration-200 ease-out active:scale-95 min-w-[130px] flex items-center justify-center"
         >
           {isPending ? (
             <span className="flex items-center gap-1 text-white">

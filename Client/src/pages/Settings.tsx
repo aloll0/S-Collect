@@ -55,9 +55,9 @@ function TabBtn({
       aria-selected={active}
       onClick={onClick}
       className={cn(
-        'py-2.5 px-6 rounded-lg text-sm font-semibold transition-all duration-300 ease-out  active:scale-95',
+        'py-2.5 px-6 w-full md:w-fit rounded-lg text-sm font-semibold transition-all duration-300 ease-out  active:scale-95',
         active
-          ? 'bg-gray-950 text-white shadow-sm'
+          ? 'bg-gray-950 text-white'
           : 'bg-transparent text-[#545454] '
       )}
     >
@@ -94,7 +94,7 @@ export default function SettingsPage({
     <div className="settings-page-enter min-h-screen bg-gray-100">
       {toast && <SuccessToast message={toast} onClose={() => setToast(null)} />}
 
-      <div className="settings-surface-enter bg-white border-b border-gray-200 px-8 py-3">
+      <div className="settings-surface-enter bg-white border-b border-gray-200 p-4 md:px-8 md:py-3">
         <h1 className="text-2xl font-semibold text-[#090909]">
           {t('settings.title')}
         </h1>
@@ -105,9 +105,9 @@ export default function SettingsPage({
         </nav>
       </div>
 
-      <div className="settings-surface-enter settings-stagger-1 px-8 py-7 max-w-[720px]">
+      <div className="settings-surface-enter settings-stagger-1 p-4 md:px-8 md:py-7 max-w-[720px]">
         <div
-          className="flex mb-6 p-1 w-fit bg-[#E9E9E9] rounded-lg transition-all duration-300 ease-out "
+          className="flex mb-4 md:mb-6 justify-center py-1.5 px-2 w-full md:w-fit bg-[#E9E9E9] rounded-lg transition-all duration-300 ease-out "
           role="tablist"
         >
           <TabBtn active={tab === 'store'} onClick={() => setTab('store')}>

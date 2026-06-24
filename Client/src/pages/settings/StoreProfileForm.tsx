@@ -45,7 +45,7 @@ function LogoNormal({
   const { t } = useTranslation();
   return (
     <div className="settings-surface-enter border border-gray-200 rounded-lg bg-white px-4 py-3 flex items-center gap-3 transition-all duration-300 ease-out ">
-      <div className="w-9 h-9 shrink-0 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center overflow-hidden">
+      <div className="w-10 h-10 shrink-0 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center overflow-hidden">
         <img
           src={logoUrl}
           alt={t('settings.logo.alt')}
@@ -53,13 +53,13 @@ function LogoNormal({
         />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[13px] font-semibold text-gray-800 leading-tight">
+        <p className="text-sm font-semibold text-[#090909] ">
           {fileName}
         </p>
-        <div className="flex items-center gap-2 mt-0.5">
+        <div className="flex md:items-center justify-end md:justify-start gap-2 mt-0.5">
           <label
             htmlFor={id}
-            className="text-[12px] text-gray-500 cursor-pointer hover:text-gray-700"
+            className="text-xs text-[#737373] cursor-pointer underline"
           >
             {t('settings.logo.replace')}
             <input
@@ -76,7 +76,7 @@ function LogoNormal({
           </label>
           <button
             type="button"
-            className="text-[12px] text-red-500 hover:text-red-700"
+            className="text-xs underline text-red-500 hover:text-red-700"
             onClick={onRemove}
           >
             {t('settings.logo.remove')}
@@ -291,9 +291,9 @@ export function StoreProfileForm({
         <p className="text-xs font-bold text-[#969696] mb-3">
           {t('settings.storePreview')}
         </p>
-        <div className="settings-surface-enter border border-[#E9E9E9] rounded-lg bg-white/50 p-5 transition-all duration-300 ease-out ">
-          <div className="flex items-start gap-5">
-            <div className="w-10 h-10 md:w-20 md:h-20 shrink-0 rounded-full bg-[#F8F8F8]  flex items-center justify-center overflow-hidden">
+        <div className="settings-surface-enter border border-[#E9E9E9] rounded-lg bg-white/50 p-3 md:p-5 transition-all duration-300 ease-out ">
+          <div className="flex items-center md:items-start gap-3 md:gap-5">
+            <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 rounded-full bg-[#F8F8F8]  flex items-center justify-center overflow-hidden">
               {data.storeLogoUrl ? (
                 <img
                   src={data.storeLogoUrl}
@@ -301,14 +301,14 @@ export function StoreProfileForm({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <ImageIcon size={16} className="text-[#969696] w-8 h-8" />
+                <ImageIcon size={16} className="text-[#969696] w-6 h-6 md:w-8 md:h-8" />
               )}
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-base font-medium text-[#090909]">
                 {data.storeName || t('settings.storeNameFallback')}
               </p>
-              <p className="text-sm font-medium text-[#969696] mt-0.5  line-clamp-2">
+              <p className="text-sm font-medium text-[#969696] mt-0.5 line-clamp-1  md:line-clamp-2">
                 {data.storeDescription ||
                   t('settings.storeDescriptionFallback')}
               </p>
@@ -345,7 +345,7 @@ export function StoreProfileForm({
         {logoSection}
       </div>
 
-      <div className="settings-surface-enter settings-stagger-3 mb-6">
+      <div className="settings-surface-enter settings-stagger-3 mb-4 md:mb-6">
         <label
           htmlFor="store-description"
           className="block text-sm font-bold text-[#090909] mb-3"
@@ -379,11 +379,11 @@ export function StoreProfileForm({
         )}
       </div>
 
-      <div className="settings-surface-enter settings-stagger-3 mb-6">
+      <div className="settings-surface-enter settings-stagger-3 mb-4 md:mb-6">
         <h3 className="text-xl font-medium text-[#090909] mb-3">
           {t('settings.contactInformation')}
         </h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FieldWrap
             label={t('settings.publicEmail')}
             error={errors.publicEmail}
@@ -413,12 +413,12 @@ export function StoreProfileForm({
         </div>
       </div>
 
-      <div className="settings-surface-enter settings-stagger-3 flex justify-end">
+      <div className="settings-surface-enter settings-stagger-3 flex justify-center md:justify-end">
         <button
           type="submit"
           disabled={isPending}
           className={cn(
-            'py-3 px-4 rounded-lg text-sm font-semibold text-white transition-all duration-200 ease-out active:scale-95',
+            'py-3 px-4 rounded-lg text-sm font-semibold text-white transition-all duration-200 w-full md:w-fit  ease-out active:scale-95',
             hasErrors || isPending
               ? 'bg-gray-400 cursor-not-allowed'
               : 'bg-gray-950 '
