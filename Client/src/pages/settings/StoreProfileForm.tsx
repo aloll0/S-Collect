@@ -44,7 +44,7 @@ function LogoNormal({
   const id = useId();
   const { t } = useTranslation();
   return (
-    <div className="border border-gray-200 rounded-lg bg-white px-4 py-3 flex items-center gap-3">
+    <div className="settings-surface-enter border border-gray-200 rounded-lg bg-white px-4 py-3 flex items-center gap-3 transition-all duration-300 ease-out ">
       <div className="w-9 h-9 shrink-0 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center overflow-hidden">
         <img
           src={logoUrl}
@@ -95,7 +95,7 @@ function LogoEmpty({ onUpload }: { onUpload: (f: File) => void }) {
     <label
       htmlFor={id}
       className={cn(
-        'flex flex-col items-center justify-center border-2 border-dashed rounded-lg py-7 cursor-pointer transition-colors',
+        'settings-surface-enter flex flex-col items-center justify-center border-2 border-dashed rounded-lg py-7 cursor-pointer transition-all duration-300 ease-out ',
         drag
           ? 'border-gray-400 bg-gray-50'
           : 'border-gray-300 bg-white/50 hover:bg-gray-50'
@@ -148,7 +148,7 @@ function LogoError({
       <label
         htmlFor={id}
         className={cn(
-          'flex flex-col items-center justify-center border-2 border-dashed rounded-lg py-7 cursor-pointer transition-colors',
+          'settings-surface-enter flex flex-col items-center justify-center border-2 border-dashed rounded-lg py-7 cursor-pointer transition-all duration-300 ease-out ',
           drag
             ? 'border-red-400 bg-red-100'
             : 'border-red-300 bg-red-50 hover:bg-red-100'
@@ -188,7 +188,9 @@ function LogoError({
           {t('settings.logo.hint')}
         </p>
       </label>
-      <p className="mt-1.5 text-[12px] text-red-500">{error}</p>
+      <p className="settings-pop-enter mt-1.5 text-[12px] text-red-500">
+        {error}
+      </p>
     </div>
   );
 }
@@ -284,12 +286,12 @@ export function StoreProfileForm({
   );
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      <div className="mb-5">
+    <form onSubmit={handleSubmit} noValidate className="space-y-4">
+      <div className="settings-surface-enter settings-stagger-1 mb-5">
         <p className="text-xs font-bold text-[#969696] mb-3">
           {t('settings.storePreview')}
         </p>
-        <div className="border border-[#E9E9E9] rounded-lg bg-white/50 p-5">
+        <div className="settings-surface-enter border border-[#E9E9E9] rounded-lg bg-white/50 p-5 transition-all duration-300 ease-out ">
           <div className="flex items-start gap-5">
             <div className="w-10 h-10 md:w-20 md:h-20 shrink-0 rounded-full bg-[#F8F8F8]  flex items-center justify-center overflow-hidden">
               {data.storeLogoUrl ? (
@@ -320,7 +322,7 @@ export function StoreProfileForm({
         </div>
       </div>
 
-      <div className="mb-4">
+      <div className="settings-surface-enter settings-stagger-2 mb-4">
         <FieldWrap
           label={t('settings.storeName')}
           required
@@ -336,14 +338,14 @@ export function StoreProfileForm({
         </FieldWrap>
       </div>
 
-      <div className="mb-4">
+      <div className="settings-surface-enter settings-stagger-2 mb-4">
         <p className="text-sm font-bold text-[#090909] mb-2">
           {t('settings.storeLogo')}
         </p>
         {logoSection}
       </div>
 
-      <div className="mb-6">
+      <div className="settings-surface-enter settings-stagger-3 mb-6">
         <label
           htmlFor="store-description"
           className="block text-sm font-bold text-[#090909] mb-3"
@@ -358,7 +360,7 @@ export function StoreProfileForm({
             disabled={isPending}
             onChange={(e) => update('storeDescription', e.target.value)}
             className={cn(
-              'w-full h-[140px] resize-none rounded-lg border bg-white/50 px-4 pt-3 pb-8 text-sm  text-[#090909] shadow-none outline-none transition-colors placeholder:text-gray-400 disabled:bg-white/50 disabled:text-[#969696] disabled:cursor-default',
+              'w-full h-[140px] resize-none rounded-lg border bg-white/50 px-4 pt-3 pb-8 text-sm text-[#090909] shadow-none outline-none transition-all duration-200 ease-out placeholder:text-gray-400 disabled:bg-white/50 disabled:text-[#969696] disabled:cursor-default focus:-translate-y-0.5',
               errors.storeDescription
                 ? 'border-red-400 bg-red-50 focus:border-red-400 focus:ring-1 focus:ring-red-100'
                 : 'border-gray-200 focus:border-gray-300 focus:ring-1 focus:ring-gray-100'
@@ -371,13 +373,13 @@ export function StoreProfileForm({
           )}
         </div>
         {errors.storeDescription && (
-          <p className="mt-1 text-[12px] text-red-500">
+          <p className="settings-pop-enter mt-1 text-[12px] text-red-500">
             {errors.storeDescription}
           </p>
         )}
       </div>
 
-      <div className="mb-6">
+      <div className="settings-surface-enter settings-stagger-3 mb-6">
         <h3 className="text-xl font-medium text-[#090909] mb-3">
           {t('settings.contactInformation')}
         </h3>
@@ -411,15 +413,15 @@ export function StoreProfileForm({
         </div>
       </div>
 
-      <div className="flex justify-end">
+      <div className="settings-surface-enter settings-stagger-3 flex justify-end">
         <button
           type="submit"
           disabled={isPending}
           className={cn(
-            'py-3 px-4  rounded-lg text-sm font-semibold text-white transition-colors',
+            'py-3 px-4 rounded-lg text-sm font-semibold text-white transition-all duration-200 ease-out active:scale-95',
             hasErrors || isPending
               ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-gray-950 hover:bg-gray-800'
+              : 'bg-gray-950 '
           )}
         >
           {isPending ? t('settings.saving') : t('settings.saveChanges')}

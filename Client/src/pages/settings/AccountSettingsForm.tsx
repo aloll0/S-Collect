@@ -1,11 +1,4 @@
-import {
-  ArrowRight,
-  ChevronDown,
-  ChevronUp,
-  EyeOff,
-  Info,
-  Lock,
-} from 'lucide-react';
+import { ArrowRight, ChevronDown, EyeOff, Info, Lock } from 'lucide-react';
 import { type FormEvent, useCallback, useState, useTransition } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
@@ -17,7 +10,7 @@ import {
   SectionCard,
   TextInput,
 } from './shared';
-import { getPasswordStrength } from './utils';
+import { getPasswordStrength, cn } from './utils';
 import type {
   AccountSettingsData,
   PasswordData,
@@ -93,7 +86,11 @@ export function AccountSettingsForm({
   );
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-3">
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      className="space-y-3 settings-surface-enter"
+    >
       <SectionCard>
         <div className="p-5">
           <p className="text-[14px] font-semibold text-gray-900">
@@ -108,7 +105,7 @@ export function AccountSettingsForm({
               <p className="text-[12px] font-medium text-gray-700 mb-1.5">
                 {t('settings.account.firstName')}
               </p>
-              <div className="h-10 px-3 flex items-center border border-gray-200 rounded-md bg-white">
+              <div className="h-10 px-3 flex items-center border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
                 <span className="text-[13px] text-gray-900">
                   {initialData.firstName}
                 </span>
@@ -118,7 +115,7 @@ export function AccountSettingsForm({
               <p className="text-[12px] font-medium text-gray-700 mb-1.5">
                 {t('settings.account.lastName')}
               </p>
-              <div className="h-10 px-3 flex items-center border border-gray-200 rounded-md bg-white">
+              <div className="h-10 px-3 flex items-center border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
                 <span className="text-[13px] text-gray-900">
                   {initialData.lastName}
                 </span>
@@ -131,7 +128,7 @@ export function AccountSettingsForm({
               {t('settings.account.emailAddress')}
             </p>
             <div className="relative">
-              <div className="h-10 px-3 pr-10 flex items-center border border-gray-200 rounded-md bg-white">
+              <div className="h-10 px-3 pr-10 flex items-center border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
                 <span className="text-[13px] text-gray-500">
                   {initialData.email}
                 </span>
@@ -145,7 +142,7 @@ export function AccountSettingsForm({
             </p>
             <button
               type="button"
-              className="mt-1 flex items-center gap-0.5 text-[12px] text-gray-500 hover:text-gray-700"
+              className="mt-1 flex items-center gap-0.5 text-[12px] text-gray-500 transition-all duration-200 ease-out hover:translate-x-0.5 hover:text-gray-700"
             >
               {t('settings.account.requestEmailChange')}
               <ArrowRight size={11} className="mt-0.5" />
@@ -156,7 +153,7 @@ export function AccountSettingsForm({
             <p className="text-[12px] font-medium text-gray-700 mb-1.5">
               {t('settings.account.phoneNumber')}
             </p>
-            <div className="h-10 px-3 flex items-center gap-2 border border-gray-200 rounded-md bg-white">
+            <div className="h-10 px-3 flex items-center gap-2 border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
               <span className="text-[9px] font-bold text-white bg-green-600 rounded px-1.5 py-0.5 leading-none shrink-0">
                 SA
               </span>
@@ -183,75 +180,95 @@ export function AccountSettingsForm({
             <button
               type="button"
               aria-expanded={pwOpen}
-              className="p-1 rounded text-gray-500 hover:bg-gray-100 transition-colors mt-0.5"
+              className="p-1 rounded text-gray-500 transition-all duration-300 ease-out hover:bg-gray-100 hover:scale-110 mt-0.5"
               onClick={() => setPwOpen((v) => !v)}
             >
-              {pwOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              <ChevronDown
+                size={16}
+                className={cn(
+                  'transition-transform duration-300 ease-out',
+                  pwOpen ? 'rotate-180' : 'rotate-0'
+                )}
+              />
             </button>
           </div>
 
-          {pwOpen && (
-            <div className="mt-5 space-y-4">
-              <PasswordInput
-                label={t('settings.account.currentPassword')}
-                value={pw.currentPassword}
-                error={errors.currentPassword}
-                onChange={(v) => updatePw('currentPassword', v)}
-              />
-
-              <div>
-                <FieldWrap
-                  label={t('settings.account.newPassword')}
-                  error={errors.newPassword}
-                >
-                  <div className="relative">
-                    <TextInput
-                      type="password"
-                      value={pw.newPassword}
-                      error={errors.newPassword}
-                      className="pr-10"
-                      onChange={(e) => {
-                        updatePw('newPassword', e.target.value);
-                      }}
-                    />
-                    <button
-                      type="button"
-                      aria-label={t('settings.account.toggleVisibility')}
-                      className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
-                    >
-                      <EyeOff size={15} />
-                    </button>
-                  </div>
-                </FieldWrap>
-                <PasswordStrengthBar
-                  password={pw.newPassword}
-                  error={errors.newPassword}
+          <div
+            className={cn(
+              'grid transition-[grid-template-rows,opacity,margin] duration-500 ease-in-out',
+              pwOpen
+                ? 'grid-rows-[1fr] opacity-100 mt-5'
+                : 'grid-rows-[0fr] opacity-0 mt-0'
+            )}
+          >
+            <div className="overflow-hidden">
+              <div
+                className={cn(
+                  'space-y-4 transition-transform duration-500 ease-in-out',
+                  pwOpen ? 'translate-y-0' : '-translate-y-2'
+                )}
+              >
+                <PasswordInput
+                  label={t('settings.account.currentPassword')}
+                  value={pw.currentPassword}
+                  error={errors.currentPassword}
+                  onChange={(v) => updatePw('currentPassword', v)}
                 />
-              </div>
 
-              <PasswordInput
-                label={t('settings.account.confirmPassword')}
-                value={pw.confirmPassword}
-                error={errors.confirmPassword}
-                onChange={(v) => updatePw('confirmPassword', v)}
-              />
+                <div>
+                  <FieldWrap
+                    label={t('settings.account.newPassword')}
+                    error={errors.newPassword}
+                  >
+                    <div className="relative">
+                      <TextInput
+                        type="password"
+                        value={pw.newPassword}
+                        error={errors.newPassword}
+                        className="pr-10"
+                        onChange={(e) => {
+                          updatePw('newPassword', e.target.value);
+                        }}
+                      />
+                      <button
+                        type="button"
+                        aria-label={t('settings.account.toggleVisibility')}
+                        className="absolute inset-y-0 right-3 flex items-center text-gray-400 transition-all duration-200 hover:scale-110 hover:text-gray-600"
+                      >
+                        <EyeOff size={15} />
+                      </button>
+                    </div>
+                  </FieldWrap>
+                  <PasswordStrengthBar
+                    password={pw.newPassword}
+                    error={errors.newPassword}
+                  />
+                </div>
 
-              <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-md px-3 py-2.5">
-                <Info size={14} className="text-blue-500 shrink-0 mt-0.5" />
-                <p className="text-[12px] text-blue-700 leading-4">
-                  {t('settings.account.passwordInfo')}
-                </p>
+                <PasswordInput
+                  label={t('settings.account.confirmPassword')}
+                  value={pw.confirmPassword}
+                  error={errors.confirmPassword}
+                  onChange={(v) => updatePw('confirmPassword', v)}
+                />
+
+                <div className="settings-surface-enter flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-md px-3 py-2.5">
+                  <Info size={14} className="text-blue-500 shrink-0 mt-0.5" />
+                  <p className="text-[12px] text-blue-700 leading-4">
+                    {t('settings.account.passwordInfo')}
+                  </p>
+                </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </SectionCard>
 
-      <div className="flex justify-end pt-1">
+      <div className="settings-surface-enter settings-stagger-2 flex justify-end pt-1">
         <button
           type="submit"
           disabled={isPending}
-          className="h-9 px-6 rounded-md bg-gray-950 text-[13px] font-semibold text-white hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors min-w-[130px] flex items-center justify-center"
+          className="h-9 px-6 rounded-md bg-gray-950 text-[13px] font-semibold text-white  disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 transition-all duration-200 ease-out active:scale-95 min-w-[130px] flex items-center justify-center"
         >
           {isPending ? (
             <span className="flex items-center gap-1 text-white">
