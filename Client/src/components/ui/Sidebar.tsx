@@ -12,7 +12,6 @@ import { NavLink } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import Logo from '../ui/Logo';
 import LogoutButton from '../auth/LogoutButton';
-import { useTranslation } from 'react-i18next';
 import i18n from '../../i18n';
 
 
