@@ -3,6 +3,22 @@
   "products": "المنتجات",
   "orders": "الطلبات",
   "logout": "تسجيل الخروج",
+  "sidebar": {
+    "sections": {
+      "main": "الرئيسية",
+      "products": "المنتجات",
+      "management": "الإدارة",
+      "account": "الحساب"
+    },
+    "items": {
+      "dashboard": "لوحة التحكم",
+      "management": "إدارة المنتجات",
+      "addProduct": "إضافة منتج",
+      "inventory": "المخزون",
+      "incomingOrders": "الطلبات الواردة",
+      "settings": "الإعدادات"
+    }
+  },
   "dashboardMetrics": {
     "totalSales": "إجمالي المبيعات",
     "numberOfOrders": "عدد الطلبات",
