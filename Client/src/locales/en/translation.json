@@ -244,5 +244,25 @@
 
     "updatedSuccessfully": "Order updated successfully",
     "pendingLabel": "Pending"
+  },
+  "inventoryPage": {
+    "title": "Inventory Management",
+    "subtitle": "Manage stock quantities for products and variants, monitor low-stock items, and keep inventory updated in real time.",
+    "search": "Search...",
+    "allProducts": "All Products",
+    "inStock": "In Stock",
+    "lowStock": "Low Stock",
+    "outOfStock": "Out of Stock",
+    "colProductName": "Product Name",
+    "colSku": "SKU",
+    "colVariant": "Variant",
+    "colCurrentStock": "Current Stock",
+    "colStatus": "Status",
+    "colLastUpdated": "Last Updated",
+    "noProducts": "No products found.",
+    "showing": "Showing",
+    "of": "of",
+    "results": "results",
+    "saveChanges": "Save Changes"
   }
 }

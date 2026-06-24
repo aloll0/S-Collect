@@ -244,5 +244,25 @@
 
     "updatedSuccessfully": "تم تحديث الطلب بنجاح",
     "pendingLabel": "بانتظار التنفيذ"
+  },
+  "inventoryPage": {
+    "title": "إدارة المخزون",
+    "subtitle": "إدارة كميات المخزون للمنتجات والمتغيرات، ومراقبة العناصر منخفضة المخزون، والحفاظ على تحديث المخزون في الوقت الفعلي.",
+    "search": "بحث...",
+    "allProducts": "جميع المنتجات",
+    "inStock": "متوفر",
+    "lowStock": "مخزون منخفض",
+    "outOfStock": "نفد المخزون",
+    "colProductName": "اسم المنتج",
+    "colSku": "رمز المنتج",
+    "colVariant": "النوع",
+    "colCurrentStock": "المخزون الحالي",
+    "colStatus": "الحالة",
+    "colLastUpdated": "آخر تحديث",
+    "noProducts": "لا توجد منتجات.",
+    "showing": "عرض",
+    "of": "من",
+    "results": "نتيجة",
+    "saveChanges": "حفظ التغييرات"
   }
 }
