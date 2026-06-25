@@ -2,7 +2,6 @@
   "dashboard": "Dashboard",
   "products": "Products",
   "orders": "Orders",
-  "logout": "Logout",
   "sidebar": {
     "sections": {
       "main": "Main",
@@ -16,7 +15,11 @@
       "addProduct": "Add Product",
       "inventory": "Inventory",
       "incomingOrders": "Incoming Orders",
-      "settings": "Settings"
+      "settings": "Settings",
+      "logout": "Logout",
+      "cancel": "Cancel",
+      "signOut": "Sign Out",
+      "signingOut": "Signing out..."
     }
   },
   "dashboardMetrics": {

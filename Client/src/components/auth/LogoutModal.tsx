@@ -1,5 +1,6 @@
 import { LoaderCircle, LogOut } from "lucide-react";
 import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 
 interface LogoutModalProps {
   open: boolean;
@@ -14,8 +15,8 @@ const LogoutModal = ({
   onClose,
   onConfirm,
 }: LogoutModalProps) => {
+  const { t } = useTranslation();
   if (!open) return null;
-
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="mx-4 w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
@@ -26,7 +27,7 @@ const LogoutModal = ({
         </div>
 
         <h2 className="mt-6 text-center text-2xl font-semibold">
-          Log Out
+          {t('settings.logout')}
         </h2>
 
         <p className="mt-3 text-center text-sm text-gray-500">
@@ -44,10 +45,10 @@ const LogoutModal = ({
             {loading ? (
               <span className="flex items-center justify-center gap-2">
                 <LoaderCircle className="h-4 w-4 animate-spin" />
-                Signing Out...
+                {t('settings.signingOut')}
               </span>
             ) : (
-              "Sign Out"
+              t('settings.signOut')
             )}
           </button>
 
