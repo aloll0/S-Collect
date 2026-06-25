@@ -2,24 +2,23 @@ import { TrendingUp, Box, PackagePlus, Package } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 
-
 const DashboardGrid = () => {
-const { t } = useTranslation();
+  const { t } = useTranslation();
 
-interface DashboardMetric {
-  title: string;
-  value: string;
-  unit: string;
-  icon: ComponentType<{ size?: number; color?: string }>;
-  colorTheme: {
-    primary: string;
-    light?: string;
-  };
-  trend?: {
-    percentage: string;
-    isPositive: boolean;
-  };
-}
+  interface DashboardMetric {
+    title: string;
+    value: string;
+    unit: string;
+    icon: ComponentType<{ size?: number; color?: string }>;
+    colorTheme: {
+      primary: string;
+      light?: string;
+    };
+    trend?: {
+      percentage: string;
+      isPositive: boolean;
+    };
+  }
 
   const dashboardMetrics: DashboardMetric[] = [
     {
@@ -77,32 +76,29 @@ interface DashboardMetric {
 
   return (
     <div className="mb-10 ">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {dashboardMetrics.map((metric) => (
           <div
             key={metric.title}
-            className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm min-h-[130px] flex flex-col justify-between"
+            className="bg-white border border-gray-100 rounded-xl p-3 lg:p-5 shadow-sm max-sm:h-[120px] lg:h-[155px] flex flex-col lg:justify-between justify-evenly"
           >
             {/* Header */}
             <div className="flex items-center gap-2">
-              <metric.icon
-                size={20}
-                color={metric.colorTheme.primary}
-              />
-              <span className="text-sm text-gray-500 font-medium">
+              <metric.icon size={20} color={metric.colorTheme.primary} />
+              <span className="text-xs lg:text-sm text-gray-500 font-medium">
                 {metric.title}
               </span>
             </div>
 
             {/* Content */}
-            <div className="flex items-end justify-between">
-              <div>
+            <div className="flex items-end justify-between  max-sm:flex-col max-sm:items-start">
+              <div className='pb-2' >
                 <div className="flex items-end gap-2">
-                  <span className="text-3xl font-bold text-gray-900">
+                  <span className="lg:text-3xl text-xl font-bold text-gray-900">
                     {metric.value}
                   </span>
 
-                  <span className="text-sm text-gray-400 mb-1">
+                  <span className="text-xs lg:text-sm text-gray-400 mb-1">
                     {metric.unit}
                   </span>
                 </div>
@@ -110,15 +106,12 @@ interface DashboardMetric {
 
               {metric.trend && (
                 <div
-                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium ${
-                    metric.trend.isPositive
+                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium ${metric.trend.isPositive
                       ? 'bg-green-50 text-green-600'
                       : 'bg-red-50 text-red-600'
-                  }`}
+                    }`}
                 >
-                  <span>
-                    {metric.trend.isPositive ? '↗' : '↘'}
-                  </span>
+                  <span>{metric.trend.isPositive ? '↗' : '↘'}</span>
                   {metric.trend.percentage}
                 </div>
               )}

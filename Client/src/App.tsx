@@ -16,12 +16,10 @@ import { useEffect } from 'react';
 import Orders from './pages/Orders.js';
 
 function App() {
-
   const { i18n } = useTranslation();
 
   useEffect(() => {
-    document.documentElement.dir =
-      i18n.language === "ar" ? "rtl" : "ltr";
+    document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
   }, [i18n.language]);
   return (
     <>
@@ -29,7 +27,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forget-pass" element={<ForgetPass />} />
-        <Route path="/" element={<AppLayout />} >
+        <Route path="/" element={<AppLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/settings" element={<Settings />} />

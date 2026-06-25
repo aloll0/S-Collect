@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Eye, EyeOff, KeyRound, Info } from "lucide-react";
-import AuthLeftPanel from "../../components/auth/AuthLeftPanel";
+import { useState } from 'react';
+import { Eye, EyeOff, KeyRound, Info } from 'lucide-react';
+import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
 
 const ForgetPass = () => {
   const [showTempPass, setShowTempPass] = useState(false);
@@ -13,7 +13,6 @@ const ForgetPass = () => {
 
       <div className="flex-1 bg-gray-50 flex items-start justify-center px-10">
         <div className="w-full max-w-md mt-40">
-
           {/* Icon */}
           <div className="flex justify-center mb-4">
             <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
@@ -27,8 +26,8 @@ const ForgetPass = () => {
           </h1>
 
           <p className="text-center text-body-md text-gray-500 mt-3 mb-6">
-            You must change your temporary password before accessing
-            your dashboard.
+            You must change your temporary password before accessing your
+            dashboard.
           </p>
 
           {/* Alert */}
@@ -38,7 +37,6 @@ const ForgetPass = () => {
           </div>
 
           <form className="space-y-4">
-
             {/* Temporary Password */}
             <div>
               <label className="block text-label-sm text-gray-700 mb-1.5">
@@ -47,7 +45,7 @@ const ForgetPass = () => {
 
               <div className="relative">
                 <input
-                  type={showTempPass ? "text" : "password"}
+                  type={showTempPass ? 'text' : 'password'}
                   placeholder="Enter temporary password"
                   className="w-full border border-gray-300 bg-gray-50 rounded-lg px-3 py-2.5 pr-10 text-body-md text-gray-900 outline-none focus:border-gray-900 placeholder:text-gray-400 transition-colors"
                 />
@@ -70,7 +68,7 @@ const ForgetPass = () => {
 
               <div className="relative">
                 <input
-                  type={showNewPass ? "text" : "password"}
+                  type={showNewPass ? 'text' : 'password'}
                   placeholder="Create new password"
                   className="w-full border border-gray-300 bg-gray-50 rounded-lg px-3 py-2.5 pr-10 text-body-md text-gray-900 outline-none focus:border-gray-900 placeholder:text-gray-400 transition-colors"
                 />
@@ -93,7 +91,7 @@ const ForgetPass = () => {
 
               <div className="relative">
                 <input
-                  type={showConfirmPass ? "text" : "password"}
+                  type={showConfirmPass ? 'text' : 'password'}
                   placeholder="Confirm new password"
                   className="w-full border border-gray-300 bg-gray-50 rounded-lg px-3 py-2.5 pr-10 text-body-md text-gray-900 outline-none focus:border-gray-900 placeholder:text-gray-400 transition-colors"
                 />
@@ -116,7 +114,6 @@ const ForgetPass = () => {
               Set New Password
             </button>
           </form>
-
         </div>
       </div>
     </div>

@@ -348,5 +348,36 @@
     "of": "of",
     "results": "results",
     "saveChanges": "Save Changes"
+  },
+  "recentOrders": {
+    "title": "Recent Orders",
+    "viewAll": "View All",
+    "table": {
+      "id": "ID",
+      "date": "Date",
+      "customer": "Customer",
+      "amount": "Amount",
+      "status": "Status",
+      "action": "Action",
+      "view": "View"
+    },
+    "orders": {
+      "ord0012": {
+        "date": "Jun 15, 2025",
+        "customer": "Sara Al-Ghamdi"
+      },
+      "ord0011": {
+        "date": "Jun 14, 2025",
+        "customer": "Khalid Mansour"
+      },
+      "ord0010": {
+        "date": "Jun 14, 2025",
+        "customer": "Layla Ibrahim"
+      },
+      "ord0009": {
+        "date": "Jun 13, 2025",
+        "customer": "Fahad Al-Harbi"
+      }
+    }
   }
 }

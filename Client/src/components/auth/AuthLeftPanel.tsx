@@ -1,14 +1,20 @@
-import { useTranslation } from "react-i18next";
-import Logo from "../ui/Logo";
-import { Star, ShieldCheck, Grid2x2Check } from "lucide-react";
+import { useTranslation } from 'react-i18next';
+import Logo from '../ui/Logo';
+import { Star, ShieldCheck, Grid2x2Check } from 'lucide-react';
 
 const AuthLeftPanel = () => {
   const { t } = useTranslation();
 
   const features = [
-    { icon: <Star color="white" size={20} />, label: t("panel.feature1") },
-    { icon: <ShieldCheck color="white" size={20} />, label: t("panel.feature3") },
-    { icon: <Grid2x2Check color="white" size={20} />, label: t("panel.feature2") },
+    { icon: <Star color="white" size={20} />, label: t('panel.feature1') },
+    {
+      icon: <ShieldCheck color="white" size={20} />,
+      label: t('panel.feature3'),
+    },
+    {
+      icon: <Grid2x2Check color="white" size={20} />,
+      label: t('panel.feature2'),
+    },
   ];
 
   return (
@@ -25,22 +31,22 @@ const AuthLeftPanel = () => {
 
         <div className="mt-12">
           <h1 className="text-white text-[32px] font-bold leading-tight mb-3">
-            {t("panel.tagline1")}
+            {t('panel.tagline1')}
             <br />
-            {t("panel.tagline2")} 
+            {t('panel.tagline2')}
           </h1>
 
           <p className="text-[#ddd] text-sm leading-relaxed mb-10">
-            {t("panel.subtitle")}
+            {t('panel.subtitle')}
           </p>
 
           <div className="mb-8">
             <h3 className="text-white text-base font-semibold mb-2">
-              {t("panel.becomeVendor")}
+              {t('panel.becomeVendor')}
             </h3>
 
             <p className="text-[#ddd] text-[13px] leading-relaxed mb-5">
-              {t("panel.becomeVendorDesc")}
+              {t('panel.becomeVendorDesc')}
             </p>
           </div>
 
