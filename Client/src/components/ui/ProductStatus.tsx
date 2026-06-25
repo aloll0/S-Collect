@@ -21,7 +21,7 @@ const ProductStatus = ({ enabled, setEnabled }: ProductStatusProps) => {
           onChange={setEnabled}
           className={`${
             enabled ? "bg-green" : "bg-gray-300"
-          } relative  inline-flex h-6 w-11 items-center rounded-lg`}
+          } relative  inline-flex h-6 w-11 items-center rounded-full`}
         >
           <span
             className={`${
