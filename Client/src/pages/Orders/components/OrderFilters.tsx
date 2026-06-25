@@ -1,0 +1,59 @@
+import { useTranslation } from 'react-i18next';
+import { ChevronDown } from 'lucide-react';
+
+interface OrderFiltersProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+  sortNewest: boolean;
+  onSortToggle: () => void;
+}
+
+export const OrderFilters = ({
+  activeTab,
+  onTabChange,
+  sortNewest,
+  onSortToggle,
+}: OrderFiltersProps) => {
+  const { t } = useTranslation();
+
+  const FILTER_TABS = [
+    { key: 'allOrders', label: t('ordersPage.allOrders') },
+    { key: 'Pending', label: t('ordersPage.pending') },
+    { key: 'Processing', label: t('ordersPage.processing') },
+    { key: 'Shipped', label: t('ordersPage.shipped') },
+    { key: 'Delivered', label: t('ordersPage.delivered') },
+  ];
+
+  return (
+    <div className="flex flex-col gap-4 mb-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+        {FILTER_TABS.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => onTabChange(tab.key)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+              activeTab === tab.key
+                ? 'bg-gray-900 text-white'
+                : 'border border-gray-200 text-gray-500 hover:bg-gray-50'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <button
+        onClick={onSortToggle}
+        className="flex w-full items-center justify-center gap-1.5 text-sm text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors sm:w-fit"
+      >
+        <span className="text-gray-400 text-xs">
+          {t('ordersPage.sortBy')}:
+        </span>
+        {sortNewest
+          ? t('ordersPage.newestFirst')
+          : t('ordersPage.oldestFirst')}
+        <ChevronDown size={14} />
+      </button>
+    </div>
+  );
+};
