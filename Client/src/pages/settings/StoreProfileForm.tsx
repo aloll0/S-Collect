@@ -53,9 +53,7 @@ function LogoNormal({
         />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold text-[#090909] ">
-          {fileName}
-        </p>
+        <p className="text-sm font-semibold text-[#090909] ">{fileName}</p>
         <div className="flex md:items-center justify-end md:justify-start gap-2 mt-0.5">
           <label
             htmlFor={id}
@@ -301,7 +299,10 @@ export function StoreProfileForm({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <ImageIcon size={16} className="text-[#969696] w-6 h-6 md:w-8 md:h-8" />
+                <ImageIcon
+                  size={16}
+                  className="text-[#969696] w-6 h-6 md:w-8 md:h-8"
+                />
               )}
             </div>
             <div className="min-w-0 flex-1">

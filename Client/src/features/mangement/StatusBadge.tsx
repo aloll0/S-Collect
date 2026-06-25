@@ -1,6 +1,6 @@
-import { useTranslation } from "react-i18next";
-import { STATUS_BADGE } from "./constant";
-import type { ProductStatus } from "./mangement";
+import { useTranslation } from 'react-i18next';
+import { STATUS_BADGE } from './constant';
+import type { ProductStatus } from './mangement';
 
 type Props = {
   status: ProductStatus;

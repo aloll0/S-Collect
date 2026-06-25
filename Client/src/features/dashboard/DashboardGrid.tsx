@@ -114,7 +114,7 @@ const DashboardGrid = () => {
 
             {/* Content */}
             <div className="flex items-end justify-between  max-sm:flex-col max-sm:items-start">
-              <div className='pb-2' >
+              <div className="pb-2">
                 <div className="flex items-end gap-2">
                   <span className="lg:text-3xl text-xl font-bold text-gray-900">
                     {metric.value}
@@ -128,10 +128,11 @@ const DashboardGrid = () => {
 
               {metric.trend && (
                 <div
-                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium ${metric.trend.isPositive
+                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium ${
+                    metric.trend.isPositive
                       ? 'bg-green-50 text-green-600'
                       : 'bg-red-50 text-red-600'
-                    }`}
+                  }`}
                 >
                   <span>{metric.trend.isPositive ? '↗' : '↘'}</span>
                   {metric.trend.percentage}

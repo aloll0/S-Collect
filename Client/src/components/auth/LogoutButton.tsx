@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import LogoutModal from "./LogoutModal";
-import { useTranslation } from "react-i18next";
+import { useState } from 'react';
+import { LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import LogoutModal from './LogoutModal';
+import { useTranslation } from 'react-i18next';
 
 const LogoutButton = () => {
   const navigate = useNavigate();
@@ -14,11 +14,11 @@ const LogoutButton = () => {
     setLoading(true);
 
     setTimeout(() => {
-      localStorage.removeItem("token");
-      toast.success("Logged out successfully");
-      navigate("login", { replace: true });
+      localStorage.removeItem('token');
+      toast.success('Logged out successfully');
+      navigate('login', { replace: true });
       setOpen(false);
-      setLoading(false); 
+      setLoading(false);
     }, 1000);
   };
   const { t } = useTranslation();

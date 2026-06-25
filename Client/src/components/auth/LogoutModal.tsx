@@ -1,6 +1,6 @@
-import { LoaderCircle, LogOut } from "lucide-react";
-import { createPortal } from "react-dom";
-import { useTranslation } from "react-i18next";
+import { LoaderCircle, LogOut } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 
 interface LogoutModalProps {
   open: boolean;

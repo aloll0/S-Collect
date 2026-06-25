@@ -1,6 +1,6 @@
-import { useState, type ChangeEvent } from "react";
-import { Plus } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useState, type ChangeEvent } from 'react';
+import { Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ImageFile {
   file: File;
@@ -24,12 +24,10 @@ const ProductMedia = () => {
 
   return (
     <div>
-      <h5 className="mb-4 font-semibold">
-        {t("addProduct.productMedia")}
-      </h5>
+      <h5 className="mb-4 font-semibold">{t('addProduct.productMedia')}</h5>
 
       <input
-        id="images" 
+        id="images"
         type="file"
         multiple
         accept="image/*"
