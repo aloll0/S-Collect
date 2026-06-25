@@ -78,91 +78,107 @@ const RecentOrdersTable = () => {
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white h-[550px] ">
-      {/* Header */}
-      <div className="flex items-center justify-between px-8 py-6">
-        <h2 className="text-2xl font-semibold text-gray-900">
-          {t("recentOrders.title")}
-        </h2>
+    <>
+      {/* Scoped animation styles matching your existing design system */}
+      <style>{`
+        @keyframes tableFadeInUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .tbl-animate-in {
+          opacity: 0;
+          animation: tableFadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
 
-        <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-black">
-          {t("recentOrders.viewAll")}
-          <span className="inline-block rtl:rotate-180">→</span>
-        </button>
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white h-[550px]">
+        {/* Header fades in first */}
+        <div className="flex items-center justify-between px-8 py-6 tbl-animate-in">
+          <h2 className="text-2xl font-semibold text-gray-900">
+            {t("recentOrders.title")}
+          </h2>
+
+          <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-black transition-colors">
+            {t("recentOrders.viewAll")}
+            <span className="inline-block rtl:rotate-180">→</span>
+          </button>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto overflow-y-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-t border-gray-200 bg-gray-50 tbl-animate-in" style={{ animationDelay: '100ms' }}>
+                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                  {t("recentOrders.table.id")}
+                </th>
+                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                  {t("recentOrders.table.date")}
+                </th>
+                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                  {t("recentOrders.table.customer")}
+                </th>
+                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                  {t("recentOrders.table.amount")}
+                </th>
+                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                  {t("recentOrders.table.status")}
+                </th>
+                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                  {t("recentOrders.table.action")}
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {orders.map((order, index) => {
+                const orderKey = order.id.replace("#", "").toLowerCase();
+                return (
+                  <tr
+                    key={`${order.id}-${index}`}
+                    className="border-t border-gray-200 transition-colors hover:bg-gray-50 tbl-animate-in"
+                    // Stagger rows: header finishes at ~100ms, rows start at 200ms + 60ms each
+                    style={{ animationDelay: `${200 + index * 60}ms` }}
+                  >
+                    <td className="px-8 py-6 font-medium text-amber-700">
+                      {order.id}
+                    </td>
+
+                    <td className="px-8 py-6 text-gray-500">
+                      {t(`recentOrders.orders.${orderKey}.date`, { defaultValue: order.date })}
+                    </td>
+
+                    <td className="px-8 py-6 font-medium text-gray-900">
+                      {t(`recentOrders.orders.${orderKey}.customer`, { defaultValue: order.customer })}
+                    </td>
+
+                    <td className="px-8 py-6 text-gray-900">
+                      {order.amount.toLocaleString()} {t("dashboardMetrics.unit.sar")}
+                    </td>
+
+                    <td className="px-8 py-6">
+                      <span
+                        className={`inline-flex rounded-full px-4 py-2 text-sm font-medium ${
+                          statusStyles[order.status]
+                        }`}
+                      >
+                        {getStatusLabel(order.status)}
+                      </span>
+                    </td>
+
+                    <td className="px-8 py-6">
+                      <button className="font-medium text-gray-900 underline hover:text-amber-700 transition-colors">
+                        {t("recentOrders.table.view")}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
-
-      {/* Table */}
-      <div className="overflow-x-auto overflow-y-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-t border-gray-200 bg-gray-50">
-              <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                {t("recentOrders.table.id")}
-              </th>
-              <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                {t("recentOrders.table.date")}
-              </th>
-              <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                {t("recentOrders.table.customer")}
-              </th>
-              <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                {t("recentOrders.table.amount")}
-              </th>
-              <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                {t("recentOrders.table.status")}
-              </th>
-              <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                {t("recentOrders.table.action")}
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {orders.map((order, index) => {
-              const orderKey = order.id.replace("#", "").toLowerCase();
-              return (
-                <tr
-                  key={`${order.id}-${index}`}
-                  className="border-t border-gray-200 transition-colors hover:bg-gray-50"
-                >
-                  <td className="px-8 py-6 font-medium text-amber-700">
-                    {order.id}
-                  </td>
-
-                  <td className="px-8 py-6 text-gray-500">
-                    {t(`recentOrders.orders.${orderKey}.date`, { defaultValue: order.date })}
-                  </td>
-
-                  <td className="px-8 py-6 font-medium text-gray-900">
-                    {t(`recentOrders.orders.${orderKey}.customer`, { defaultValue: order.customer })}
-                  </td>
-
-                  <td className="px-8 py-6 text-gray-900">
-                    {order.amount.toLocaleString()} {t("dashboardMetrics.unit.sar")}
-                  </td>
-
-                  <td className="px-8 py-6">
-                    <span
-                      className={`inline-flex rounded-full px-4 py-2 text-sm font-medium ${
-                        statusStyles[order.status]
-                      }`}
-                    >
-                      {getStatusLabel(order.status)}
-                    </span>
-                  </td>
-
-                  <td className="px-8 py-6">
-                    <button className="font-medium text-gray-900 underline">
-                      {t("recentOrders.table.view")}
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    </>
   );
 };
 

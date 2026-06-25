@@ -76,11 +76,33 @@ const DashboardGrid = () => {
 
   return (
     <div className="mb-10 ">
+      {/* Injected CSS for smooth first appearance */}
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          opacity: 0;
+          /* Using a smooth cubic-bezier for a modern "ease-out" feel */
+          animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
+
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        {dashboardMetrics.map((metric) => (
+        {dashboardMetrics.map((metric, index) => (
           <div
             key={metric.title}
-            className="bg-white border border-gray-100 rounded-xl p-3 lg:p-5 shadow-sm max-sm:h-[120px] lg:h-[155px] flex flex-col lg:justify-between justify-evenly"
+            // Added the animation class
+            className="bg-white border border-gray-100 rounded-xl p-3 lg:p-5 shadow-sm max-sm:h-[120px] lg:h-[155px] flex flex-col lg:justify-between justify-evenly animate-fade-in-up"
+            // Stagger the animation delay for each card (0ms, 100ms, 200ms...)
+            style={{ animationDelay: `${index * 100}ms` }}
           >
             {/* Header */}
             <div className="flex items-center gap-2">

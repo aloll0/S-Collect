@@ -31,12 +31,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       sku: 'KBM-003',
       stockCount: 0,
       status: 'Out of Stock',
-      theme: {
-        text: 'var(--red)',
-        background: 'var(--red-light)',
-      },
-      image:
-        'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
+      theme: { text: 'var(--red)', background: 'var(--red-light)' },
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
     },
     {
       id: '2',
@@ -44,12 +40,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       sku: 'KBM-003',
       stockCount: 5,
       status: 'Low Stock',
-      theme: {
-        text: 'var(--yellow)',
-        background: 'var(--yellow-light)',
-      },
-      image:
-        'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
+      theme: { text: 'var(--yellow)', background: 'var(--yellow-light)' },
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
     },
     {
       id: '3',
@@ -57,12 +49,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       sku: 'KBM-003',
       stockCount: 5,
       status: 'Low Stock',
-      theme: {
-        text: 'var(--yellow)',
-        background: 'var(--yellow-light)',
-      },
-      image:
-        'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
+      theme: { text: 'var(--yellow)', background: 'var(--yellow-light)' },
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
     },
     {
       id: '4',
@@ -70,12 +58,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       sku: 'KBM-007',
       stockCount: 25,
       status: 'In Stock',
-      theme: {
-        text: 'var(--green)',
-        background: 'var(--green-light)',
-      },
-      image:
-        'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop',
+      theme: { text: 'var(--green)', background: 'var(--green-light)' },
+      image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop',
     },
     {
       id: '5',
@@ -83,12 +67,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       sku: 'KBM-012',
       stockCount: 15,
       status: 'In Stock',
-      theme: {
-        text: 'var(--green)',
-        background: 'var(--green-light)',
-      },
-      image:
-        'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=500&fit=crop',
+      theme: { text: 'var(--green)', background: 'var(--green-light)' },
+      image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=500&fit=crop',
     },
     {
       id: '6',
@@ -96,12 +76,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       sku: 'KBM-019',
       stockCount: 2,
       status: 'Low Stock',
-      theme: {
-        text: 'var(--yellow)',
-        background: 'var(--yellow-light)',
-      },
-      image:
-        'https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=500&fit=crop',
+      theme: { text: 'var(--yellow)', background: 'var(--yellow-light)' },
+      image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=500&fit=crop',
     },
     {
       id: '7',
@@ -109,12 +85,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       sku: 'KBM-024',
       stockCount: 0,
       status: 'Out of Stock',
-      theme: {
-        text: 'var(--red)',
-        background: 'var(--red-light)',
-      },
-      image:
-        'https://images.unsplash.com/photo-1584865288642-42078afe6942?w=400&h=500&fit=crop',
+      theme: { text: 'var(--red)', background: 'var(--red-light)' },
+      image: 'https://images.unsplash.com/photo-1584865288642-42078afe6942?w=400&h=500&fit=crop',
     },
     {
       id: '8',
@@ -122,39 +94,64 @@ const inventoryAlertsData: InventoryAlertsCard = {
       sku: 'KBM-031',
       stockCount: 8,
       status: 'In Stock',
-      theme: {
-        text: 'var(--green)',
-        background: 'var(--green-light)',
-      },
-      image:
-        'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=500&fit=crop',
+      theme: { text: 'var(--green)', background: 'var(--green-light)' },
+      image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=500&fit=crop',
     },
   ],
 };
 
 const InventoryAlert = () => {
   const { t } = useTranslation();
+
   return (
-    <div className="w-full rounded-lg bg-white p-8 shadow h-[512px] ">
-      <div className="flex gap-2 items-center mb-6">
-        <TriangleAlert className="text-yellow" />
-        <h3 className="text-xl font-bold">{t('inventoryAlerts')}</h3>
+    <>
+      {/* Scoped animation styles matching the DashboardGrid easing */}
+      <style>{`
+        @keyframes invFadeInUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .inv-animate-in {
+          opacity: 0;
+          animation: invFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
+
+      <div className="w-full rounded-lg bg-white p-8 shadow h-[512px] inv-animate-in">
+        {/* Header & Alert Banner appear with the container */}
+        <div className="flex gap-2 items-center mb-6">
+          <TriangleAlert className="text-yellow" />
+          <h3 className="text-xl font-bold">{t('inventoryAlerts')}</h3>
+        </div>
+
+        <div className="bg-yellow-light text-yellow px-4 py-2.5 rounded-lg text-sm mb-6">
+          <p>{t('inventoryItem.alertMessage')}</p>
+        </div>
+
+        {/* Scrollable list area */}
+        <div className="mb-6 flex flex-col gap-3 h-[60%] overflow-y-auto pr-1">
+          {inventoryAlertsData.items.map((item, index) => (
+            <div
+              key={item.id}
+              className="inv-animate-in"
+              // Stagger each inventory card after the container has started appearing
+              // Base delay of 200ms + 80ms per item for a tighter cascade than the dashboard
+              style={{ animationDelay: `${200 + index * 80}ms` }}
+            >
+              <InventoryCard cardData={item} />
+            </div>
+          ))}
+        </div>
+
+        <Link
+          to={'/inventory'}
+          className="w-full text-center rounded-lg border-2 block py-3 mt-auto inv-animate-in hover:bg-gray-50 transition-colors"
+          style={{ animationDelay: '600ms' }}
+        >
+          {t('inventoryItem.manageInventory')}
+        </Link>
       </div>
-      <div className="bg-yellow-light text-yellow px-4 py-2.5 rounded-lg text-sm mb-6">
-        <p>{t('inventoryItem.alertMessage')}</p>
-      </div>
-      <div className="mb-6 flex flex-col gap-3 h-[60%] overflow-y-auto  ">
-        {inventoryAlertsData.items.map((item) => (
-          <InventoryCard key={item.id} cardData={item} />
-        ))}
-      </div>
-      <Link
-        to={'/inventory'}
-        className="w-full text-center rounded-lg border-2 block  py-3 mt-auto"
-      >
-        {t('inventoryItem.manageInventory')}
-      </Link>
-    </div>
+    </>
   );
 };
 
