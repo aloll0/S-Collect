@@ -162,44 +162,61 @@
     "feature3": "تحليلات تجارية متقدمة"
   },
   "addProduct": {
-    "title": "إضافة منتج",
-    "subtitle": "أضف منتجًا جديدًا إلى المخزون الخاص بك",
+      "title": "إضافة منتج",
+      "subtitle": "أضف منتجًا جديدًا إلى المخزون الخاص بك",
 
-    "productInformation": "معلومات المنتج",
-    "productMedia": "صور المنتج",
-    "productStatus": "حالة المنتج",
-    "pricingRules": "قواعد التسعير",
+      "productInformation": "معلومات المنتج",
+      "productMedia": "صور المنتج",
+      "productStatus": "حالة المنتج",
+      "pricingRules": "قواعد التسعير",
 
-    "nameAr": "اسم المنتج (بالعربية)",
-    "nameEn": "اسم المنتج (بالإنجليزية)",
-    "description": "الوصف",
+      "nameAr": "اسم المنتج (بالعربية)",
+      "nameEn": "اسم المنتج (بالإنجليزية)",
+      "description": "الوصف",
 
-    "categories": "التصنيفات",
-    "sizes": "المقاسات",
-    "colors": "الألوان",
+      "categories": "التصنيفات",
+      "sizes": "المقاسات",
+      "colors": "الألوان",
 
-    "addCategory": "إضافة تصنيف",
-    "addSize": "إضافة مقاس",
-    "addColor": "إضافة لون",
+      "addCategory": "إضافة تصنيف",
+      "addSize": "إضافة مقاس",
+      "addColor": "إضافة لون",
 
-    "basePrice": "السعر الأساسي",
-    "comparePrice": "السعر قبل الخصم",
-    "sku": "رمز المنتج",
+      "enterCategory": "أدخل اسم التصنيف",
+      "enterSize": "أدخل المقاس",
+      "enterColor": "أدخل اللون",
 
-    "visibility": "الظهور",
-    "homepage": "الصفحة الرئيسية",
-    "promotions": "العروض",
-    "searchResults": "نتائج البحث",
+      "add": "إضافة",
 
-    "save": "حفظ التغييرات",
-    "cancel": "إلغاء",
+      "nameArPlaceholder": "أدخل اسم المنتج بالعربية",
+      "nameEnPlaceholder": "أدخل اسم المنتج بالإنجليزية",
+      "descriptionPlaceholder": "أدخل وصف المنتج",
 
-    "uploadImage": "رفع صورة",
-    "dragImage": "اسحب الصورة هنا أو اضغط للرفع",
+      "basePrice": "السعر الأساسي",
+      "comparePrice": "السعر قبل الخصم",
+      "sku": "رمز المنتج",
 
-    "active": "نشط",
-    "inactive": "غير نشط"
-  },
+      "visibility": "الظهور",
+      "homepage": "الصفحة الرئيسية",
+      "promotions": "العروض",
+      "searchResults": "نتائج البحث",
+
+      "save": "حفظ التغييرات",
+      "cancel": "إلغاء",
+
+      "uploadImage": "رفع صورة",
+      "dragImage": "اسحب الصورة هنا أو اضغط للرفع",
+
+      "active": "نشط",
+      "inactive": "غير نشط",
+
+      "addingProduct": "جاري إضافة المنتج...",
+      "addingProductMessage": "يرجى الانتظار بينما نقوم بإضافة منتجك.",
+      
+      "productAddedSuccessfully": "تمت إضافة المنتج بنجاح",
+      "productAddedMessage": "تمت إضافة منتجك بنجاح.",
+      "done": "تم"
+    },
   "ordersPage": {
     "title": "الطلبات الواردة",
     "allOrders": "كل الطلبات",

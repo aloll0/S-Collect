@@ -162,43 +162,60 @@
     "feature3": "Advanced merchant analytics"
   },
   "addProduct": {
-    "title": "Add Product",
-    "subtitle": "Add a new product to your inventory",
+      "title": "Add Product",
+      "subtitle": "Add a new product to your inventory",
 
-    "productInformation": "Product Information",
-    "productMedia": "Product Media",
-    "productStatus": "Product Status",
-    "pricingRules": "Pricing Rules",
+      "productInformation": "Product Information",
+      "productMedia": "Product Media",
+      "productStatus": "Product Status",
+      "pricingRules": "Pricing Rules",
 
-    "nameAr": "Product Name (Arabic)",
-    "nameEn": "Product Name (English)",
-    "description": "Description",
+      "nameAr": "Product Name (Arabic)",
+      "nameEn": "Product Name (English)",
+      "description": "Description",
 
-    "categories": "Categories",
-    "sizes": "Sizes",
-    "colors": "Colors",
+      "categories": "Categories",
+      "sizes": "Sizes",
+      "colors": "Colors",
 
-    "addCategory": "Add Category",
-    "addSize": "Add Size",
-    "addColor": "Add Color",
+      "addCategory": "Add Category",
+      "addSize": "Add Size",
+      "addColor": "Add Color",
 
-    "basePrice": "Base Price",
-    "comparePrice": "Compare-at Price",
-    "sku": "SKU",
+      "enterCategory": "Enter category name",
+      "enterSize": "Enter size",
+      "enterColor": "Enter color",
 
-    "visibility": "Visibility",
-    "homepage": "Homepage",
-    "promotions": "Promotions",
-    "searchResults": "Search Results",
+      "add": "Add",
 
-    "save": "Save Changes",
-    "cancel": "Cancel",
+      "nameArPlaceholder": "Enter product name in Arabic",
+      "nameEnPlaceholder": "Enter product name in English",
+      "descriptionPlaceholder": "Enter product description",
 
-    "uploadImage": "Upload Image",
-    "dragImage": "Drag image here or click to upload",
+      "basePrice": "Base Price",
+      "comparePrice": "Compare-at Price",
+      "sku": "SKU",
 
-    "active": "Active",
-    "inactive": "Inactive"
+      "visibility": "Visibility",
+      "homepage": "Homepage",
+      "promotions": "Promotions",
+      "searchResults": "Search Results",
+
+      "save": "Save Changes",
+      "cancel": "Cancel",
+
+      "uploadImage": "Upload Image",
+      "dragImage": "Drag image here or click to upload",
+
+      "active": "Active",
+      "inactive": "Inactive",
+
+      "addingProduct": "Adding Product...",
+      "addingProductMessage": "Please wait while we add your product.",
+      
+      "productAddedSuccessfully": "Product Added Successfully",
+      "productAddedMessage": "Your product has been added successfully.",
+      "done": "Done"
   },
   "ordersPage": {
     "title": "Incoming Orders",
