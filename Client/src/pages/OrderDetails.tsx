@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ChevronsRight } from 'lucide-react';
-import { type Order, type OrderStatus, STATUS_STYLES, ALL_STATUSES } from '../types/order';
+import {
+  type Order,
+  type OrderStatus,
+  STATUS_STYLES,
+  ALL_STATUSES,
+} from './Orders/types/order';
 
 interface OrderDetailsProps {
   order: Order;

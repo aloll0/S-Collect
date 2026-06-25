@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import AppLayout from './pages/AppLayout.js';
 import Dashboard from './pages/Dashboard.js';
-import Products from './pages/Products.js';
 import Inventory from './pages/Inventory.js';
 import Settings from './pages/Settings.js';
 import Management from './pages/Mangement.js';
@@ -32,7 +31,6 @@ function App() {
         <Route path="/forget-pass" element={<ForgetPass />} />
         <Route path="/" element={<AppLayout />} >
           <Route index element={<Dashboard />} />
-          <Route path="/products" element={<Products />} />
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/management" element={<Management />} />
