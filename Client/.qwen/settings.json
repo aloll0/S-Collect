@@ -1,8 +1,37 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(mkdir *)",
+      "Bash(python)",
+      "Bash(from *)",
+      "Bash(root *)",
+      "Bash('/home/user/documents/s-collect-dashboard/client')",
+      "Bash(src *)",
+      "Bash(text *)",
+      "Bash(fake_start *)",
+      "Bash('const fake_orders: order[] = [')",
+      "Bash(fake_end *)",
+      "Bash('];\\n// ============================================================', *)",
+      "Bash(fake *)",
+      "Bash('const fake_orders', *)",
+      "Bash(.write_text)",
+      "Bash(tracking_start *)",
+      "Bash('// ── tracking number modal')",
+      "Bash(empty_start *)",
+      "Bash('// ── empty state')",
+      "Bash(details_start *)",
+      "Bash('// ── order details page')",
+      "Bash(main_start *)",
+      "Bash('// ── main orders page')",
+      "Bash(tracking *)",
+      "Bash('const trackingmodal =', *)",
+      "Bash(empty *)",
+      "Bash('const emptystate =', *)",
+      "Bash(details *)",
+      "Bash('const orderdetails =', *)",
+      "Bash(py)"
     ]
   },
-  "$version": 5
+  "$version": 4
 }
