@@ -7,8 +7,8 @@ import { OrdersTable } from '../../src/pages/Orders/components/OrdersTable';
 import { Pagination } from '../../src/pages/Orders/components/Pagination';
 import { EmptyState } from '../../src/pages/Orders/components/ EmptyState';
 import { TrackingModal } from '../../src/pages/Orders/components/TrackingModal';
-import { OrderDetails } from '../../src/pages/Orders/components/OrderDetails';
- 
+import { OrderDetails } from './OrderDetails';
+
 const ITEMS_PER_PAGE = 8;
 
 const IncomingOrders = () => {
@@ -124,7 +124,7 @@ const IncomingOrders = () => {
               onStatusChange={handleStatusChange}
               onViewDetails={setSelectedOrder}
             />
-            
+
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
