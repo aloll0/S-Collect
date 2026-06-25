@@ -1,4 +1,5 @@
 import type { ChangeEvent } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Trash2, X } from "lucide-react";
 import ProductRow from "./ProductRow";
@@ -55,6 +56,32 @@ export default function ProductTable() {
       "managementTable.deleteSelectedConfirmMessage",
       { count: selectedCount },
       deleteSelectedProducts
+    );
+  };
+
+  const handlePublishSelected = () => {
+    showDeleteConfirmation(
+      "managementTable.publishSelectedConfirmMessage",
+      { count: selectedCount },
+      publishSelectedProducts,
+      {
+        titleKey: "managementTable.publishConfirmTitle",
+        confirmKey: "managementTable.publish",
+        confirmClassName: "bg-green-600 hover:bg-green-700",
+      }
+    );
+  };
+
+  const handleUnpublishSelected = () => {
+    showDeleteConfirmation(
+      "managementTable.unpublishSelectedConfirmMessage",
+      { count: selectedCount },
+      unpublishSelectedProducts,
+      {
+        titleKey: "managementTable.unpublishConfirmTitle",
+        confirmKey: "managementTable.unpublish",
+        confirmClassName: "bg-amber-600 hover:bg-amber-700",
+      }
     );
   };
 
@@ -119,7 +146,13 @@ export default function ProductTable() {
               <tr>
                 <td colSpan={7} className="text-center py-10 text-gray-400">
                   <i className="ti ti-package-off text-2xl block mb-2" aria-hidden="true" />
-                  {t("managementTable.noProducts")}
+                  <p>{t("managementTable.noProducts")}</p>
+                  <Link
+                    to="/add-product"
+                    className="mt-4 inline-flex items-center justify-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800"
+                  >
+                    {t("managementTable.addFirstProduct")}
+                  </Link>
                 </td>
               </tr>
             ) : (
@@ -181,7 +214,7 @@ export default function ProductTable() {
           </span>
           <button
             type="button"
-            onClick={publishSelectedProducts}
+            onClick={handlePublishSelected}
             className="flex px-3.5 py-1 items-center justify-center rounded-md border-2 border-green-600 text-green-600 transition-colors hover:bg-green-300 text-sm font-medium"
             aria-label={t("managementTable.publishSelected")}
           >
@@ -189,7 +222,7 @@ export default function ProductTable() {
           </button>
           <button
             type="button"
-            onClick={unpublishSelectedProducts}
+            onClick={handleUnpublishSelected}
             className="flex px-3.5 py-1 items-center justify-center rounded-md border-2 border-amber-600 text-amber-600 transition-colors hover:bg-amber-300 text-sm font-medium"
             aria-label={t("managementTable.unpublishSelected")}
           >

@@ -2,14 +2,20 @@ import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
 type ConfirmDeleteModalProps = {
+  titleKey?: string;
   messageKey: string;
   messageValues?: Record<string, string | number>;
+  confirmKey?: string;
+  confirmClassName?: string;
   onConfirm: () => void;
 };
 
 export function ConfirmDeleteModal({
+  titleKey = "managementTable.deleteConfirmTitle",
   messageKey,
   messageValues,
+  confirmKey = "managementTable.delete",
+  confirmClassName = "bg-red-600 hover:bg-red-700",
   onConfirm,
 }: ConfirmDeleteModalProps) {
   const { t } = useTranslation();
@@ -26,16 +32,12 @@ export function ConfirmDeleteModal({
 
         {/* Title */}
         <h3 className="mt-5 text-center text-2xl font-semibold text-gray-900">
-          {t("managementTable.deleteConfirmTitle")}
+          {t(titleKey)}
         </h3>
 
         {/* Description */}
         <p className="mt-3 text-center text-sm text-gray-500">
           {t(messageKey, messageValues)}
-        </p>
-
-        <p className="mt-1 text-center text-sm text-gray-400">
-          {t("managementTable.cannotUndo")}
         </p>
 
         {/* Actions */}
@@ -46,9 +48,9 @@ export function ConfirmDeleteModal({
               onConfirm();
               toast.dismiss();
             }}
-            className="flex-1 cursor-pointer rounded-lg bg-red-600 py-3 text-sm font-medium text-white transition hover:bg-red-700"
+            className={`flex-1 cursor-pointer rounded-lg py-3 text-sm font-medium text-white transition ${confirmClassName}`}
           >
-            {t("managementTable.delete")}
+            {t(confirmKey)}
           </button>
 
           <button
