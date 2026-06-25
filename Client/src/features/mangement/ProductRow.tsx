@@ -90,7 +90,7 @@ export default function ProductRow({
             aria-label={t('managementTable.deleteProduct', {
               name: product.name,
             })}
-            className="w-[30px] h-[30px] flex items-center justify-center border border-gray-200 rounded-lg hover:bg-red-50 hover:border-red-200 transition-colors"
+            className="w-[30px] h-[30px] flex items-center justify-center border border-gray-200  hover:bg-red-50 hover:border-red-200 transition-colors rounded-full"
           >
             <Trash className="text-red-500" size={16} />
           </button>
@@ -98,9 +98,9 @@ export default function ProductRow({
             aria-label={t('managementTable.editProduct', {
               name: product.name,
             })}
-            className="w-[30px] h-[30px] flex items-center justify-center border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+            className="w-[30px] h-[30px] flex items-center justify-center border border-gray-200  hover:bg-gray-100 transition-colors rounded-full"
           >
-            <SquarePen size={16} />
+            <SquarePen size={16}  />
           </button>
         </div>
       </td>

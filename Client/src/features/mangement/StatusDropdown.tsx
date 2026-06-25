@@ -49,7 +49,7 @@ function StatusDropdown({ selected, onChange }: StatusDropdownProps) {
                 type="radio"
                 readOnly
                 checked={selected === s}
-                className="accent-indigo-600 w-3.5 h-3.5 cursor-pointer"
+                className="accent-black w-3.5 h-3.5 cursor-pointer"
               />
               <span>
                 {s === 'All'

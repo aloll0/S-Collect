@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { useOutsideClick } from '../../hooks/useOutsideClick';
 import { useTranslation } from 'react-i18next';
 import { CATEGORIES } from './constant';
-import {  ChevronUp  } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
 const DD_MENU =
   'absolute top-[calc(100%+6px)] left-0 bg-white border border-gray-200 rounded-lg shadow-md z-50 overflow-hidden';
 
@@ -51,7 +51,7 @@ function CategoryDropdown({ selected, onChange }: CategoryDropdownProps) {
               type="checkbox"
               readOnly
               checked={allSelected}
-              className="accent-indigo-600 w-3.5 h-3.5 cursor-pointer"
+              className="accent-black w-3.5 h-3.5 cursor-pointer"
             />
             <span>{t('managementTable.allCategories')}</span>
           </div>
@@ -62,7 +62,7 @@ function CategoryDropdown({ selected, onChange }: CategoryDropdownProps) {
                 type="checkbox"
                 readOnly
                 checked={selected.includes(cat)}
-                className="accent-indigo-600 w-3.5 h-3.5 cursor-pointer"
+                className="accent-black w-3.5 h-3.5 cursor-pointer"
               />
               <span>{t(`managementTable.categories.${cat}`)}</span>
             </div>

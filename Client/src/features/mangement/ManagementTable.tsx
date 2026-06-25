@@ -136,7 +136,7 @@ export default function ProductTable() {
                   type="checkbox"
                   checked={allChecked}
                   onChange={toggleAll}
-                  className="accent-indigo-600 w-4 h-4 cursor-pointer"
+                  className="accent-black w-4 h-4 cursor-pointer"
                 />
               </th>
               {tableHeaders.map((h) => (
@@ -206,8 +206,8 @@ export default function ProductTable() {
                 key={n}
                 onClick={() => setPage(n)}
                 className={`w-8 h-8 rounded-lg text-sm font-medium border transition-colors ${n === page
-                    ? 'bg-gray-900 text-white border-gray-900'
-                    : 'border-gray-200 text-gray-500 hover:bg-gray-50'
+                  ? 'bg-gray-900 text-white border-gray-900'
+                  : 'border-gray-200 text-gray-500 hover:bg-gray-50'
                   }`}
               >
                 {n}
@@ -220,7 +220,7 @@ export default function ProductTable() {
       {selectedCount > 0 && (
         /* Replaced left-1/2 and -translate-x-1/2 with logical positioning */
         <div className="fixed left-1/2 bottom-6 z-50 flex -translate-x-1/2 items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-3 shadow-lg">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-50 text-black text-sm font-semibold">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-black text-sm font-semibold">
             {selectedCount}
           </div>
           <span className="text-sm font-medium text-gray-900 whitespace-nowrap">
@@ -229,7 +229,7 @@ export default function ProductTable() {
           <button
             type="button"
             onClick={handlePublishSelected}
-            className="flex px-3.5 py-1 items-center justify-center rounded-md border-2 border-green-600 text-green-600 transition-colors hover:bg-green-300 text-sm font-medium"
+            className="flex px-3.5 py-1 items-center justify-center rounded-md border border-green-600 text-green-600 transition-colors hover:bg-green-300 text-sm font-medium"
             aria-label={t('managementTable.publishSelected')}
           >
             {t('managementTable.publish')}
@@ -237,7 +237,7 @@ export default function ProductTable() {
           <button
             type="button"
             onClick={handleUnpublishSelected}
-            className="flex px-3.5 py-1 items-center justify-center rounded-md border-2 border-amber-600 text-amber-600 transition-colors hover:bg-amber-300 text-sm font-medium"
+            className="flex px-3.5 py-1 items-center justify-center rounded-md border border-black text-black transition-colors hover:bg-gray-100 text-sm font-medium"
             aria-label={t('managementTable.unpublishSelected')}
           >
             {t('managementTable.unpublish')}
@@ -245,15 +245,15 @@ export default function ProductTable() {
           <button
             type="button"
             onClick={handleDeleteSelected}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-red-50 text-red-500 transition-colors hover:bg-red-100"
+            className="flex px-3.5 py-1 items-center justify-center rounded-md border border-red-600 text-white bg-red-600 hover:bg-red-700 text-sm font-medium"
             aria-label={t('managementTable.deleteSelected')}
           >
-            <Trash2 size={17} />
+            {t('managementTable.delete')}
           </button>
           <button
             type="button"
             onClick={clearSelection}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-50 text-gray-500 transition-colors hover:bg-gray-100"
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50 text-gray-500 transition-colors hover:bg-gray-100"
             aria-label={t('managementTable.clearSelection')}
           >
             <X size={17} />
