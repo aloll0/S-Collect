@@ -1,20 +1,17 @@
 import { useTranslation } from 'react-i18next';
-import { ChevronDown } from 'lucide-react';
 
 interface OrderFiltersProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
-  sortNewest: boolean;
   onSortToggle: () => void;
 }
 
 export const OrderFilters = ({
   activeTab,
   onTabChange,
-  sortNewest,
   onSortToggle,
 }: OrderFiltersProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(); 
 
   const FILTER_TABS = [
     { key: 'allOrders', label: t('ordersPage.allOrders') },
@@ -42,18 +39,16 @@ export const OrderFilters = ({
         ))}
       </div>
 
-      <button
-        onClick={onSortToggle}
+      <select
+        onChange={onSortToggle}
         className="flex w-full items-center justify-center gap-1.5 text-sm text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors sm:w-fit"
       >
         <span className="text-gray-400 text-xs">
           {t('ordersPage.sortBy')}:
         </span>
-        {sortNewest
-          ? t('ordersPage.newestFirst')
-          : t('ordersPage.oldestFirst')}
-        <ChevronDown size={14} />
-      </button>
+        <option value="newest">{t('ordersPage.newestFirst')}</option>
+        <option value="oldest">{t('ordersPage.oldestFirst')}</option>
+      </select>
     </div>
   );
 };
