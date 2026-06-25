@@ -1,8 +1,6 @@
 {
   "dashboard": "لوحة التحكم",
   "products": "المنتجات",
-  "orders": "الطلبات",
-  "logout": "تسجيل الخروج",
   "sidebar": {
     "sections": {
       "main": "الرئيسية",
@@ -16,7 +14,12 @@
       "addProduct": "إضافة منتج",
       "inventory": "المخزون",
       "incomingOrders": "الطلبات الواردة",
-      "settings": "الإعدادات"
+      "settings": "الإعدادات",
+      "orders": "الطلبات",
+      "logout": "تسجيل الخروج",
+      "cancel": "إلغاء",
+      "signOut": "تسجيل الخروج",
+      "signingOut": "جارٍ تسجيل الخروج..."
     }
   },
   "dashboardMetrics": {
