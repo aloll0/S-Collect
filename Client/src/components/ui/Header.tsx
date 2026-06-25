@@ -32,8 +32,8 @@ const Header = ({ onMenuClick }: HeaderProps) => {
   };
 
   return (
-    <header className="bg-(--gray-950) shadow-md p-4 text-white">
-      <div className="container mx-auto flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center">
+    <header className="bg-(--gray-950) shadow-md p-4 text-white sticky inset-0  z-50">
+      <div className="container mx-auto flex flex-col gap-4 lg:flex-row  lg:justify-between lg:items-center">
         <div className="flex items-center justify-between gap-4 lg:hidden">
           <div className="flex items-center gap-3">
             <img src="/mobLogo.png" alt="Logo" className="h-10 w-10" />
