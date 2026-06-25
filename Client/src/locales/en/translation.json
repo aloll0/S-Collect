@@ -3,6 +3,22 @@
   "products": "Products",
   "orders": "Orders",
   "logout": "Logout",
+  "sidebar": {
+    "sections": {
+      "main": "Main",
+      "products": "Products",
+      "management": "Management",
+      "account": "Account"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "management": "Management",
+      "addProduct": "Add Product",
+      "inventory": "Inventory",
+      "incomingOrders": "Incoming Orders",
+      "settings": "Settings"
+    }
+  },
   "dashboardMetrics": {
     "totalSales": "Total Sales",
     "numberOfOrders": "Number of Orders",
@@ -48,6 +64,13 @@
     "forgotPassword": "Forgot Password?",
     "signIn": "Sign In",
     "signingIn": "Signing in...",
+    "tryAgain": "Try Again Later",
+    "nextAttempt": "Next attempt available in 14 minutes",
+    "expiredTitle": "Session Expired",
+    "expiredSubtitle": "For your security, your session has ended. Please sign in again to continue.",
+    "expiredAlert": "Your session expired due to inactivity.",
+    "lockedTitle": "Account Temporarily Locked",
+    "lockedSubtitle": "Too many failed login attempts. Please wait before trying again.",
     "trouble": "Having trouble?",
     "contactSupport": "Contact support",
     "noAccount": "Don't have an account?",
@@ -134,5 +157,196 @@
     "feature1": "Reach millions of active buyers",
     "feature2": "Secure automated payments",
     "feature3": "Advanced merchant analytics"
+  },
+  "addProduct": {
+    "title": "Add Product",
+    "subtitle": "Add a new product to your inventory",
+
+    "productInformation": "Product Information",
+    "productMedia": "Product Media",
+    "productStatus": "Product Status",
+    "pricingRules": "Pricing Rules",
+
+    "nameAr": "Product Name (Arabic)",
+    "nameEn": "Product Name (English)",
+    "description": "Description",
+
+    "categories": "Categories",
+    "sizes": "Sizes",
+    "colors": "Colors",
+
+    "addCategory": "Add Category",
+    "addSize": "Add Size",
+    "addColor": "Add Color",
+
+    "basePrice": "Base Price",
+    "comparePrice": "Compare-at Price",
+    "sku": "SKU",
+
+    "visibility": "Visibility",
+    "homepage": "Homepage",
+    "promotions": "Promotions",
+    "searchResults": "Search Results",
+
+    "save": "Save Changes",
+    "cancel": "Cancel",
+
+    "uploadImage": "Upload Image",
+    "dragImage": "Drag image here or click to upload",
+
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "ordersPage": {
+    "title": "Incoming Orders",
+    "allOrders": "All Orders",
+    "pending": "Pending",
+    "processing": "Processing",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+
+    "sortBy": "Sort by",
+    "newestFirst": "Newest First",
+    "oldestFirst": "Oldest First",
+
+    "orderId": "Order ID",
+    "orderDate": "Order Date",
+    "customerName": "Customer Name",
+    "totalAmount": "Total Amount",
+    "orderStatus": "Order Status",
+    "actions": "Actions",
+
+    "viewDetails": "View Details",
+
+    "showing": "Showing",
+    "of": "of",
+    "results": "results",
+
+    "noOrders": "No orders yet",
+    "noOrdersDesc": "They will appear here once you receive your first order",
+
+    "save": "Save",
+    "cancel": "Cancel",
+
+    "addTrackingNumber": "Add Tracking Number",
+    "trackingDescription": "Please enter the tracking number for this shipment to help the buyer track their order",
+    "trackingPlaceholder": "Enter tracking number",
+
+    "orderDetails": "Order Details",
+    "orderItems": "Order Items",
+    "orderTimeline": "Order Timeline",
+    "orderInformation": "Order Information",
+    "customerInformation": "Customer Information",
+    "shippingAddress": "Shipping Address",
+    "orderSummary": "Order Summary",
+
+    "paymentStatus": "Payment Status",
+    "trackingNumber": "Tracking Number",
+
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+
+    "subtotal": "Subtotal",
+    "shippingFee": "Shipping Fee",
+    "discount": "Discount",
+    "tax": "Tax",
+    "grandTotal": "Grand Total",
+
+    "updateOrderStatus": "Update Order Status",
+    "updateOrderStatusDesc": "Status changes are irreversible and cannot be undone",
+    "trackingOptional": "Tracking Number (Optional)",
+    "updateButton": "Update Order Status",
+
+    "updatedSuccessfully": "Order updated successfully",
+    "pendingLabel": "Pending"
+  },
+  "settings": {
+    "title": "Settings",
+    "storeProfile": "Store Profile",
+    "accountSettings": "Account Settings",
+    "storePreview": "Store Preview",
+    "storeName": "Store Name",
+    "storeNamePlaceholder": "Enter store name",
+    "storeNameFallback": "Store Name",
+    "storeLogo": "Store Logo",
+    "storeDescription": "Store Description",
+    "storeDescriptionPlaceholder": "Enter store description",
+    "storeDescriptionFallback": "Store description",
+    "contactInformation": "Contact Information",
+    "publicEmail": "Public Email",
+    "emailPlaceholder": "Email",
+    "phoneNumber": "Phone Number",
+    "phonePlaceholder": "Phone",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "logo": {
+      "alt": "logo",
+      "replace": "Replace",
+      "remove": "Remove",
+      "upload": "Drag & drop or click to upload",
+      "hint": "Maximum size 2MB - JPG, PNG, WebP",
+      "fileFallback": "logo.png"
+    },
+    "account": {
+      "personalInformation": "Personal Information",
+      "personalInformationDescription": "Display current account information.",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "emailAddress": "Email Address",
+      "emailLockedHint": "Email address cannot be changed from this page. Please contact the administrator to request an email change.",
+      "requestEmailChange": "Request email change",
+      "phoneNumber": "Phone Number",
+      "changePassword": "Change Password",
+      "changePasswordDescription": "Update your account password.",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "toggleVisibility": "Toggle visibility",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "passwordRequirement": "Must contain at least 8 characters, one uppercase letter, and one number.",
+      "passwordGood": "Good",
+      "passwordWeak": "Weak",
+      "passwordInfo": "Changing your password will sign out all other active sessions. You cannot reuse either of your last two passwords."
+    },
+    "toast": {
+      "storeProfileSaved": "Store Profile updated successfully.",
+      "accountSettingsSaved": "Account Settings updated successfully.",
+      "details": "Changes have been saved and will be reflected in the marketplace within 2 minutes.",
+      "close": "Close"
+    },
+    "errors": {
+      "storeNameRequired": "Store name is required.",
+      "storeDescriptionRequired": "Store description is required.",
+      "invalidEmail": "Please enter a valid email address.",
+      "invalidPhone": "Please enter a valid phone number.",
+      "imageUpload": "Unable to upload image. Please check the file format and size.",
+      "firstNameRequired": "First name is required.",
+      "lastNameRequired": "Last name is required.",
+      "currentPasswordRequired": "Current password is required.",
+      "newPasswordWeak": "Must contain at least 8 characters, one uppercase letter, and one number.",
+      "passwordMismatch": "Passwords do not match."
+    }
+  },
+  "inventoryPage": {
+    "title": "Inventory Management",
+    "subtitle": "Manage stock quantities for products and variants, monitor low-stock items, and keep inventory updated in real time.",
+    "search": "Search...",
+    "allProducts": "All Products",
+    "inStock": "In Stock",
+    "lowStock": "Low Stock",
+    "outOfStock": "Out of Stock",
+    "colProductName": "Product Name",
+    "colSku": "SKU",
+    "colVariant": "Variant",
+    "colCurrentStock": "Current Stock",
+    "colStatus": "Status",
+    "colLastUpdated": "Last Updated",
+    "noProducts": "No products found.",
+    "showing": "Showing",
+    "of": "of",
+    "results": "results",
+    "saveChanges": "Save Changes"
   }
 }

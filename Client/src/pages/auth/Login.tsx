@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  AlertTriangle,
+  Clock3,
+  LockKeyhole,
+  TimerReset,
+  UserRound,
+} from 'lucide-react';
 import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
 
-// ─── Eye Icon ─────────────────────────────────────────────────────────────────
 const EyeIcon = ({ open }: { open: boolean }) => (
   <svg
     width="16"
@@ -29,70 +35,125 @@ const EyeIcon = ({ open }: { open: boolean }) => (
   </svg>
 );
 
-// ─── Login ────────────────────────────────────────────────────────────────────
 interface LoginProps {
   onGoToRegister?: () => void;
 }
 
+type LoginState = 'default' | 'expired' | 'locked';
+
+const MOCK_LOGIN_RESULTS: Record<
+  string,
+  LoginState | 'change-password' | 'success'
+> = {
+  'locked-out@company.com': 'locked',
+  'vendor@active-store.com': 'expired',
+  'temporary@company.com': 'change-password',
+  'vendor@company.com': 'success',
+};
+
 const Login = ({ onGoToRegister }: LoginProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const initialState =
+    searchParams.get('state') === 'locked'
+      ? 'locked'
+      : searchParams.get('state') === 'expired'
+        ? 'expired'
+        : 'default';
+  const initialEmail =
+    initialState === 'locked'
+      ? 'locked-out@company.com'
+      : initialState === 'expired'
+        ? 'vendor@active-store.com'
+        : '';
+
+  const [email, setEmail] = useState(initialEmail);
+  const [password, setPassword] = useState(
+    initialState === 'locked' ? '••••••••' : ''
+  );
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [loginState, setLoginState] = useState<LoginState>(initialState);
+
+  const isLocked = loginState === 'locked';
+  const isExpired = loginState === 'expired';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLocked) return;
+
     if (!email || !password) {
       setError(t('login.errorFillAll'));
       return;
     }
+
     setError('');
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1200));
+    await new Promise((resolve) => setTimeout(resolve, 700));
     setLoading(false);
-    // ← plug in your auth logic here
+
+    const result = MOCK_LOGIN_RESULTS[email.trim().toLowerCase()] ?? 'success';
+
+    if (result === 'locked' || result === 'expired') {
+      setLoginState(result);
+      return;
+    }
+
+    if (result === 'change-password') {
+      navigate('/forget-pass');
+      return;
+    }
+
+    navigate('/');
   };
+
+  const icon = isLocked ? (
+    <LockKeyhole size={22} />
+  ) : isExpired ? (
+    <TimerReset size={22} />
+  ) : (
+    <UserRound size={22} />
+  );
+  const title = isLocked
+    ? t('login.lockedTitle')
+    : isExpired
+      ? t('login.expiredTitle')
+      : t('login.title');
+  const subtitle = isLocked
+    ? t('login.lockedSubtitle')
+    : isExpired
+      ? t('login.expiredSubtitle')
+      : t('login.subtitle');
 
   return (
     <div className="flex min-h-screen font-sans">
       <AuthLeftPanel />
 
-      {/* Right panel */}
-      <div className="flex-1 bg-gray-50 flex items-center justify-center px-10 py-12 flex justify-center items-start">
+      <div className="flex-1 bg-gray-50 flex items-start justify-center px-10 py-12">
         <div className="container flex justify-center">
-          <div className="w-full max-w-[360px] mt-25">
-            {/* Avatar icon */}
+          <div className="w-full max-w-[380px] mt-25">
             <div className="flex justify-center mb-6">
-              <div className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center">
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  className="text-gray-700"
-                >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" opacity="0.4" />
-                </svg>
+              <div className="w-12 h-12 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-800">
+                {icon}
               </div>
             </div>
 
-            <h2 className="text-h5 text-gray-900 text-center mb-2">
-              {t('login.title')}
-            </h2>
-            <p className="text-body-md text-gray-500 text-center leading-relaxed mb-8">
-              {t('login.subtitle')}
+            <h2 className="text-h5 text-gray-900 text-center mb-2">{title}</h2>
+            <p className="text-body-md text-gray-500 text-center leading-relaxed mb-6">
+              {subtitle}
             </p>
 
+            {isExpired && (
+              <div className="flex items-center gap-2 bg-orange-light text-orange text-body-sm rounded-lg px-3.5 py-3 mb-4">
+                <AlertTriangle size={15} />
+                {t('login.expiredAlert')}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Email */}
               <div>
                 <label className="block text-label-sm text-gray-700 mb-1.5">
                   {t('login.emailLabel')}
@@ -101,12 +162,15 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                   type="email"
                   placeholder={t('login.emailPlaceholder')}
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-body-md text-gray-900 outline-none focus:border-gray-900 transition-colors placeholder:text-gray-400"
+                  disabled={isLocked}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setLoginState('default');
+                  }}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-body-md text-gray-900 outline-none focus:border-gray-900 disabled:bg-gray-100 disabled:text-gray-500 transition-colors placeholder:text-gray-400"
                 />
               </div>
 
-              {/* Password */}
               <div>
                 <label className="block text-label-sm text-gray-700 mb-1.5">
                   {t('login.passwordLabel')}
@@ -116,8 +180,12 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                     type={showPassword ? 'text' : 'password'}
                     placeholder={t('login.passwordPlaceholder')}
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-lg text-body-md text-gray-900 outline-none focus:border-gray-900 transition-colors placeholder:text-gray-400"
+                    disabled={isLocked}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setLoginState('default');
+                    }}
+                    className="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-lg text-body-md text-gray-900 outline-none focus:border-gray-900 disabled:bg-gray-100 disabled:text-gray-500 transition-colors placeholder:text-gray-400"
                   />
                   <button
                     type="button"
@@ -129,40 +197,54 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                 </div>
               </div>
 
-              {/* Forgot password */}
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => navigate('/forget-pass')}
-                  className="text-label-sm text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
-                >
-                  {t('login.forgotPassword')}
-                </button>
-              </div>
+              {!isLocked && (
+                <div className="flex justify-start">
+                  <button
+                    type="button"
+                    onClick={() => navigate('/forget-pass')}
+                    className="text-label-sm text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
+                  >
+                    {t('login.forgotPassword')}
+                  </button>
+                </div>
+              )}
 
-              {/* Submit */}
               <button
                 type="submit"
-                disabled={loading}
-                className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                disabled={loading || isLocked}
+                className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-700 disabled:cursor-not-allowed transition-colors"
               >
-                {loading ? t('login.signingIn') : t('login.signIn')}
+                {isLocked
+                  ? t('login.tryAgain')
+                  : loading
+                    ? t('login.signingIn')
+                    : t('login.signIn')}
               </button>
 
-              <div className="relative flex items-center">
-                <div className="flex-1 border-t border-gray-300"></div>
-                <p className="mx-4 text-gray-400 text-body-md">or</p>
-                <div className="flex-1 border-t border-gray-300"></div>
-              </div>
+              {isLocked && (
+                <p className="flex items-center justify-center gap-1.5 text-body-sm text-gray-700">
+                  <Clock3 size={14} />
+                  {t('login.nextAttempt')}
+                </p>
+              )}
 
-              {/* Register */}
-              <button
-                type="button"
-                onClick={() => navigate('/register')}
-                className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
-              >
-                {t('login.register')}
-              </button>
+              {!isLocked && !isExpired && (
+                <>
+                  <div className="relative flex items-center">
+                    <div className="flex-1 border-t border-gray-300"></div>
+                    <p className="mx-4 text-gray-400 text-body-md">or</p>
+                    <div className="flex-1 border-t border-gray-300"></div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => navigate('/register')}
+                    className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {t('login.register')}
+                  </button>
+                </>
+              )}
 
               {error && (
                 <div className="bg-red-light border border-red rounded-lg px-3.5 py-2.5 text-red text-body-sm">
@@ -171,14 +253,16 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               )}
             </form>
 
-            <p className="text-center mt-6 text-body-sm text-gray-500">
-              {t('login.trouble')}{' '}
-              <button className="text-gray-900 font-semibold hover:underline">
-                {t('login.contactSupport')}
-              </button>
-            </p>
+            {!isLocked && !isExpired && (
+              <p className="text-center mt-6 text-body-sm text-gray-500">
+                {t('login.trouble')}{' '}
+                <button className="text-gray-900 font-semibold hover:underline">
+                  {t('login.contactSupport')}
+                </button>
+              </p>
+            )}
 
-            {onGoToRegister && (
+            {onGoToRegister && !isLocked && !isExpired && (
               <p className="text-center mt-3 text-body-sm text-gray-500">
                 {t('login.noAccount')}{' '}
                 <button

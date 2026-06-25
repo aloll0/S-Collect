@@ -1,6 +1,6 @@
-import { useTranslation } from 'react-i18next';
-import TopSellingCard from './TopSellingCard';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useTranslation } from "react-i18next";
+import TopSellingCard from "./TopSellingCard";
+// import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type ProductSale = {
   id: string;
