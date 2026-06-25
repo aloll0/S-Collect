@@ -42,10 +42,12 @@ export default function SalesChart() {
         label: t('salesChart.sales'),
         data: chartValues,
         borderColor: '#218c21',
-        backgroundColor: '#218c21',
+        backgroundColor: 'rgba(33, 140, 33, 0.1)', // Semi-transparent fill for cleaner look
         borderWidth: 3,
         tension: 0.4,
         fill: true,
+        pointRadius: 4,
+        pointHoverRadius: 6,
       },
     ],
   };
@@ -58,17 +60,43 @@ export default function SalesChart() {
         display: true,
       },
     },
+    // Smooth chart draw animation synced with container entrance
+    animation: {
+      duration: 1200,
+      easing: 'easeOutQuart' as const,
+      delay: (context: { dataIndex?: number; type?: string }) => {
+        // Stagger each data point's draw animation
+        if (context.type === 'data' && context.dataIndex !== undefined) {
+          return context.dataIndex * 150 + 400; // 400ms base delay + stagger
+        }
+        return 400;
+      },
+    },
   };
 
   return (
-    <div className="w-full rounded-xl bg-white p-6 shadow h-[512px]">
-      <div className="mb-4 flex items-center gap-3">
-        <label className="font-medium">{t('salesChart.pointStyle')}</label>
-      </div>
+    <>
+      {/* Scoped animation matching dashboard design system */}
+      <style>{`
+        @keyframes chartFadeInUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .chart-animate-in {
+          opacity: 0;
+          animation: chartFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
 
-      <div className="h-[450px]">
-        <Line data={data} options={options} />
+      <div className="w-full rounded-xl bg-white p-6 shadow h-[512px] chart-animate-in">
+        <div className="mb-4 flex items-center gap-3">
+          <label className="font-medium">{t('salesChart.pointStyle')}</label>
+        </div>
+
+        <div className="h-[450px]">
+          <Line data={data} options={options} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
