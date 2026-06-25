@@ -100,7 +100,7 @@ const AddProduct = () => {
       </div>
 
       <div className="rounded-2xl bg-white p-6">
-        <div className="grid grid-cols-1 gap-10 xl:grid-cols-[1fr_280px]">
+        <div className="grid grid-cols-1 gap-10 xl:grid-cols-[1fr_400px]">
           {/* Left */}
           <div>
             <h5 className="mb-6 font-semibold">
@@ -412,15 +412,15 @@ const AddProduct = () => {
         </div>
 
         <div className="mt-10 flex justify-end gap-4">
-          <button className="rounded-xl border border-red-500 px-6 py-3 text-red-500 transition hover:bg-red-50 cursor-pointer">
-            {t("addProduct.cancel")}
-          </button>
-
           <button
             onClick={handleSave}
             className="rounded-xl bg-gray-950 px-6 py-3 text-white transition hover:bg-gray-800 cursor-pointer"
           >
             {t("addProduct.save")}
+          </button>
+
+          <button className="rounded-xl border border-red-500 px-6 py-3 text-red-500 transition hover:bg-red-50 cursor-pointer">
+            {t("addProduct.cancel")}
           </button>
         </div>
       </div>
