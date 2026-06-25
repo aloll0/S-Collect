@@ -8,11 +8,11 @@ const ForgetPass = () => {
   const [showConfirmPass, setShowConfirmPass] = useState(false);
 
   return (
-    <div className="flex min-h-screen font-sans">
+    <div className="flex flex-col lg:flex-row min-h-screen font-sans">
       <AuthLeftPanel />
 
       <div className="flex-1 bg-gray-50 flex items-start justify-center px-10">
-        <div className="w-full max-w-md mt-40">
+        <div className="w-full max-w-md mt-6 lg:mt-40">
           {/* Icon */}
           <div className="flex justify-center mb-4">
             <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
@@ -21,7 +21,7 @@ const ForgetPass = () => {
           </div>
 
           {/* Heading */}
-          <h1 className="text-h3 text-gray-900 text-center">
+          <h1 className="lg:text-h3 text-h5 font-bold text-gray-900 text-center">
             Change Your Password
           </h1>
 

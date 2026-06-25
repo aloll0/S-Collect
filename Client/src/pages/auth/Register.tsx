@@ -2,27 +2,12 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface PersonalInfo {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-}
-
-interface StoreInfo {
-  storeName: string;
-  category: string;
-  website: string;
-  description: string;
-}
-
-interface PasswordInfo {
-  password: string;
-  confirmPassword: string;
-}
+import {
+  type PasswordInfo,
+  type PersonalInfo,
+  type StoreInfo,
+  useAuthStore,
+} from '../../store/authStore';
 
 // ─── Step Indicator ───────────────────────────────────────────────────────────
 
@@ -49,7 +34,7 @@ const StepIndicator = ({ current }: { current: number }) => {
             <div className="flex flex-col items-center gap-1.5">
               {/* Circle */}
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                className={`lg:w-12 lg:h-12 w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
                   done || active ? 'bg-green' : 'bg-gray-200'
                 }`}
               >
@@ -74,7 +59,7 @@ const StepIndicator = ({ current }: { current: number }) => {
               </div>
               {/* Label */}
               <span
-                className={`text-md whitespace-nowrap ${
+                className={`lg:text-md text-[10px] whitespace-nowrap ${
                   active ? 'text-gray-900 font-semibold' : 'text-gray-400'
                 }`}
               >
@@ -524,54 +509,25 @@ const EmailSent = ({
 
 // ─── Register ─────────────────────────────────────────────────────────────────
 
-interface RegisterProps {}
-
-
-const Register = ({}: RegisterProps) => {
-
+const Register = () => {
   const { t } = useTranslation();
 
-  const [step, setStep] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const [personal, setPersonal] = useState<PersonalInfo>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-  });
-  const [store, setStore] = useState<StoreInfo>({
-    storeName: '',
-    category: '',
-    website: '',
-    description: '',
-  });
-  const [passwords, setPasswords] = useState<PasswordInfo>({
-    password: '',
-    confirmPassword: '',
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const clearError = (key: string) =>
-    setErrors((e) => {
-      const n = { ...e };
-      delete n[key];
-      return n;
-    });
-
-  const updatePersonal = (k: keyof PersonalInfo, v: string) => {
-    setPersonal((p) => ({ ...p, [k]: v }));
-    clearError(k);
-  };
-  const updateStore = (k: keyof StoreInfo, v: string) => {
-    setStore((s) => ({ ...s, [k]: v }));
-    clearError(k);
-  };
-  const updatePasswords = (k: keyof PasswordInfo, v: string) => {
-    setPasswords((p) => ({ ...p, [k]: v }));
-    clearError(k);
-  };
+  const {
+    step,
+    submitted,
+    registerLoading,
+    personal,
+    store,
+    passwords,
+    errors,
+    setErrors,
+    updatePersonal,
+    updateStore,
+    updatePasswords,
+    nextStep,
+    previousStep,
+    submitRegister,
+  } = useAuthStore();
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
@@ -613,23 +569,19 @@ const Register = ({}: RegisterProps) => {
   const handleContinue = async () => {
     if (!validate()) return;
     if (step < 2) {
-      setStep((s) => s + 1);
+      nextStep();
       return;
     }
 
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    // ← plug in your register API call here, then send verification email
-    setLoading(false);
-    setSubmitted(true);
+    await submitRegister();
   };
 
   return (
-    <div className="flex min-h-screen font-sans bg-gray-800">
+    <div className="flex flex-col lg:flex-row min-h-screen font-sans">
       <AuthLeftPanel />
 
       <div className="flex-1 bg-gray-50 flex items-center justify-center px-10 py-12 overflow-y-auto flex justify-center items-start">
-        <div className="w-full max-w-[480px] mt-32">
+        <div className="w-full max-w-[480px] mt-6 lg:mt-48">
           {submitted ? (
             <EmailSent
               email={personal.email}
@@ -667,7 +619,7 @@ const Register = ({}: RegisterProps) => {
               <div className="flex gap-3 mt-7">
                 {step > 0 && (
                   <button
-                    onClick={() => setStep((s) => s - 1)}
+                    onClick={previousStep}
                     className="flex-1 py-3 bg-gray-50 text-gray-700 border border-gray-300 rounded-lg text-label-md font-semibold hover:bg-gray-100 transition-colors"
                   >
                     {t('register.back')}
@@ -675,10 +627,10 @@ const Register = ({}: RegisterProps) => {
                 )}
                 <button
                   onClick={handleContinue}
-                  disabled={loading}
+                  disabled={registerLoading}
                   className="flex-[2] py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
                 >
-                  {loading
+                  {registerLoading
                     ? t('register.creatingAccount')
                     : step === 2
                       ? t('register.createAccount')

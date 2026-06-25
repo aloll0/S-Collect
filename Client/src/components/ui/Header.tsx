@@ -46,25 +46,29 @@ const Header = ({ onMenuClick }: HeaderProps) => {
               <Menu size={24} />
             </button>
           </div>
-
+          <div className="flex items-center">
+            <div className="lg:hidden block">
+              <InputSearch />
+            </div>
           <Link
             to="/login"
             className="inline-flex h-11 w-11 items-center justify-center text-gray-50 transition-colors"
             aria-label="Account"
-          >
-            <User size={22} />
+            >
+            <User size={24} /> 
           </Link>
+          </div>
         </div>
 
         <div className="hidden items-center justify-between gap-4 lg:flex">
           <div>
             <h1 className="text-2xl font-bold">Hello, Ahmed 👋</h1>
-            <p className="text-sm text-gray-400">{today}</p>
+            <p className="text-sm text-gray-400">{today}</p> 
           </div>
         </div>
 
-        <div className="flex items-center gap-3 lg:gap-4">
-          <div className="flex-1 lg:flex-none">
+        <div className="flex items-center gap-3 lg:gap-4 lg:flex hidden">
+          <div className="flex-1 lg:flex-none lg:block hidden">
             <InputSearch />
           </div>
 

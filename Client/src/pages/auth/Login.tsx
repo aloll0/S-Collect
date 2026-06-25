@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -9,6 +9,7 @@ import {
   UserRound,
 } from 'lucide-react';
 import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
+import { type LoginState, useAuthStore } from '../../store/authStore';
 
 const EyeIcon = ({ open }: { open: boolean }) => (
   <svg
@@ -39,24 +40,12 @@ interface LoginProps {
   onGoToRegister?: () => void;
 }
 
-type LoginState = 'default' | 'expired' | 'locked';
-
-const MOCK_LOGIN_RESULTS: Record<
-  string,
-  LoginState | 'change-password' | 'success'
-> = {
-  'locked-out@company.com': 'locked',
-  'vendor@active-store.com': 'expired',
-  'temporary@company.com': 'change-password',
-  'vendor@company.com': 'success',
-};
-
 const Login = ({ onGoToRegister }: LoginProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const initialState =
+  const initialState: LoginState =
     searchParams.get('state') === 'locked'
       ? 'locked'
       : searchParams.get('state') === 'expired'
@@ -68,15 +57,26 @@ const Login = ({ onGoToRegister }: LoginProps) => {
       : initialState === 'expired'
         ? 'vendor@active-store.com'
         : '';
+  const initialPassword = initialState === 'locked' ? '••••••••' : '';
 
-  const [email, setEmail] = useState(initialEmail);
-  const [password, setPassword] = useState(
-    initialState === 'locked' ? '••••••••' : ''
-  );
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [loginState, setLoginState] = useState<LoginState>(initialState);
+  const {
+    loginEmail,
+    loginPassword,
+    showLoginPassword,
+    loginLoading,
+    loginError,
+    loginState,
+    initializeLogin,
+    setLoginEmail,
+    setLoginPassword,
+    setLoginError,
+    toggleLoginPassword,
+    submitLogin,
+  } = useAuthStore();
+
+  useEffect(() => {
+    initializeLogin(initialState, initialEmail, initialPassword);
+  }, [initialState, initialEmail, initialPassword, initializeLogin]);
 
   const isLocked = loginState === 'locked';
   const isExpired = loginState === 'expired';
@@ -85,20 +85,14 @@ const Login = ({ onGoToRegister }: LoginProps) => {
     e.preventDefault();
     if (isLocked) return;
 
-    if (!email || !password) {
-      setError(t('login.errorFillAll'));
+    if (!loginEmail || !loginPassword) {
+      setLoginError(t('login.errorFillAll'));
       return;
     }
 
-    setError('');
-    setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 700));
-    setLoading(false);
-
-    const result = MOCK_LOGIN_RESULTS[email.trim().toLowerCase()] ?? 'success';
+    const result = await submitLogin();
 
     if (result === 'locked' || result === 'expired') {
-      setLoginState(result);
       return;
     }
 
@@ -129,19 +123,21 @@ const Login = ({ onGoToRegister }: LoginProps) => {
       : t('login.subtitle');
 
   return (
-    <div className="flex min-h-screen font-sans">
+    <div className="flex flex-col lg:flex-row min-h-screen font-sans">
       <AuthLeftPanel />
 
-      <div className="flex-1 bg-gray-50 flex items-start justify-center px-10 py-12">
+      <div className="flex-1 bg-gray-50 flex items-start justify-center px-5 py-8 lg:px-10 lg:py-12">
         <div className="container flex justify-center">
-          <div className="w-full max-w-[380px] mt-25">
+          <div className="w-full max-w-[380px] mt-6 lg:mt-32">
             <div className="flex justify-center mb-6">
               <div className="w-12 h-12 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-800">
                 {icon}
               </div>
             </div>
 
-            <h2 className="text-h5 text-gray-900 text-center mb-2">{title}</h2>
+            <h2 className="text-h3 font-semibold  text-gray-900 text-center mb-2">
+              {title}
+            </h2>
             <p className="text-body-md text-gray-500 text-center leading-relaxed mb-6">
               {subtitle}
             </p>
@@ -161,12 +157,9 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                 <input
                   type="email"
                   placeholder={t('login.emailPlaceholder')}
-                  value={email}
+                  value={loginEmail}
                   disabled={isLocked}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    setLoginState('default');
-                  }}
+                  onChange={(e) => setLoginEmail(e.target.value)}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-body-md text-gray-900 outline-none focus:border-gray-900 disabled:bg-gray-100 disabled:text-gray-500 transition-colors placeholder:text-gray-400"
                 />
               </div>
@@ -177,22 +170,19 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                 </label>
                 <div className="relative">
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    type={showLoginPassword ? 'text' : 'password'}
                     placeholder={t('login.passwordPlaceholder')}
-                    value={password}
+                    value={loginPassword}
                     disabled={isLocked}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                      setLoginState('default');
-                    }}
+                    onChange={(e) => setLoginPassword(e.target.value)}
                     className="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-lg text-body-md text-gray-900 outline-none focus:border-gray-900 disabled:bg-gray-100 disabled:text-gray-500 transition-colors placeholder:text-gray-400"
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={toggleLoginPassword}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    <EyeIcon open={showPassword} />
+                    <EyeIcon open={showLoginPassword} />
                   </button>
                 </div>
               </div>
@@ -211,12 +201,12 @@ const Login = ({ onGoToRegister }: LoginProps) => {
 
               <button
                 type="submit"
-                disabled={loading || isLocked}
+                disabled={loginLoading || isLocked}
                 className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-700 disabled:cursor-not-allowed transition-colors"
               >
                 {isLocked
                   ? t('login.tryAgain')
-                  : loading
+                  : loginLoading
                     ? t('login.signingIn')
                     : t('login.signIn')}
               </button>
@@ -246,9 +236,9 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                 </>
               )}
 
-              {error && (
+              {loginError && (
                 <div className="bg-red-light border border-red rounded-lg px-3.5 py-2.5 text-red text-body-sm">
-                  {error}
+                  {loginError}
                 </div>
               )}
             </form>
