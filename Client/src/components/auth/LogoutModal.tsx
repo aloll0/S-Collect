@@ -27,7 +27,7 @@ const LogoutModal = ({
         </div>
 
         <h2 className="mt-6 text-center text-2xl font-semibold">
-          {t('settings.logout')}
+          {t('sidebar.items.logout')}
         </h2>
 
         <p className="mt-3 text-center text-sm text-gray-500">
@@ -45,10 +45,10 @@ const LogoutModal = ({
             {loading ? (
               <span className="flex items-center justify-center gap-2">
                 <LoaderCircle className="h-4 w-4 animate-spin" />
-                {t('settings.signingOut')}
+                {t('sidebar.items.signingOut')}
               </span>
             ) : (
-              t('settings.signOut')
+              t('sidebar.items.signOut')
             )}
           </button>
 
@@ -57,7 +57,7 @@ const LogoutModal = ({
             disabled={loading}
             className="flex-1 rounded-lg border py-3 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Cancel
+            {t('sidebar.items.cancel')}
           </button>
         </div>
       </div>
