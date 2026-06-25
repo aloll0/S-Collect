@@ -309,7 +309,9 @@
       "passwordGood": "جيدة",
       "passwordWeak": "ضعيفة",
       "passwordInfo": "سيؤدي تغيير كلمة المرور إلى تسجيل الخروج من جميع الجلسات النشطة الأخرى. لا يمكنك إعادة استخدام أي من آخر كلمتي مرور.",
-      "countryCode": "SA"
+      "countryCode": "رمز الدولة",
+      "searchCountry": "ابحث عن دولة",
+      "noCountriesFound": "لا توجد دول"
     },
     "toast": {
       "storeProfileSaved": "تم تحديث ملف المتجر بنجاح.",
