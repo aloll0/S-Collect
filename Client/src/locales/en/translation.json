@@ -2,7 +2,6 @@
   "dashboard": "Dashboard",
   "products": "Products",
   "orders": "Orders",
-  "logout": "Logout",
   "sidebar": {
     "sections": {
       "main": "Main",
@@ -16,7 +15,11 @@
       "addProduct": "Add Product",
       "inventory": "Inventory",
       "incomingOrders": "Incoming Orders",
-      "settings": "Settings"
+      "settings": "Settings",
+      "logout": "Logout",
+      "cancel": "Cancel",
+      "signOut": "Sign Out",
+      "signingOut": "Signing out..."
     }
   },
   "dashboardMetrics": {
@@ -308,7 +311,10 @@
       "passwordRequirement": "Must contain at least 8 characters, one uppercase letter, and one number.",
       "passwordGood": "Good",
       "passwordWeak": "Weak",
-      "passwordInfo": "Changing your password will sign out all other active sessions. You cannot reuse either of your last two passwords."
+      "passwordInfo": "Changing your password will sign out all other active sessions. You cannot reuse either of your last two passwords.",
+      "countryCode": "Country code",
+      "searchCountry": "Search country",
+      "noCountriesFound": "No countries found"
     },
     "toast": {
       "storeProfileSaved": "Store Profile updated successfully.",

@@ -1,13 +1,13 @@
 'use client';
 
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AccountSettingsForm } from './settings/AccountSettingsForm';
 import { SuccessToast } from './settings/shared';
 import { cn } from './settings/utils';
 import { StoreProfileForm } from './settings/StoreProfileForm';
-import {  ChevronsRight } from "lucide-react";
+import { ChevronsRight } from 'lucide-react';
 import type {
   AccountSettingsData,
   PasswordData,
@@ -57,9 +57,7 @@ function TabBtn({
       onClick={onClick}
       className={cn(
         'py-2.5 px-6 w-full md:w-fit rounded-lg text-sm font-semibold transition-all duration-300 ease-out  active:scale-95',
-        active
-          ? 'bg-gray-950 text-white'
-          : 'bg-transparent text-[#545454] '
+        active ? 'bg-gray-950 text-white' : 'bg-transparent text-[#545454] '
       )}
     >
       {children}
@@ -74,16 +72,29 @@ export default function SettingsPage({
   onAccountSettingsSave = async () => undefined,
 }: SettingsPageProps) {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<'store' | 'account'>('store');
+  const [tab, setTab] = useState<'store' | 'account'>('account');
   const [toast, setToast] = useState<string | null>(null);
 
   const storeData = useMemo(
     () => ({ ...defaultStoreProfile, ...initialStoreProfile }),
     [initialStoreProfile]
   );
-  const accountData = useMemo(
-    () => ({ ...defaultAccountSettings, ...initialAccountSettings }),
-    [initialAccountSettings]
+  const [accountData, setAccountData] = useState<AccountSettingsData>(() => ({
+    ...defaultAccountSettings,
+    ...initialAccountSettings,
+  }));
+
+  const handleAccountSettingsSave = useCallback(
+    async (data: AccountSettingsData & PasswordData) => {
+      await onAccountSettingsSave(data);
+      setAccountData({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+      });
+    },
+    [onAccountSettingsSave]
   );
 
   const breadcrumb =
@@ -101,7 +112,9 @@ export default function SettingsPage({
         </h1>
         <nav className="mt-3 text-sm flex items-center gap-1">
           <span className="text-[#090909]">{t('settings.title')}</span>
-          <span className="mx-0.5 text-[#737373]"><ChevronsRight size={16}/></span>
+          <span className="mx-0.5 text-[#737373]">
+            <ChevronsRight size={16} />
+          </span>
           <span className="text-[#737373]">{breadcrumb}</span>
         </nav>
       </div>
@@ -130,7 +143,7 @@ export default function SettingsPage({
           <AccountSettingsForm
             key="account"
             initialData={accountData}
-            onSave={onAccountSettingsSave}
+            onSave={handleAccountSettingsSave}
             onSuccess={() => setToast(t('settings.toast.accountSettingsSaved'))}
           />
         )}

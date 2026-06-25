@@ -1,8 +1,6 @@
 {
   "dashboard": "لوحة التحكم",
   "products": "المنتجات",
-  "orders": "الطلبات",
-  "logout": "تسجيل الخروج",
   "sidebar": {
     "sections": {
       "main": "الرئيسية",
@@ -16,7 +14,12 @@
       "addProduct": "إضافة منتج",
       "inventory": "المخزون",
       "incomingOrders": "الطلبات الواردة",
-      "settings": "الإعدادات"
+      "settings": "الإعدادات",
+      "orders": "الطلبات",
+      "logout": "تسجيل الخروج",
+      "cancel": "إلغاء",
+      "signOut": "تسجيل الخروج",
+      "signingOut": "جارٍ تسجيل الخروج..."
     }
   },
   "dashboardMetrics": {
@@ -309,7 +312,9 @@
       "passwordGood": "جيدة",
       "passwordWeak": "ضعيفة",
       "passwordInfo": "سيؤدي تغيير كلمة المرور إلى تسجيل الخروج من جميع الجلسات النشطة الأخرى. لا يمكنك إعادة استخدام أي من آخر كلمتي مرور.",
-      "countryCode": "SA"
+      "countryCode": "رمز الدولة",
+      "searchCountry": "ابحث عن دولة",
+      "noCountriesFound": "لا توجد دول"
     },
     "toast": {
       "storeProfileSaved": "تم تحديث ملف المتجر بنجاح.",

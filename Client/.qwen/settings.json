@@ -1,6 +1,12 @@
 {
   "permissions": {
     "allow": [
+      "Bash(python3)",
+      "Bash(from *)",
+      "Bash(img *)",
+      "Bash('/home/user/.qwen/tmp/clipboard/clipboard-1782375686170-8cf46b11-a65a-4811-b46d-9d436d6c677e.png')",
+      "Bash(print)",
+      "Bash(py)",
       "Bash(npm run *)"
     ]
   },

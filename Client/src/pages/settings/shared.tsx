@@ -1,4 +1,4 @@
-import { Check, EyeOff, X } from 'lucide-react';
+import { Check, Eye, EyeOff, X } from 'lucide-react';
 import {
   type InputHTMLAttributes,
   type ReactNode,
@@ -11,7 +11,7 @@ import { cn, getPasswordStrength } from './utils';
 
 export function SectionCard({ children }: { children: ReactNode }) {
   return (
-    <div className="settings-surface-enter bg-white/50 border border-gray-200 rounded-lg overflow-hidden transition-all duration-300 ease-out ">
+    <div className="settings-surface-enter bg-white/50 border border-gray-200 rounded-lg overflow-visible transition-all duration-300 ease-out ">
       {children}
     </div>
   );
@@ -133,10 +133,13 @@ export function PasswordInput({
               ? t('settings.account.hidePassword')
               : t('settings.account.showPassword')
           }
-          className="absolute inset-y-0 right-3 flex items-center text-gray-400 transition-all duration-200 hover:scale-110 hover:text-gray-600"
+          className={cn(
+            'absolute inset-y-0 right-3 flex items-center transition-all duration-200 hover:scale-110 hover:text-gray-600',
+            show ? 'text-gray-700' : 'text-gray-400'
+          )}
           onClick={() => setShow((v) => !v)}
         >
-          <EyeOff size={15} />
+          {show ? <Eye size={15} /> : <EyeOff size={15} />}
         </button>
       </div>
     </FieldWrap>
