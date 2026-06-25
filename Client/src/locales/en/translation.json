@@ -308,7 +308,10 @@
       "passwordRequirement": "Must contain at least 8 characters, one uppercase letter, and one number.",
       "passwordGood": "Good",
       "passwordWeak": "Weak",
-      "passwordInfo": "Changing your password will sign out all other active sessions. You cannot reuse either of your last two passwords."
+      "passwordInfo": "Changing your password will sign out all other active sessions. You cannot reuse either of your last two passwords.",
+      "countryCode": "Country code",
+      "searchCountry": "Search country",
+      "noCountriesFound": "No countries found"
     },
     "toast": {
       "storeProfileSaved": "Store Profile updated successfully.",

@@ -1,16 +1,27 @@
-import { ArrowRight, ChevronDown, EyeOff, Info, Lock } from 'lucide-react';
-import { type FormEvent, useCallback, useState, useTransition } from 'react';
+import { ArrowRight, ChevronDown, Info, Lock } from 'lucide-react';
+import {
+  type FormEvent,
+  useCallback,
+  useMemo,
+  useState,
+  useTransition,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 
 import {
-  FieldWrap,
   PasswordInput,
   PasswordStrengthBar,
   SectionCard,
   TextInput,
 } from './shared';
-import { getPasswordStrength, cn } from './utils';
+import { CountryCodeSelector } from './CountryCodeSelector';
+import {
+  formatPhoneNumber,
+  getInitialPhone,
+  type CountryOption,
+} from './countries';
+import { getPasswordStrength, cn, isValidPhoneNumber } from './utils';
 import type {
   AccountSettingsData,
   PasswordData,
@@ -35,6 +46,8 @@ function validateAccountSettings(
   if (!data.firstName.trim())
     e.firstName = t('settings.errors.firstNameRequired');
   if (!data.lastName.trim()) e.lastName = t('settings.errors.lastNameRequired');
+  if (!isValidPhoneNumber(data.phoneNumber))
+    e.phoneNumber = t('settings.errors.invalidPhone');
   if (hasPw) {
     if (!pw.currentPassword)
       e.currentPassword = t('settings.errors.currentPasswordRequired');
@@ -56,10 +69,44 @@ export function AccountSettingsForm({
   onSuccess: () => void;
 }) {
   const { t } = useTranslation();
+  const initialPhone = useMemo(
+    () => getInitialPhone(initialData.phoneNumber),
+    [initialData.phoneNumber]
+  );
+  const [data, setData] = useState<AccountSettingsData>({
+    ...initialData,
+    phoneNumber: formatPhoneNumber(
+      initialPhone.country,
+      initialPhone.localNumber
+    ),
+  });
+  const [selectedCountry, setSelectedCountry] = useState(initialPhone.country);
+  const [localPhoneNumber, setLocalPhoneNumber] = useState(
+    initialPhone.localNumber
+  );
   const [pw, setPw] = useState(emptyPasswordData);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [pwOpen, setPwOpen] = useState(false);
+  const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  const update = useCallback(
+    (field: keyof AccountSettingsData, value: string) => {
+      setData((d) => ({ ...d, [field]: value }));
+      setErrors((e) => ({ ...e, [field]: undefined }));
+    },
+    []
+  );
+
+  const updatePhone = useCallback((country: CountryOption, value: string) => {
+    setSelectedCountry(country);
+    setLocalPhoneNumber(value);
+    setData((d) => ({
+      ...d,
+      phoneNumber: formatPhoneNumber(country, value),
+    }));
+    setErrors((e) => ({ ...e, phoneNumber: undefined }));
+  }, []);
 
   const updatePw = useCallback((field: keyof PasswordData, val: string) => {
     setPw((d) => ({ ...d, [field]: val }));
@@ -69,7 +116,11 @@ export function AccountSettingsForm({
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      const errs = validateAccountSettings(initialData, pw, t);
+      const nextData = {
+        ...data,
+        phoneNumber: formatPhoneNumber(selectedCountry, localPhoneNumber),
+      };
+      const errs = validateAccountSettings(nextData, pw, t);
       if (Object.values(errs).some(Boolean)) {
         setErrors(errs);
         if (errs.currentPassword || errs.newPassword || errs.confirmPassword)
@@ -77,12 +128,13 @@ export function AccountSettingsForm({
         return;
       }
       startTransition(async () => {
-        await onSave({ ...initialData, ...pw });
+        await onSave({ ...nextData, ...pw });
+        setData(nextData);
         setPw(emptyPasswordData);
         onSuccess();
       });
     },
-    [initialData, pw, onSave, onSuccess, t]
+    [data, selectedCountry, localPhoneNumber, pw, onSave, onSuccess, t]
   );
 
   return (
@@ -93,7 +145,7 @@ export function AccountSettingsForm({
     >
       <SectionCard>
         <div className="md:p-5 px-4 py-6">
-          <p className="text-base font-bold text-[#090909">
+          <p className="text-base font-bold text-[#090909]">
             {t('settings.account.personalInformation')}
           </p>
           <p className="text-xs text-[#737373] mt-1  mb-2 md:mb-4 font-normal">
@@ -105,21 +157,31 @@ export function AccountSettingsForm({
               <p className="text-xs font-bold text-[#090909] mb-1.5">
                 {t('settings.account.firstName')}
               </p>
-              <div className="h-10 px-3 flex items-center border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
-                <span className="text-[13px] text-gray-900">
-                  {initialData.firstName}
-                </span>
-              </div>
+              <TextInput
+                value={data.firstName}
+                error={errors.firstName}
+                onChange={(e) => update('firstName', e.target.value)}
+              />
+              {errors.firstName && (
+                <p className="settings-pop-enter mt-1 text-[12px] text-red-500">
+                  {errors.firstName}
+                </p>
+              )}
             </div>
             <div>
               <p className="text-xs font-bold text-[#090909] mb-1.5">
                 {t('settings.account.lastName')}
               </p>
-              <div className="h-10 px-3 flex items-center border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
-                <span className="text-[13px] text-gray-900">
-                  {initialData.lastName}
-                </span>
-              </div>
+              <TextInput
+                value={data.lastName}
+                error={errors.lastName}
+                onChange={(e) => update('lastName', e.target.value)}
+              />
+              {errors.lastName && (
+                <p className="settings-pop-enter mt-1 text-[12px] text-red-500">
+                  {errors.lastName}
+                </p>
+              )}
             </div>
           </div>
 
@@ -129,9 +191,7 @@ export function AccountSettingsForm({
             </p>
             <div className="relative">
               <div className="h-10 px-3 pr-10 flex items-center border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
-                <span className="text-[13px] text-gray-500">
-                  {initialData.email}
-                </span>
+                <span className="text-[13px] text-gray-500">{data.email}</span>
               </div>
               <span className="absolute inset-y-0 right-3 flex items-center text-gray-400">
                 <Lock size={14} />
@@ -149,19 +209,41 @@ export function AccountSettingsForm({
             </button>
           </div>
 
-          <div>
+          <div
+            className={cn(
+              'transition-[padding-bottom] duration-200 ease-out',
+              countryDropdownOpen ? 'pb-[250px]' : 'pb-0'
+            )}
+          >
             <p className="text-xs font-bold text-[#090909] mb-1.5">
               {t('settings.account.phoneNumber')}
             </p>
-            <div className="h-10 px-3 flex items-center gap-2 border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
-              <span className="text-[9px] font-bold text-white bg-green-600 rounded px-1.5 py-0.5 leading-none shrink-0">
-                SA
-              </span>
-              <span className="text-[13px] text-gray-500">+966</span>
-              <span className="text-[13px] text-gray-900">
-                {initialData.phoneNumber}
-              </span>
+            <div
+              className={cn(
+                'flex h-10 items-center rounded-md border bg-white px-3 transition-all duration-200 ease-out focus-within:border-[#090909] focus-within:ring-1 focus-within:ring-gray-200',
+                errors.phoneNumber
+                  ? 'border-red-400 bg-red-50'
+                  : 'border-gray-200'
+              )}
+            >
+              <CountryCodeSelector
+                value={selectedCountry}
+                onChange={(country) => updatePhone(country, localPhoneNumber)}
+                onOpenChange={setCountryDropdownOpen}
+              />
+              <input
+                value={localPhoneNumber}
+                inputMode="tel"
+                className="min-w-0 flex-1 bg-transparent pl-2 text-[13px] text-gray-900 outline-none placeholder:text-gray-400"
+                placeholder="50 123 4567"
+                onChange={(e) => updatePhone(selectedCountry, e.target.value)}
+              />
             </div>
+            {errors.phoneNumber && (
+              <p className="settings-pop-enter mt-1 text-[12px] text-red-500">
+                {errors.phoneNumber}
+              </p>
+            )}
           </div>
         </div>
       </SectionCard>
@@ -216,29 +298,12 @@ export function AccountSettingsForm({
                 />
 
                 <div>
-                  <FieldWrap
+                  <PasswordInput
                     label={t('settings.account.newPassword')}
+                    value={pw.newPassword}
                     error={errors.newPassword}
-                  >
-                    <div className="relative">
-                      <TextInput
-                        type="password"
-                        value={pw.newPassword}
-                        error={errors.newPassword}
-                        className="pr-10"
-                        onChange={(e) => {
-                          updatePw('newPassword', e.target.value);
-                        }}
-                      />
-                      <button
-                        type="button"
-                        aria-label={t('settings.account.toggleVisibility')}
-                        className="absolute inset-y-0 right-3 flex items-center text-gray-400 transition-all duration-200 hover:scale-110 hover:text-gray-600"
-                      >
-                        <EyeOff size={15} />
-                      </button>
-                    </div>
-                  </FieldWrap>
+                    onChange={(v) => updatePw('newPassword', v)}
+                  />
                   <PasswordStrengthBar
                     password={pw.newPassword}
                     error={errors.newPassword}
