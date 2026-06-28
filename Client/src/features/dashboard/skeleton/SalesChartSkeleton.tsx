@@ -18,10 +18,7 @@ const SalesChartSkeleton = () => {
         {/* Grid lines */}
         <div className="ml-12 h-full flex flex-col justify-between">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="border-t border-gray-100 w-full"
-            />
+            <div key={i} className="border-t border-gray-100 w-full" />
           ))}
         </div>
 

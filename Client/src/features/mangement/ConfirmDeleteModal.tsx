@@ -1,5 +1,5 @@
-import toast from "react-hot-toast";
-import { useTranslation } from "react-i18next";
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 type ConfirmDeleteModalProps = {
   titleKey?: string;
@@ -11,11 +11,11 @@ type ConfirmDeleteModalProps = {
 };
 
 export function ConfirmDeleteModal({
-  titleKey = "managementTable.deleteConfirmTitle",
+  titleKey = 'managementTable.deleteConfirmTitle',
   messageKey,
   messageValues,
-  confirmKey = "managementTable.delete",
-  confirmClassName = "bg-red-600 hover:bg-red-700",
+  confirmKey = 'managementTable.delete',
+  confirmClassName = 'bg-red-600 hover:bg-red-700',
   onConfirm,
 }: ConfirmDeleteModalProps) {
   const { t } = useTranslation();
@@ -58,7 +58,7 @@ export function ConfirmDeleteModal({
             onClick={() => toast.dismiss()}
             className="flex-1 cursor-pointer rounded-lg border border-gray-300 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
           >
-            {t("managementTable.cancel")}
+            {t('managementTable.cancel')}
           </button>
         </div>
       </div>

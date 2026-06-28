@@ -32,7 +32,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       stockCount: 0,
       status: 'Out of Stock',
       theme: { text: 'var(--red)', background: 'var(--red-light)' },
-      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
     },
     {
       id: '2',
@@ -41,7 +42,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       stockCount: 5,
       status: 'Low Stock',
       theme: { text: 'var(--yellow)', background: 'var(--yellow-light)' },
-      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
     },
     {
       id: '3',
@@ -50,7 +52,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       stockCount: 5,
       status: 'Low Stock',
       theme: { text: 'var(--yellow)', background: 'var(--yellow-light)' },
-      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
     },
     {
       id: '4',
@@ -59,7 +62,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       stockCount: 25,
       status: 'In Stock',
       theme: { text: 'var(--green)', background: 'var(--green-light)' },
-      image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop',
     },
     {
       id: '5',
@@ -68,7 +72,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       stockCount: 15,
       status: 'In Stock',
       theme: { text: 'var(--green)', background: 'var(--green-light)' },
-      image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=500&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=500&fit=crop',
     },
     {
       id: '6',
@@ -77,7 +82,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       stockCount: 2,
       status: 'Low Stock',
       theme: { text: 'var(--yellow)', background: 'var(--yellow-light)' },
-      image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=500&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=500&fit=crop',
     },
     {
       id: '7',
@@ -86,7 +92,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       stockCount: 0,
       status: 'Out of Stock',
       theme: { text: 'var(--red)', background: 'var(--red-light)' },
-      image: 'https://images.unsplash.com/photo-1584865288642-42078afe6942?w=400&h=500&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1584865288642-42078afe6942?w=400&h=500&fit=crop',
     },
     {
       id: '8',
@@ -95,7 +102,8 @@ const inventoryAlertsData: InventoryAlertsCard = {
       stockCount: 8,
       status: 'In Stock',
       theme: { text: 'var(--green)', background: 'var(--green-light)' },
-      image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=500&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=500&fit=crop',
     },
   ],
 };

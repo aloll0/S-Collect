@@ -11,6 +11,7 @@
     "f": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
   },
   "dependencies": {
+    "@fontsource/inter": "^5.2.8",
     "@headlessui/react": "^2.2.10",
     "@tailwindcss/vite": "^4.3.1",
     "@tanstack/react-query": "^5.101.0",

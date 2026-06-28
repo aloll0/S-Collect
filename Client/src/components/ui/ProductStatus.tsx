@@ -1,5 +1,5 @@
-import { Switch } from "@headlessui/react";
-import { useTranslation } from "react-i18next";
+import { Switch } from '@headlessui/react';
+import { useTranslation } from 'react-i18next';
 
 interface ProductStatusProps {
   enabled: boolean;
@@ -25,7 +25,9 @@ const ProductStatus = ({ enabled, setEnabled }: ProductStatusProps) => {
         >
           <span
             className={`${
-              enabled ? "translate-x-6 rtl:-translate-x-6": "translate-x-1 rtl:-translate-x-1"
+              enabled
+                ? 'translate-x-6 rtl:-translate-x-6'
+                : 'translate-x-1 rtl:-translate-x-1'
             } inline-block h-4 w-4 transform rounded-full bg-white transition`}
           />
         </Switch>

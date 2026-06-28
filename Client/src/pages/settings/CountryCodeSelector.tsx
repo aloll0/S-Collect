@@ -126,7 +126,9 @@ export function CountryCodeSelector({
             open
               ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
               : 'pointer-events-none -translate-y-1 scale-[0.98] opacity-0',
-            isRtl ? ' right-[-12px] origin-top-right' : ' left-[-12px] origin-top-left'
+            isRtl
+              ? ' right-[-12px] origin-top-right'
+              : ' left-[-12px] origin-top-left'
           )}
         >
           <div className="border-b border-gray-100 bg-white p-2">
