@@ -203,7 +203,9 @@
 
     "save": "Save Changes",
     "cancel": "Cancel",
-
+      "continue": "Continue",
+      "publish": "Publish",
+      "previous": "Previous", 
     "uploadImage": "Upload Image",
     "dragImage": "Drag image here or click to upload",
 

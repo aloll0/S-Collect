@@ -39,14 +39,17 @@ export const OrderFilters = ({
         ))}
       </div>
 
+      <div className="flex items-center gap-2">
+        <span className="text-gray-400 text-xs">{t('ordersPage.sortBy')}:</span>
+
       <select
         onChange={onSortToggle}
-        className="flex w-full items-center justify-center gap-1.5 text-sm text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors sm:w-fit"
+        className="flex w-full items-center justify-center gap-1.5 text-sm text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors  cursor-pointer sm:w-fit"
       >
-        <span className="text-gray-400 text-xs">{t('ordersPage.sortBy')}:</span>
         <option value="newest">{t('ordersPage.newestFirst')}</option>
         <option value="oldest">{t('ordersPage.oldestFirst')}</option>
       </select>
+    </div>
     </div>
   );
 };
