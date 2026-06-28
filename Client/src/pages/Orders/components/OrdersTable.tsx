@@ -1,6 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { ChevronDown } from 'lucide-react';
-import { type Order, type OrderStatus, STATUS_STYLES, ALL_STATUSES } from '../types/order';  
+import {
+  type Order,
+  type OrderStatus,
+  STATUS_STYLES,
+  ALL_STATUSES,
+} from '../types/order';
 
 interface OrdersTableProps {
   orders: Order[];
@@ -47,9 +52,7 @@ export const OrdersTable = ({
                 #{order.id}
               </td>
               <td className="py-4 px-2 text-gray-500">{order.date}</td>
-              <td className="py-4 px-2 text-gray-700">
-                {order.customer.name}
-              </td>
+              <td className="py-4 px-2 text-gray-700">{order.customer.name}</td>
               <td className="py-4 px-2 font-medium text-gray-900">
                 {order.amount.toLocaleString()} SAR
               </td>
@@ -88,6 +91,7 @@ export const OrdersTable = ({
                         className="text-gray-400 pointer-events-none"
                       />
                     </div>
+
                 </div>
               </td>
               <td className="py-4 px-2">

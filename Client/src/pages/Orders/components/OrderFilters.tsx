@@ -11,7 +11,7 @@ export const OrderFilters = ({
   onTabChange,
   onSortToggle,
 }: OrderFiltersProps) => {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
   const FILTER_TABS = [
     { key: 'allOrders', label: t('ordersPage.allOrders') },
@@ -43,9 +43,7 @@ export const OrderFilters = ({
         onChange={onSortToggle}
         className="flex w-full items-center justify-center gap-1.5 text-sm text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors  cursor-pointer sm:w-fit"
       >
-        <span className="text-gray-400 text-xs">
-          {t('ordersPage.sortBy')}:
-        </span>
+        <span className="text-gray-400 text-xs">{t('ordersPage.sortBy')}:</span>
         <option value="newest">{t('ordersPage.newestFirst')}</option>
         <option value="oldest">{t('ordersPage.oldestFirst')}</option>
       </select>

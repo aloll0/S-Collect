@@ -72,7 +72,7 @@ export default function SettingsPage({
   onAccountSettingsSave = async () => undefined,
 }: SettingsPageProps) {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<'store' | 'account'>('account');
+  const [tab, setTab] = useState<'store' | 'account'>('store');
   const [toast, setToast] = useState<string | null>(null);
 
   const storeData = useMemo(

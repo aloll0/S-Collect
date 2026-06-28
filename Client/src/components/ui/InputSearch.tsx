@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Search, X } from "lucide-react";
+import { useState } from 'react';
+import { Search, X } from 'lucide-react';
 
 const InputSearch = () => {
   const [open, setOpen] = useState(false);
@@ -22,7 +22,7 @@ const InputSearch = () => {
         className="md:hidden flex items-center justify-center"
       >
         <Search className="w-6 h-6 text-[var(--gray-50)]" />
-      </button> 
+      </button>
 
       {/* Mobile Overlay */}
       {open && (

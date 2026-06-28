@@ -1,6 +1,5 @@
 import type { Order } from '../../types/order';
 
-
 export const FAKE_ORDERS: Order[] = [
   {
     id: 'ORD-8821',

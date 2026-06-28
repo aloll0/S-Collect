@@ -6,13 +6,16 @@ const AuthLeftPanel = () => {
   const { t } = useTranslation();
 
   const features = [
-    { icon: <TrendingUp color="white" size={16} />, label: t('panel.feature1') },
+    {
+      icon: <TrendingUp color="white" size={16} />,
+      label: t('panel.feature1'),
+    },
     {
       icon: <Shield color="white" size={16} />,
       label: t('panel.feature3'),
     },
     {
-      icon: <ChartNoAxesColumnIncreasing  color="white" size={16} />,
+      icon: <ChartNoAxesColumnIncreasing color="white" size={16} />,
       label: t('panel.feature2'),
     },
   ];
@@ -26,15 +29,15 @@ const AuthLeftPanel = () => {
       lg:px-10 lg:py-12
       lg:flex-1
       h-[220px]
-    " 
+    "
       style={{
         backgroundImage: "url('/bg_login.png')",
       }}
     >
       <div className="absolute inset-0 bg-black/60"></div>
 
-     <div className="relative z-10 lg:mt-25 lg:ml-12 ">
-       <Logo />
+      <div className="relative z-10 lg:mt-25 lg:ml-12 ">
+        <Logo />
 
         <div className="mt-4 mb-12 hidden lg:block">
           <h1 className="text-white text-[56px] font-bold">
@@ -44,15 +47,14 @@ const AuthLeftPanel = () => {
           </h1>
 
           <p className="text-white/80 mt-2">
-            Join thousands of vendors already scaling their business with <br />  HubMarket
+            Join thousands of vendors already scaling their business with <br />{' '}
+            HubMarket
           </p>
         </div>
 
         <div className="mt-4  lg:hidden block">
-          <h5 className="text-white text-[24px] font-bold">
-            Power your store
-          </h5> 
- 
+          <h5 className="text-white text-[24px] font-bold">Power your store</h5>
+
           <p className="text-white/80 mt-2">
             Sign in to manage your marketplace account
           </p>
@@ -65,7 +67,8 @@ const AuthLeftPanel = () => {
             </h3>
 
             <p className="text-[#ddd] text-[13px] leading-relaxed mb-5">
-              Join our marketplace and start selling today. Manage your store, <br /> fulfill orders, and grow your brand with Nexus.
+              Join our marketplace and start selling today. Manage your store,{' '}
+              <br /> fulfill orders, and grow your brand with Nexus.
             </p>
           </div>
 
@@ -80,7 +83,7 @@ const AuthLeftPanel = () => {
             ))}
           </div>
         </div>
-    </div>
+      </div>
     </div>
   );
 };

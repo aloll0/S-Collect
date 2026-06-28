@@ -1,5 +1,5 @@
-export type ProductStatus = "Available" | "Low Stock" | "Out Of Stock";
-export type StatusFilter = "All" | ProductStatus;
+export type ProductStatus = 'Available' | 'Low Stock' | 'Out Of Stock';
+export type StatusFilter = 'All' | ProductStatus;
 
 export interface Product {
   id: number;

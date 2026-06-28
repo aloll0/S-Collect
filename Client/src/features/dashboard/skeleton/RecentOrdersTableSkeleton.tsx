@@ -22,10 +22,7 @@ const RecentOrdersTableSkeleton = () => {
 
           <tbody>
             {Array.from({ length: 6 }).map((_, rowIndex) => (
-              <tr
-                key={rowIndex}
-                className="border-t border-gray-200"
-              >
+              <tr key={rowIndex} className="border-t border-gray-200">
                 <td className="px-8 py-6">
                   <div className="h-5 w-24 bg-gray-200 rounded animate-pulse" />
                 </td>

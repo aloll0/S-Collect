@@ -1,4 +1,4 @@
-import TopSellingCardSkeleton from "./TopSellingCardSkeleton";
+import TopSellingCardSkeleton from './TopSellingCardSkeleton';
 
 const TopSellingSkeleton = () => {
   return (

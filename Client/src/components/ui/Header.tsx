@@ -50,20 +50,20 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             <div className="lg:hidden block">
               <InputSearch />
             </div>
-          <Link
-            to="/login"
-            className="inline-flex h-11 w-11 items-center justify-center text-gray-50 transition-colors"
-            aria-label="Account"
+            <Link
+              to="/login"
+              className="inline-flex h-11 w-11 items-center justify-center text-gray-50 transition-colors"
+              aria-label="Account"
             >
-            <User size={24} /> 
-          </Link>
+              <User size={24} />
+            </Link>
           </div>
         </div>
 
         <div className="hidden items-center justify-between gap-4 lg:flex">
           <div>
             <h1 className="text-2xl font-bold">Hello, Ahmed 👋</h1>
-            <p className="text-sm text-gray-400">{today}</p> 
+            <p className="text-sm text-gray-400">{today}</p>
           </div>
         </div>
 
