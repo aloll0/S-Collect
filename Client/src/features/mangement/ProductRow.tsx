@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { PencilIcon, PencilLineIcon, SquarePen, Trash, Trash2 } from 'lucide-react';
+import { SquarePen, Trash } from 'lucide-react';
 import Toggle from './Toggle';
 import StatusBadge from './StatusBadge';
 import { showDeleteConfirmation } from './deleteConfirmation';

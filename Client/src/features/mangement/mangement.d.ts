@@ -1,4 +1,4 @@
-export type ProductStatus = 'Available' | 'Low Stock' | 'Out Of Stock';
+export type ProductStatus = 'In Stock' | 'Low Stock' | 'Out Of Stock';
 export type StatusFilter = 'All' | ProductStatus;
 
 export interface Product {
