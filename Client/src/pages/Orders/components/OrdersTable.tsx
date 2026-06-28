@@ -63,35 +63,34 @@ export const OrdersTable = ({
                   >
                     {t(`ordersPage.${order.status.toLowerCase()}`)}
                   </span> */}
-                    <div className="relative inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-2 py-1.5">
-                      <span
-                        className={`rounded-md px-3 py-1 text-xs font-medium ${
-                          STATUS_STYLES[order.status]
-                        }`}
-                      >
-                        {t(`ordersPage.${order.status.toLowerCase()}`)}
-                      </span>
+                  <div className="relative inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-2 py-1.5">
+                    <span
+                      className={`rounded-md px-3 py-1 text-xs font-medium ${
+                        STATUS_STYLES[order.status]
+                      }`}
+                    >
+                      {t(`ordersPage.${order.status.toLowerCase()}`)}
+                    </span>
 
-                      <select
-                        value={order.status}
-                        onChange={(e) =>
-                          onStatusChange(order.id, e.target.value as OrderStatus)
-                        }
-                        className="absolute inset-0 cursor-pointer opacity-0"
-                      >
-                        {ALL_STATUSES.map((s) => (
-                          <option key={s} value={s}>
-                            {t(`ordersPage.${s.toLowerCase()}`)}
-                          </option>
-                        ))}
-                      </select>
+                    <select
+                      value={order.status}
+                      onChange={(e) =>
+                        onStatusChange(order.id, e.target.value as OrderStatus)
+                      }
+                      className="absolute inset-0 cursor-pointer opacity-0"
+                    >
+                      {ALL_STATUSES.map((s) => (
+                        <option key={s} value={s}>
+                          {t(`ordersPage.${s.toLowerCase()}`)}
+                        </option>
+                      ))}
+                    </select>
 
-                      <ChevronDown
-                        size={14}
-                        className="text-gray-400 pointer-events-none"
-                      />
-                    </div>
-
+                    <ChevronDown
+                      size={14}
+                      className="text-gray-400 pointer-events-none"
+                    />
+                  </div>
                 </div>
               </td>
               <td className="py-4 px-2">

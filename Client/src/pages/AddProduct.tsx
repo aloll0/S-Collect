@@ -673,8 +673,7 @@ const AddProduct = () => {
 
               <div className="max-w-md">
                 <label className="mb-2 block font-medium">
-                  {t('addProduct.sku')}{' '}
-                  <span className="text-red-500">*</span>
+                  {t('addProduct.sku')} <span className="text-red-500">*</span>
                 </label>
 
                 <input
@@ -732,9 +731,13 @@ const AddProduct = () => {
               </svg>
             </div>
 
-            <h3 className="text-2xl font-bold">{t('addProduct.productAddedSuccessfully')}</h3>
+            <h3 className="text-2xl font-bold">
+              {t('addProduct.productAddedSuccessfully')}
+            </h3>
 
-            <p className="mt-2 text-gray-500">{t('addProduct.productAddedMessage')}</p>
+            <p className="mt-2 text-gray-500">
+              {t('addProduct.productAddedMessage')}
+            </p>
 
             <button
               onClick={() => setIsSuccess(false)}

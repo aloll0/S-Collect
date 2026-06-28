@@ -41,8 +41,6 @@ const ProductCard = ({ product, onDelete, onToggle }: Props) => {
           <StatusBadge status={product.status} />
         </div>
         <div className="flex items-center gap-2">
-
-
           <Toggle checked={product.enabled} onChange={onToggle} />
           <div ref={menuRef} className="relative">
             <button

@@ -95,15 +95,15 @@ export default function MobileManagementTable() {
         <span className="text-xs text-gray-400">
           {totalItems === 0
             ? t('managementTable.showing', {
-              start: 0,
-              end: 0,
-              total: totalItems,
-            })
+                start: 0,
+                end: 0,
+                total: totalItems,
+              })
             : t('managementTable.showing', {
-              start: (page - 1) * itemsPerPage + 1,
-              end: Math.min(page * itemsPerPage, totalItems),
-              total: totalItems,
-            })}
+                start: (page - 1) * itemsPerPage + 1,
+                end: Math.min(page * itemsPerPage, totalItems),
+                total: totalItems,
+              })}
         </span>
 
         {totalPages > 1 && (
@@ -112,10 +112,11 @@ export default function MobileManagementTable() {
               <button
                 key={n}
                 onClick={() => setPage(n)}
-                className={`w-8 h-8 rounded-lg text-sm font-medium border transition-colors ${n === page
+                className={`w-8 h-8 rounded-lg text-sm font-medium border transition-colors ${
+                  n === page
                     ? 'bg-gray-900 text-white border-gray-900'
                     : 'border-gray-200 text-gray-500 hover:bg-gray-50'
-                  }`}
+                }`}
               >
                 {n}
               </button>
