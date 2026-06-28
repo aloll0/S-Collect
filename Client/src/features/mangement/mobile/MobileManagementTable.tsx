@@ -52,7 +52,7 @@ export default function MobileManagementTable() {
           />
         </div>
 
-        <div className="flex items-center justify-between gap-2.5">
+        <div className="flex items-center gap-2.5">
           <CategoryDropdown
             selected={selectedCategories}
             onChange={setSelectedCategories}
