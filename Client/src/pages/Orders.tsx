@@ -93,7 +93,7 @@ const IncomingOrders = () => {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#f5f7fb]">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-6 ">
       {trackingModal && (
         <TrackingModal
           onSave={(num) => applyStatusChange(trackingModal, 'Shipped', num)}
@@ -107,7 +107,7 @@ const IncomingOrders = () => {
         </h1>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6">
+      <div className=" rounded-2xl border border-gray-100 p-4 sm:p-6">
         <OrderFilters
           activeTab={activeTab}
           onTabChange={handleTabChange}

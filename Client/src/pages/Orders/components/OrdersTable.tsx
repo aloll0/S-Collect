@@ -17,9 +17,9 @@ export const OrdersTable = ({
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[760px] text-sm">
+      <table className="w-full min-w-190 text-sm bg-white border border-gray-100 rounded-2xl overflow-hidden ">
         <thead>
-          <tr className="border-b border-gray-100">
+          <tr className="border-b border-gray-100 bg-gray-100">
             {[
               t('ordersPage.orderId'),
               t('ordersPage.orderDate'),
@@ -55,33 +55,39 @@ export const OrdersTable = ({
               </td>
               <td className="py-4 px-2">
                 <div className="flex items-center gap-1">
-                  <span
+                  {/* <span
                     className={`px-3 py-1 rounded-full text-xs font-medium ${STATUS_STYLES[order.status]}`}
                   >
                     {t(`ordersPage.${order.status.toLowerCase()}`)}
-                  </span>
-                  <div className="relative">
-                    <select
-                      value={order.status}
-                      onChange={(e) =>
-                        onStatusChange(
-                          order.id,
-                          e.target.value as OrderStatus
-                        )
-                      }
-                      className="appearance-none bg-transparent border-none text-xs text-gray-400 cursor-pointer focus:outline-none pl-0.5 pr-4"
-                    >
-                      {ALL_STATUSES.map((s) => (
-                        <option key={s} value={s}>
-                          {t(`ordersPage.${s.toLowerCase()}`)}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown
-                      size={12}
-                      className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-                    />
-                  </div>
+                  </span> */}
+                    <div className="relative inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-2 py-1.5">
+                      <span
+                        className={`rounded-md px-3 py-1 text-xs font-medium ${
+                          STATUS_STYLES[order.status]
+                        }`}
+                      >
+                        {t(`ordersPage.${order.status.toLowerCase()}`)}
+                      </span>
+
+                      <select
+                        value={order.status}
+                        onChange={(e) =>
+                          onStatusChange(order.id, e.target.value as OrderStatus)
+                        }
+                        className="absolute inset-0 cursor-pointer opacity-0"
+                      >
+                        {ALL_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {t(`ordersPage.${s.toLowerCase()}`)}
+                          </option>
+                        ))}
+                      </select>
+
+                      <ChevronDown
+                        size={14}
+                        className="text-gray-400 pointer-events-none"
+                      />
+                    </div>
                 </div>
               </td>
               <td className="py-4 px-2">
