@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, ChevronsRight } from 'lucide-react';
+import { ArrowLeft, ChevronsRight, Check,  Truck, Circle, CircleCheckBig } from 'lucide-react';
 import {
   type Order,
   type OrderStatus,
@@ -37,35 +37,35 @@ export const OrderDetails = ({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-3 mb-2">
         <button
           onClick={onBack}
-          className="p-1.5 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer w-fit"
+          className="p-1.5 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer w-fit border border-gray-300 "
         >
-          <ArrowLeft size={18} className="text-gray-600" />
+          <ArrowLeft size={18} className="text-gray-900 " />
         </button>
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 break-words">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 wrap-break-word">
             {t('ordersPage.orderDetails')}{' '}
             <span className="text-gray-500">#{order.id}</span>
           </h1>
           <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1 flex-wrap">
-            <span>{t('ordersPage.title')}</span>
+            <span className="text-gray-900">{t('ordersPage.title')}</span>
             <ChevronsRight size={12} />
             <span>{t('ordersPage.orderDetails')}</span>
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_340px] gap-5 mt-5">
+      <div className="grid grid-cols-1 xl:grid-cols-[1fr_470px] gap-5 mt-5">
         {/* Left column */}
         <div className="flex flex-col gap-5 min-w-0">
           {/* Order Items */}
           <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5">
-            <h5 className="font-semibold text-gray-900 mb-4">
+            <h6 className="font-semibold text-gray-900 mb-4">
               {t('ordersPage.orderItems')}
-            </h5>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[640px] text-sm">
+            </h6>
+            <div className="overflow-x-auto rounded-md">
+              <table className="w-full min-w-160 text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100">
+                  <tr className="border-b border-gray-100 bg-gray-100 ">
                     {[
                       t('addProduct.nameEn'),
                       t('addProduct.sizes'),
@@ -76,7 +76,7 @@ export const OrderDetails = ({
                     ].map((h) => (
                       <th
                         key={h}
-                        className="text-left rtl:text-right pb-2 text-xs text-gray-950 font-bold"
+                        className="text-left rtl:text-right pb-2 text-xs text-gray-950 font-bold px-2 py-3"
                       >
                         {h}
                       </th>
@@ -89,7 +89,7 @@ export const OrderDetails = ({
                       key={i}
                       className="border-b border-gray-50 last:border-none"
                     >
-                      <td className="py-3 font-medium text-gray-900">
+                      <td className="px-2 py-3 font-medium text-gray-900">
                         {item.name}
                       </td>
                       <td className="py-3 text-gray-500">{item.variant}</td>
@@ -109,55 +109,71 @@ export const OrderDetails = ({
           </div>
 
           {/* Order Timeline */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5">
-            <h5 className="font-semibold text-gray-900 mb-4">
-              {t('ordersPage.orderTimeline')}
-            </h5>
-            <div className="flex flex-col gap-0">
-              {order.timeline.map((item, i) => (
-                <div key={i} className="flex gap-3">
-                  <div className="flex flex-col items-center">
-                    <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                        item.done
-                          ? 'bg-green-500 text-white'
-                          : 'border-2 border-gray-200 bg-white text-gray-300'
-                      }`}
-                    >
-                      {item.done ? '✓' : ''}
-                    </div>
-                    {i < order.timeline.length - 1 && (
+          <div className="bg-white rounded-2xl border border-gray-100 p-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-6">
+              {t("ordersPage.orderTimeline")}
+            </h3>
+
+            <div className="space-y-0">
+              {order.timeline.map((item, i) => {
+                const isCurrent = item.step === "Shipped";
+
+                return (
+                  <div key={i} className="flex gap-4">
+                    {/* Icon + Line */}
+                    <div className="flex flex-col items-center">
                       <div
-                        className={`w-px flex-1 my-1 ${item.done ? 'bg-green-300' : 'bg-gray-200'}`}
-                        style={{ minHeight: 24 }}
-                      />
-                    )}
-                  </div>
-                  <div className="pb-5 flex-1 flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-start">
-                    <div>
-                      <p
-                        className={`text-sm font-medium ${item.done ? 'text-gray-900' : 'text-gray-400'}`}
+                        className={`
+                          w-7 h-7 flex items-center justify-center rounded-lg
+                          ${
+                            item.done
+                              ? isCurrent
+                                ? "bg-amber-500 text-white"
+                                : "bg-green-600 text-white rounded-full"
+                              : "border border-gray-300 bg-white text-gray-400 rounded-full"
+                          }
+                        `}
+                      >
+                        {item.done ? (
+                          isCurrent ? (
+                            <Truck size={14} />
+                          ) : (
+                            <Check size={16} strokeWidth={3} />
+                          )
+                        ) : (
+                          <Circle size={10} fill="currentColor" />
+                        )}
+                      </div>
+
+                      {i < order.timeline.length - 1 && (
+                        <div
+                          className={`w-0.5 flex-1 ${
+                            item.done ? "bg-green-500" : "bg-gray-200"
+                          }`}
+                          style={{ minHeight: 28 }}
+                        />
+                      )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="pb-6">
+                      <h4
+                        className={`font-semibold text-lg ${
+                          item.done ? "text-gray-900" : "text-gray-700"
+                        }`}
                       >
                         {item.step}
-                      </p>
+                      </h4>
+
                       {item.desc && (
-                        <p className="text-xs text-gray-400 mt-0.5">
+                        <p className="text-gray-500 text-sm mt-1">
                           {item.desc}
                         </p>
                       )}
                     </div>
-                    {item.date ? (
-                      <p className="text-xs text-gray-400 sm:ml-4 sm:whitespace-nowrap">
-                        {item.date}
-                      </p>
-                    ) : (
-                      <p className="text-xs text-gray-300 sm:ml-4">
-                        {t('ordersPage.pendingLabel')}
-                      </p>
-                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -167,9 +183,9 @@ export const OrderDetails = ({
           {/* Order Information */}
           <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5 text-sm">
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center mb-3">
-              <h5 className="font-semibold text-gray-900">
+              <h6 className="font-semibold text-gray-900">
                 {t('ordersPage.orderInformation')}
-              </h5>
+              </h6>
               <span
                 className={`w-fit px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_STYLES[order.status]}`}
               >
@@ -202,9 +218,9 @@ export const OrderDetails = ({
 
           {/* Customer Information */}
           <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5 text-sm">
-            <h5 className="font-semibold text-gray-900 mb-3">
+            <h6 className="font-semibold text-gray-900 mb-3">
               {t('ordersPage.customerInformation')}
-            </h5>
+            </h6>
             {[
               [t('ordersPage.name'), order.customer.name],
               [t('ordersPage.email'), order.customer.email],
@@ -224,19 +240,19 @@ export const OrderDetails = ({
 
           {/* Shipping Address */}
           <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5 text-sm">
-            <h5 className="font-semibold text-gray-900 mb-2">
+            <h6 className="font-semibold text-gray-900 mb-2">
               {t('ordersPage.shippingAddress')}
-            </h5>
-            <p className="text-gray-500 leading-relaxed break-words">
+            </h6>
+            <p className="text-gray-500 leading-relaxed wrap-break-word">
               {order.shippingAddress}
             </p>
           </div>
 
           {/* Order Summary */}
           <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5 text-sm">
-            <h5 className="font-semibold text-gray-900 mb-3">
+            <h6 className="font-semibold text-gray-900 mb-3">
               {t('ordersPage.orderSummary')}
-            </h5>
+            </h6>
             {[
               [
                 t('ordersPage.subtotal'),
@@ -267,9 +283,9 @@ export const OrderDetails = ({
 
           {/* Update Order Status */}
           <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5 text-sm">
-            <h5 className="font-semibold text-gray-900 mb-1">
+            <h6 className="font-semibold text-gray-900 mb-1">
               {t('ordersPage.updateOrderStatus')}
-            </h5>
+            </h6>
             <p className="text-xs text-gray-400 mb-3">
               {t('ordersPage.updateOrderStatusDesc')}
             </p>
@@ -310,7 +326,7 @@ export const OrderDetails = ({
 
             {saved && (
               <div className="mt-3 flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 rounded-xl px-4 py-2.5 text-sm">
-                <span className="text-green-500">✓</span>
+                <CircleCheckBig className="w-6 h-6 text-green-700" />
                 {t('ordersPage.updatedSuccessfully')}
               </div>
             )}
