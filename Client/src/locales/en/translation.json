@@ -201,7 +201,9 @@
       "promotions": "Promotions",
       "searchResults": "Search Results",
 
-      "save": "Save Changes",
+      "continue": "Continue",
+      "publish": "Publish",
+      "previous": "Previous",
       "cancel": "Cancel",
 
       "uploadImage": "Upload Image",
