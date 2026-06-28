@@ -42,7 +42,7 @@
     "alertMessage": "5 منتجات على وشك نفاد المخزون",
     "lowStock": "مخزون منخفض",
     "outOfStock": "نفاد المخزون",
-    "available": "متوفر",
+    "inStock": "متوفر",
     "manageInventory": "إدارة المخزون",
     "sku": "رمز المنتج",
     "stock": "المخزون"
@@ -78,7 +78,32 @@
     "contactSupport": "تواصل مع الدعم",
     "noAccount": "ليس لديك حساب؟",
     "register": "إنشاء حساب",
-    "errorFillAll": "يرجى تعبئة جميع الحقول."
+    "errorFillAll": "يرجى تعبئة جميع الحقول.",
+    "errors": {
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "emailInvalid": "يرجى إدخال بريد إلكتروني صحيح",
+      "passwordRequired": "كلمة المرور مطلوبة"
+    }
+  },
+  "forgetPass": {
+    "title": "تغيير كلمة المرور",
+    "subtitle": "يجب تغيير كلمة المرور المؤقتة قبل الوصول إلى لوحة التحكم.",
+    "alert": "هذه أول تسجيل دخول لك. يرجى تحديث كلمة المرور.",
+    "tempPassword": "كلمة المرور المؤقتة",
+    "tempPasswordPlaceholder": "أدخل كلمة المرور المؤقتة",
+    "newPassword": "كلمة المرور الجديدة",
+    "newPasswordPlaceholder": "أنشئ كلمة مرور جديدة",
+    "confirmPassword": "تأكيد كلمة المرور الجديدة",
+    "confirmPasswordPlaceholder": "أكد كلمة المرور الجديدة",
+    "submit": "تعيين كلمة مرور جديدة",
+    "errors": {
+      "tempPasswordRequired": "كلمة المرور المؤقتة مطلوبة",
+      "newPasswordRequired": "كلمة المرور الجديدة مطلوبة",
+      "newPasswordMinLength": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+      "newPasswordWeak": "كلمة المرور يجب أن تحتوي على حرف كبير واحد ورقم واحد على الأقل",
+      "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+      "passwordsMismatch": "كلمتا المرور غير متطابقتين"
+    }
   },
   "register": {
     "step1": "المعلومات الشخصية",
@@ -162,63 +187,73 @@
     "feature3": "تحليلات تجارية متقدمة"
   },
   "addProduct": {
-      "title": "إضافة منتج",
-      "subtitle": "أضف منتجًا جديدًا إلى المخزون الخاص بك",
+    "title": "إضافة منتج",
+    "subtitle": "أضف منتجًا جديدًا إلى المخزون الخاص بك",
 
-      "productInformation": "معلومات المنتج",
-      "productMedia": "صور المنتج",
-      "productStatus": "حالة المنتج",
-      "pricingRules": "قواعد التسعير",
+    "productInformation": "معلومات المنتج",
+    "productMedia": "صور المنتج",
+    "productStatus": "حالة المنتج",
+    "pricingRules": "قواعد التسعير",
 
-      "nameAr": "اسم المنتج (بالعربية)",
-      "nameEn": "اسم المنتج (بالإنجليزية)",
-      "description": "الوصف",
+    "nameAr": "اسم المنتج (بالعربية)",
+    "nameEn": "اسم المنتج (بالإنجليزية)",
+    "description": "الوصف",
 
-      "categories": "التصنيفات",
-      "sizes": "المقاسات",
-      "colors": "الألوان",
+    "categories": "التصنيفات",
+    "sizes": "المقاسات",
+    "colors": "الألوان",
 
-      "addCategory": "إضافة تصنيف",
-      "addSize": "إضافة مقاس",
-      "addColor": "إضافة لون",
+    "addCategory": "إضافة تصنيف",
+    "addSize": "إضافة مقاس",
+    "addColor": "إضافة لون",
 
-      "enterCategory": "أدخل اسم التصنيف",
-      "enterSize": "أدخل المقاس",
-      "enterColor": "أدخل اللون",
+    "enterCategory": "أدخل اسم التصنيف",
+    "enterSize": "أدخل المقاس",
+    "enterColor": "أدخل اللون",
 
-      "add": "إضافة",
+    "add": "إضافة",
 
-      "nameArPlaceholder": "أدخل اسم المنتج بالعربية",
-      "nameEnPlaceholder": "أدخل اسم المنتج بالإنجليزية",
-      "descriptionPlaceholder": "أدخل وصف المنتج",
+    "nameArPlaceholder": "أدخل اسم المنتج بالعربية",
+    "nameEnPlaceholder": "أدخل اسم المنتج بالإنجليزية",
+    "descriptionPlaceholder": "أدخل وصف المنتج",
 
-      "basePrice": "السعر الأساسي",
-      "comparePrice": "السعر قبل الخصم",
-      "sku": "رمز المنتج",
+    "basePrice": "السعر الأساسي",
+    "comparePrice": "السعر قبل الخصم",
+    "sku": "رمز المنتج",
 
-      "visibility": "الظهور",
-      "homepage": "الصفحة الرئيسية",
-      "promotions": "العروض",
-      "searchResults": "نتائج البحث",
+    "visibility": "الظهور",
+    "homepage": "الصفحة الرئيسية",
+    "promotions": "العروض",
+    "searchResults": "نتائج البحث",
 
-      "continue": "متابعة",
-      "publish": "نشر",
-      "previous": "السابق",
-      "cancel": "إلغاء",
+    "save": "حفظ التغييرات",
+    "cancel": "إلغاء",
+    "continue": "متابعة",
+    "publish": "نشر",
+    "previous": "السابق",
 
-      "uploadImage": "رفع صورة",
-      "dragImage": "اسحب الصورة هنا أو اضغط للرفع",
+    "uploadImage": "رفع صورة",
+    "dragImage": "اسحب الصورة هنا أو اضغط للرفع",
 
-      "active": "نشط",
-      "inactive": "غير نشط",
+    "active": "نشط",
+    "inactive": "غير نشط",
 
-      "addingProduct": "جاري إضافة المنتج...",
-      "addingProductMessage": "يرجى الانتظار بينما نقوم بإضافة منتجك.",
-      
-      "productAddedSuccessfully": "تمت إضافة المنتج بنجاح",
-      "productAddedMessage": "تمت إضافة منتجك بنجاح.",
-      "done": "تم"
-    },
+    "addingProduct": "جاري إضافة المنتج...",
+    "addingProductMessage": "يرجى الانتظار بينما نقوم بإضافة منتجك.",
+
+    "productAddedSuccessfully": "تمت إضافة المنتج بنجاح",
+    "productAddedMessage": "تمت إضافة منتجك بنجاح.",
+    "done": "تم",
+    "errors": {
+      "nameArRequired": "اسم المنتج بالعربية مطلوب",
+      "nameEnRequired": "اسم المنتج بالإنجليزية مطلوب",
+      "descriptionRequired": "الوصف مطلوب",
+      "basePriceRequired": "السعر الأساسي مطلوب",
+      "comparePriceRequired": "السعر قبل الخصم مطلوب",
+      "skuRequired": "رمز المنتج مطلوب",
+      "priceMinValue": "السعر يجب أن يكون أكبر من أو يساوي 0"
+    }
+  },
   "ordersPage": {
     "title": "الطلبات الواردة",
     "allOrders": "كل الطلبات",
@@ -351,7 +386,8 @@
       "lastNameRequired": "اسم العائلة مطلوب.",
       "currentPasswordRequired": "كلمة المرور الحالية مطلوبة.",
       "newPasswordWeak": "يجب أن تحتوي على 8 أحرف على الأقل، وحرف كبير واحد، ورقم واحد.",
-      "passwordMismatch": "كلمتا المرور غير متطابقتين."
+      "passwordMismatch": "كلمتا المرور غير متطابقتين.",
+      "storeDescriptionMaxLength": "يجب ألا يتجاوز الوصف 500 حرف."
     }
   },
   "inventoryPage": {
@@ -391,6 +427,7 @@
     "allStatuses": "كل الحالات",
     "noProducts": "لا توجد منتجات",
     "addFirstProduct": "أضف أول منتج",
+    "selectAll": "تحديد الكل",
     "showing": "{{start}} - {{end}} من {{total}} منتج",
     "deleteProduct": "حذف {{name}}",
     "editProduct": "تعديل {{name}}",
@@ -418,7 +455,7 @@
       "Youth clothes": "ملابس شبابية"
     },
     "statuses": {
-      "Available": "متوفر",
+      "In Stock": "متوفر",
       "Low Stock": "مخزون منخفض",
       "Out Of Stock": "نفد المخزون"
     }

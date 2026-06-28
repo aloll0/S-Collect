@@ -1,11 +1,33 @@
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Eye, EyeOff, KeyRound, Info } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
 
+interface ForgetPassFormValues {
+  tempPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 const ForgetPass = () => {
+  const { t } = useTranslation();
   const [showTempPass, setShowTempPass] = useState(false);
   const [showNewPass, setShowNewPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ForgetPassFormValues>();
+
+  const newPassword = watch('newPassword');
+
+  const onSubmit = (data: ForgetPassFormValues) => {
+    console.log('Password change:', data);
+  };
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen font-sans">
@@ -22,32 +44,34 @@ const ForgetPass = () => {
 
           {/* Heading */}
           <h1 className="lg:text-h3 text-h5 font-bold text-gray-900 text-center">
-            Change Your Password
+            {t('forgetPass.title')}
           </h1>
 
           <p className="text-center text-body-md text-gray-500 mt-3 mb-6">
-            You must change your temporary password before accessing your
-            dashboard.
+            {t('forgetPass.subtitle')}
           </p>
 
           {/* Alert */}
           <div className="flex items-center gap-2 bg-blue-light border border-blue-100 text-blue-700 text-body-sm rounded-lg px-4 py-3 mb-6">
             <Info size={14} />
-            This is your first time signing in. Please update your password.
+            {t('forgetPass.alert')}
           </div>
 
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Temporary Password */}
             <div>
               <label className="block text-label-sm text-gray-700 mb-1.5">
-                Temporary Password
+                {t('forgetPass.tempPassword')}
               </label>
 
               <div className="relative">
                 <input
                   type={showTempPass ? 'text' : 'password'}
-                  placeholder="Enter temporary password"
+                  placeholder={t('forgetPass.tempPasswordPlaceholder')}
                   className="w-full border border-gray-300 bg-gray-50 rounded-lg px-3 py-2.5 pr-10 text-body-md text-gray-900 outline-none focus:border-gray-900 placeholder:text-gray-400 transition-colors"
+                  {...register('tempPassword', {
+                    required: t('forgetPass.errors.tempPasswordRequired'),
+                  })}
                 />
 
                 <button
@@ -58,19 +82,35 @@ const ForgetPass = () => {
                   {showTempPass ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              {errors.tempPassword && (
+                <p className="text-red text-caption-sm mt-1">
+                  {errors.tempPassword.message}
+                </p>
+              )}
             </div>
 
             {/* New Password */}
             <div>
               <label className="block text-label-sm text-gray-700 mb-1.5">
-                New Password
+                {t('forgetPass.newPassword')}
               </label>
 
               <div className="relative">
                 <input
                   type={showNewPass ? 'text' : 'password'}
-                  placeholder="Create new password"
+                  placeholder={t('forgetPass.newPasswordPlaceholder')}
                   className="w-full border border-gray-300 bg-gray-50 rounded-lg px-3 py-2.5 pr-10 text-body-md text-gray-900 outline-none focus:border-gray-900 placeholder:text-gray-400 transition-colors"
+                  {...register('newPassword', {
+                    required: t('forgetPass.errors.newPasswordRequired'),
+                    minLength: {
+                      value: 8,
+                      message: t('forgetPass.errors.newPasswordMinLength'),
+                    },
+                    pattern: {
+                      value: /^(?=.*[A-Z])(?=.*\d).+$/,
+                      message: t('forgetPass.errors.newPasswordWeak'),
+                    },
+                  })}
                 />
 
                 <button
@@ -81,19 +121,32 @@ const ForgetPass = () => {
                   {showNewPass ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              {errors.newPassword && (
+                <p className="text-red text-caption-sm mt-1">
+                  {errors.newPassword.message}
+                </p>
+              )}
             </div>
 
             {/* Confirm Password */}
             <div>
               <label className="block text-label-sm text-gray-700 mb-1.5">
-                Confirm New Password
+                {t('forgetPass.confirmPassword')}
               </label>
 
               <div className="relative">
                 <input
                   type={showConfirmPass ? 'text' : 'password'}
-                  placeholder="Confirm new password"
+                  placeholder={t('forgetPass.confirmPasswordPlaceholder')}
                   className="w-full border border-gray-300 bg-gray-50 rounded-lg px-3 py-2.5 pr-10 text-body-md text-gray-900 outline-none focus:border-gray-900 placeholder:text-gray-400 transition-colors"
+                  {...register('confirmPassword', {
+                    required: t(
+                      'forgetPass.errors.confirmPasswordRequired'
+                    ),
+                    validate: (val) =>
+                      val === newPassword ||
+                      t('forgetPass.errors.passwordsMismatch'),
+                  })}
                 />
 
                 <button
@@ -101,9 +154,18 @@ const ForgetPass = () => {
                   onClick={() => setShowConfirmPass(!showConfirmPass)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  {showConfirmPass ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showConfirmPass ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
                 </button>
               </div>
+              {errors.confirmPassword && (
+                <p className="text-red text-caption-sm mt-1">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
             </div>
 
             {/* Submit */}
@@ -111,7 +173,7 @@ const ForgetPass = () => {
               type="submit"
               className="w-full mt-3 bg-gray-900 text-gray-50 py-3 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
             >
-              Set New Password
+              {t('forgetPass.submit')}
             </button>
           </form>
         </div>

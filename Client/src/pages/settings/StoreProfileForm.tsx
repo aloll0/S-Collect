@@ -1,34 +1,11 @@
 import { ImageIcon } from 'lucide-react';
-import {
-  type DragEvent,
-  type FormEvent,
-  useCallback,
-  useId,
-  useState,
-  useTransition,
-} from 'react';
+import { type DragEvent, useId, useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { TFunction } from 'i18next';
 
 import { FieldWrap, TextInput } from './shared';
-import type { StoreProfileData, ValidationErrors } from './types';
+import type { StoreProfileData } from './types';
 import { cn, isValidEmail, isValidPhoneNumber } from './utils';
-
-function validateStoreProfile(
-  data: StoreProfileData,
-  t: TFunction
-): ValidationErrors {
-  const e: ValidationErrors = {};
-  if (!data.storeName.trim())
-    e.storeName = t('settings.errors.storeNameRequired');
-  if (!data.storeDescription.trim())
-    e.storeDescription = t('settings.errors.storeDescriptionRequired');
-  if (!isValidEmail(data.publicEmail))
-    e.publicEmail = t('settings.errors.invalidEmail');
-  if (!isValidPhoneNumber(data.phoneNumber))
-    e.phoneNumber = t('settings.errors.invalidPhone');
-  return e;
-}
 
 function LogoNormal({
   logoUrl,
@@ -203,79 +180,66 @@ export function StoreProfileForm({
   onSuccess: () => void;
 }) {
   const { t } = useTranslation();
-  const [data, setData] = useState(initialData);
-  const [errors, setErrors] = useState<ValidationErrors>({});
   const [isPending, startTransition] = useTransition();
 
-  const update = useCallback(
-    (field: keyof StoreProfileData, value: string | null) => {
-      setData((d) => ({ ...d, [field]: value }));
-      setErrors((e) => ({ ...e, [field]: undefined }));
-    },
-    []
-  );
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<StoreProfileData>({
+    defaultValues: initialData,
+  });
 
-  const handleLogoUpload = useCallback(
-    (file: File) => {
-      if (!file.type.startsWith('image/') || file.size > 2 * 1024 * 1024) {
-        setErrors((e) => ({
-          ...e,
-          storeLogoUrl: t('settings.errors.imageUpload'),
-        }));
-        setData((d) => {
-          if (d.storeLogoUrl?.startsWith('blob:'))
-            URL.revokeObjectURL(d.storeLogoUrl);
-          return { ...d, storeLogoUrl: null };
-        });
-        return;
-      }
-      setData((d) => {
-        if (d.storeLogoUrl?.startsWith('blob:'))
-          URL.revokeObjectURL(d.storeLogoUrl);
-        return {
-          ...d,
-          storeLogoUrl: URL.createObjectURL(file),
-          storeLogoFileName: file.name,
-        };
+  const storeName = watch('storeName');
+  const storeDescription = watch('storeDescription');
+  const publicEmail = watch('publicEmail');
+  const phoneNumber = watch('phoneNumber');
+  const storeLogoUrl = watch('storeLogoUrl');
+  const storeLogoFileName = watch('storeLogoFileName');
+
+  const handleLogoUpload = (file: File) => {
+    if (!file.type.startsWith('image/') || file.size > 2 * 1024 * 1024) {
+      setError('storeLogoUrl', {
+        message: t('settings.errors.imageUpload'),
       });
-      setErrors((e) => ({ ...e, storeLogoUrl: undefined }));
-    },
-    [t]
-  );
+      setValue('storeLogoUrl', null);
+      return;
+    }
+    if (storeLogoUrl?.startsWith('blob:')) URL.revokeObjectURL(storeLogoUrl);
+    setValue('storeLogoUrl', URL.createObjectURL(file));
+    setValue('storeLogoFileName', file.name);
+    clearErrors('storeLogoUrl');
+  };
 
-  const handleLogoRemove = useCallback(() => {
-    setData((d) => {
-      if (d.storeLogoUrl?.startsWith('blob:'))
-        URL.revokeObjectURL(d.storeLogoUrl);
-      return { ...d, storeLogoUrl: null };
+  const handleLogoRemove = () => {
+    if (storeLogoUrl?.startsWith('blob:')) URL.revokeObjectURL(storeLogoUrl);
+    setValue('storeLogoUrl', null);
+    setValue('storeLogoFileName', null);
+    clearErrors('storeLogoUrl');
+  };
+
+  const onSubmit = (data: StoreProfileData) => {
+    startTransition(async () => {
+      await onSave(data);
+      onSuccess();
     });
-    setErrors((e) => ({ ...e, storeLogoUrl: undefined }));
-  }, []);
+  };
 
-  const handleSubmit = useCallback(
-    (e: FormEvent) => {
-      e.preventDefault();
-      const errs = validateStoreProfile(data, t);
-      if (Object.values(errs).some(Boolean)) {
-        setErrors(errs);
-        return;
-      }
-      startTransition(async () => {
-        await onSave(data);
-        onSuccess();
-      });
-    },
-    [data, onSave, onSuccess, t]
-  );
-
-  const hasErrors = Object.values(errors).some(Boolean);
+  const hasErrors = Object.keys(errors).length > 0;
 
   const logoSection = errors.storeLogoUrl ? (
-    <LogoError error={errors.storeLogoUrl} onUpload={handleLogoUpload} />
-  ) : data.storeLogoUrl ? (
+    <LogoError
+      error={errors.storeLogoUrl.message as string}
+      onUpload={handleLogoUpload}
+    />
+  ) : storeLogoUrl ? (
     <LogoNormal
-      logoUrl={data.storeLogoUrl}
-      fileName={data.storeLogoFileName ?? t('settings.logo.fileFallback')}
+      logoUrl={storeLogoUrl}
+      fileName={storeLogoFileName ?? t('settings.logo.fileFallback')}
       onReplace={handleLogoUpload}
       onRemove={handleLogoRemove}
     />
@@ -284,7 +248,7 @@ export function StoreProfileForm({
   );
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
       <div className="settings-surface-enter settings-stagger-1 mb-5">
         <p className="text-xs font-bold text-[#969696] mb-3">
           {t('settings.storePreview')}
@@ -292,9 +256,9 @@ export function StoreProfileForm({
         <div className="settings-surface-enter border border-[#E9E9E9] rounded-lg bg-white/50 p-3 md:p-5 transition-all duration-300 ease-out ">
           <div className="flex items-center md:items-start gap-3 md:gap-5">
             <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 rounded-full bg-[#F8F8F8]  flex items-center justify-center overflow-hidden">
-              {data.storeLogoUrl ? (
+              {storeLogoUrl ? (
                 <img
-                  src={data.storeLogoUrl}
+                  src={storeLogoUrl}
                   alt={t('settings.logo.alt')}
                   className="w-full h-full object-cover"
                 />
@@ -307,16 +271,16 @@ export function StoreProfileForm({
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-base font-medium text-[#090909]">
-                {data.storeName || t('settings.storeNameFallback')}
+                {storeName || t('settings.storeNameFallback')}
               </p>
               <p className="text-sm font-medium text-[#969696] mt-0.5 line-clamp-1  md:line-clamp-2">
-                {data.storeDescription ||
+                {storeDescription ||
                   t('settings.storeDescriptionFallback')}
               </p>
               <p className="text-xs text-[#969696] mt-1 flex items-center gap-1.5 flex-wrap font-normal">
-                {data.publicEmail && <span>{data.publicEmail}</span>}
-                {data.publicEmail && data.phoneNumber && <span>•</span>}
-                {data.phoneNumber && <span>{data.phoneNumber}</span>}
+                {publicEmail && <span>{publicEmail}</span>}
+                {publicEmail && phoneNumber && <span>•</span>}
+                {phoneNumber && <span>{phoneNumber}</span>}
               </p>
             </div>
           </div>
@@ -327,14 +291,17 @@ export function StoreProfileForm({
         <FieldWrap
           label={t('settings.storeName')}
           required
-          error={errors.storeName}
+          error={errors.storeName?.message}
         >
           <TextInput
-            value={data.storeName}
-            error={errors.storeName}
             placeholder={t('settings.storeNamePlaceholder')}
             disabled={isPending}
-            onChange={(e) => update('storeName', e.target.value)}
+            error={errors.storeName?.message}
+            {...register('storeName', {
+              required: t('settings.errors.storeNameRequired'),
+              validate: (v) =>
+                v.trim() !== '' || t('settings.errors.storeNameRequired'),
+            })}
           />
         </FieldWrap>
       </div>
@@ -356,26 +323,34 @@ export function StoreProfileForm({
         <div className="relative">
           <textarea
             id="store-description"
-            value={data.storeDescription}
             placeholder={t('settings.storeDescriptionPlaceholder')}
             disabled={isPending}
-            onChange={(e) => update('storeDescription', e.target.value)}
             className={cn(
               'w-full h-[140px] resize-none rounded-lg border bg-white/50 px-4 pt-3 pb-8 text-sm text-[#090909] shadow-none outline-none transition-all duration-200 ease-out placeholder:text-gray-400 disabled:bg-white/50 disabled:text-[#969696] disabled:cursor-default focus:-translate-y-0.5',
               errors.storeDescription
                 ? 'border-red-400 bg-red-50 focus:border-red-400 focus:ring-1 focus:ring-red-100'
                 : 'border-gray-200 focus:border-gray-300 focus:ring-1 focus:ring-gray-100'
             )}
+            {...register('storeDescription', {
+              required: t('settings.errors.storeDescriptionRequired'),
+              validate: (v) =>
+                v.trim() !== '' ||
+                t('settings.errors.storeDescriptionRequired'),
+              maxLength: {
+                value: 500,
+                message: t('settings.errors.storeDescriptionMaxLength'),
+              },
+            })}
           />
           {!errors.storeDescription && (
             <span className="pointer-events-none absolute bottom-3 right-3.5 text-[14px] leading-none text-gray-400">
-              {data.storeDescription.length} / 500
+              {(storeDescription ?? '').length} / 500
             </span>
           )}
         </div>
         {errors.storeDescription && (
           <p className="settings-pop-enter mt-1 text-[12px] text-red-500">
-            {errors.storeDescription}
+            {errors.storeDescription.message}
           </p>
         )}
       </div>
@@ -387,28 +362,34 @@ export function StoreProfileForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FieldWrap
             label={t('settings.publicEmail')}
-            error={errors.publicEmail}
+            error={errors.publicEmail?.message}
           >
             <TextInput
               type="email"
-              value={data.publicEmail}
-              error={errors.publicEmail}
               placeholder={t('settings.emailPlaceholder')}
               disabled={isPending}
-              onChange={(e) => update('publicEmail', e.target.value)}
+              error={errors.publicEmail?.message}
+              {...register('publicEmail', {
+                required: t('settings.errors.invalidEmail'),
+                validate: (v) =>
+                  isValidEmail(v) || t('settings.errors.invalidEmail'),
+              })}
             />
           </FieldWrap>
           <FieldWrap
             label={t('settings.phoneNumber')}
-            error={errors.phoneNumber}
+            error={errors.phoneNumber?.message}
           >
             <TextInput
               type="tel"
-              value={data.phoneNumber}
-              error={errors.phoneNumber}
               placeholder={t('settings.phonePlaceholder')}
               disabled={isPending}
-              onChange={(e) => update('phoneNumber', e.target.value)}
+              error={errors.phoneNumber?.message}
+              {...register('phoneNumber', {
+                required: t('settings.errors.invalidPhone'),
+                validate: (v) =>
+                  isValidPhoneNumber(v) || t('settings.errors.invalidPhone'),
+              })}
             />
           </FieldWrap>
         </div>

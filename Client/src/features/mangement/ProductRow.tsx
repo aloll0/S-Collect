@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { PencilIcon, PencilLineIcon, SquarePen, Trash, Trash2 } from 'lucide-react';
+import { SquarePen, Trash } from 'lucide-react';
 import Toggle from './Toggle';
 import StatusBadge from './StatusBadge';
 import { showDeleteConfirmation } from './deleteConfirmation';
@@ -39,8 +39,9 @@ export default function ProductRow({
   return (
     /* Removed individual dir attribute - inherited from parent container */
     <tr
-      className={`transition-colors ${selected ? 'bg-indigo-50 hover:bg-indigo-50' : 'hover:bg-gray-50'
-        }`}
+      className={`transition-colors ${
+        selected ? 'bg-indigo-50 hover:bg-indigo-50' : 'hover:bg-gray-50'
+      }`}
     >
       <td className="px-3 py-3 border-b border-gray-100 text-start">
         <input
@@ -100,7 +101,7 @@ export default function ProductRow({
             })}
             className="w-[30px] h-[30px] flex items-center justify-center border border-gray-200  hover:bg-gray-100 transition-colors rounded-full"
           >
-            <SquarePen size={16}  />
+            <SquarePen size={16} />
           </button>
         </div>
       </td>

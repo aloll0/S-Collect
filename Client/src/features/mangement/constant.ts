@@ -6,7 +6,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     name: 'Summer cotton dress',
     category: "Women's clothing",
     price: 189,
-    status: 'Available',
+    status: 'In Stock',
     enabled: true,
     icon: 'ti-dress',
   },
@@ -33,7 +33,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     name: 'White formal shirt',
     category: "Men's clothing",
     price: 150,
-    status: 'Available',
+    status: 'In Stock',
     enabled: true,
     icon: 'ti-shirt',
   },
@@ -42,7 +42,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     name: 'Leather handbag',
     category: 'Accessories',
     price: 450,
-    status: 'Available',
+    status: 'In Stock',
     enabled: true,
     icon: 'ti-briefcase',
   },
@@ -60,7 +60,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     name: 'Printed T-shirt',
     category: 'Youth clothes',
     price: 95,
-    status: 'Available',
+    status: 'In Stock',
     enabled: true,
     icon: 'ti-shirt',
   },
@@ -76,7 +76,7 @@ export const CATEGORIES = [
 
 export const STATUS_FILTERS: StatusFilter[] = [
   'All',
-  'Available',
+  'In Stock',
   'Low Stock',
   'Out Of Stock',
 ];
@@ -85,7 +85,7 @@ export const TOTAL_PRODUCTS = 48;
 export const TOTAL_PAGES = 3;
 
 export const STATUS_BADGE: Record<ProductStatus, string> = {
-  Available: 'bg-green-100 text-green-800',
+  'In Stock': 'bg-green-100 text-green-800',
   'Low Stock': 'bg-amber-100 text-amber-800',
   'Out Of Stock': 'bg-red-100 text-red-800',
 };

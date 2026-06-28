@@ -1,6 +1,6 @@
 import {
   Boxes,
-  PackageOpen ,
+  PackageOpen,
   Settings,
   X,
   Globe,
@@ -90,7 +90,7 @@ const NAV_SECTIONS: NavSectionProps[] = [
     titleKey: 'sidebar.sections.main',
     items: [
       {
-        icon: <ChartNoAxesCombined  size={18} />,
+        icon: <ChartNoAxesCombined size={18} />,
         labelKey: 'sidebar.items.dashboard',
         to: '/',
       },
@@ -105,7 +105,7 @@ const NAV_SECTIONS: NavSectionProps[] = [
         to: '/management',
       },
       {
-        icon: <CirclePlus  size={18} />,
+        icon: <CirclePlus size={18} />,
         labelKey: 'sidebar.items.addProduct',
         to: '/add-product',
       },
@@ -120,7 +120,7 @@ const NAV_SECTIONS: NavSectionProps[] = [
         to: '/inventory',
       },
       {
-        icon: <Handbag  size={18} />,
+        icon: <Handbag size={18} />,
         labelKey: 'sidebar.items.incomingOrders',
         to: '/incoming-orders',
       },

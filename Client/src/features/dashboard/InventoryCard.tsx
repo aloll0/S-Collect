@@ -26,7 +26,7 @@ const InventoryCard = ({ cardData }: { cardData: CardData }) => {
       case 'Low Stock':
         return t('inventoryItem.lowStock');
       case 'In Stock':
-        return t('inventoryItem.available');
+        return t('inventoryItem.inStock');
       default:
         return status;
     }

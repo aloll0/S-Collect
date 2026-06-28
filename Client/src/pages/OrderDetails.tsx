@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, ChevronsRight, Check,  Truck, Circle, CircleCheckBig } from 'lucide-react';
+import {
+  ArrowLeft,
+  ChevronsRight,
+  Check,
+  Truck,
+  Circle,
+  CircleCheckBig,
+} from 'lucide-react';
 import {
   type Order,
   type OrderStatus,
@@ -111,12 +118,12 @@ export const OrderDetails = ({
           {/* Order Timeline */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <h3 className="text-xl font-bold text-gray-900 mb-6">
-              {t("ordersPage.orderTimeline")}
+              {t('ordersPage.orderTimeline')}
             </h3>
 
             <div className="space-y-0">
               {order.timeline.map((item, i) => {
-                const isCurrent = item.step === "Shipped";
+                const isCurrent = item.step === 'Shipped';
 
                 return (
                   <div key={i} className="flex gap-4">
@@ -128,9 +135,9 @@ export const OrderDetails = ({
                           ${
                             item.done
                               ? isCurrent
-                                ? "bg-amber-500 text-white"
-                                : "bg-green-600 text-white rounded-full"
-                              : "border border-gray-300 bg-white text-gray-400 rounded-full"
+                                ? 'bg-amber-500 text-white'
+                                : 'bg-green-600 text-white rounded-full'
+                              : 'border border-gray-300 bg-white text-gray-400 rounded-full'
                           }
                         `}
                       >
@@ -148,7 +155,7 @@ export const OrderDetails = ({
                       {i < order.timeline.length - 1 && (
                         <div
                           className={`w-0.5 flex-1 ${
-                            item.done ? "bg-green-500" : "bg-gray-200"
+                            item.done ? 'bg-green-500' : 'bg-gray-200'
                           }`}
                           style={{ minHeight: 28 }}
                         />
@@ -159,7 +166,7 @@ export const OrderDetails = ({
                     <div className="pb-6">
                       <h4
                         className={`font-semibold text-lg ${
-                          item.done ? "text-gray-900" : "text-gray-700"
+                          item.done ? 'text-gray-900' : 'text-gray-700'
                         }`}
                       >
                         {item.step}

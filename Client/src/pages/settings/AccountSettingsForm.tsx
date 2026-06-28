@@ -1,13 +1,7 @@
 import { ArrowRight, ChevronDown, Info, Lock } from 'lucide-react';
-import {
-  type FormEvent,
-  useCallback,
-  useMemo,
-  useState,
-  useTransition,
-} from 'react';
+import { useMemo, useState, useTransition } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { TFunction } from 'i18next';
 
 import {
   PasswordInput,
@@ -22,42 +16,9 @@ import {
   type CountryOption,
 } from './countries';
 import { getPasswordStrength, cn, isValidPhoneNumber } from './utils';
-import type {
-  AccountSettingsData,
-  PasswordData,
-  ValidationErrors,
-} from './types';
+import type { AccountSettingsData, PasswordData } from './types';
 
-const emptyPasswordData: PasswordData = {
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: '',
-};
-
-function validateAccountSettings(
-  data: AccountSettingsData,
-  pw: PasswordData,
-  t: TFunction
-): ValidationErrors {
-  const e: ValidationErrors = {};
-  const hasPw = Boolean(
-    pw.currentPassword || pw.newPassword || pw.confirmPassword
-  );
-  if (!data.firstName.trim())
-    e.firstName = t('settings.errors.firstNameRequired');
-  if (!data.lastName.trim()) e.lastName = t('settings.errors.lastNameRequired');
-  if (!isValidPhoneNumber(data.phoneNumber))
-    e.phoneNumber = t('settings.errors.invalidPhone');
-  if (hasPw) {
-    if (!pw.currentPassword)
-      e.currentPassword = t('settings.errors.currentPasswordRequired');
-    if (getPasswordStrength(pw.newPassword) < 4)
-      e.newPassword = t('settings.errors.newPasswordWeak');
-    if (pw.newPassword !== pw.confirmPassword)
-      e.confirmPassword = t('settings.errors.passwordMismatch');
-  }
-  return e;
-}
+type AccountSettingsFormValues = AccountSettingsData & PasswordData;
 
 export function AccountSettingsForm({
   initialData,
@@ -73,73 +34,68 @@ export function AccountSettingsForm({
     () => getInitialPhone(initialData.phoneNumber),
     [initialData.phoneNumber]
   );
-  const [data, setData] = useState<AccountSettingsData>({
-    ...initialData,
-    phoneNumber: formatPhoneNumber(
-      initialPhone.country,
-      initialPhone.localNumber
-    ),
-  });
+
   const [selectedCountry, setSelectedCountry] = useState(initialPhone.country);
   const [localPhoneNumber, setLocalPhoneNumber] = useState(
     initialPhone.localNumber
   );
-  const [pw, setPw] = useState(emptyPasswordData);
-  const [errors, setErrors] = useState<ValidationErrors>({});
   const [pwOpen, setPwOpen] = useState(false);
   const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const update = useCallback(
-    (field: keyof AccountSettingsData, value: string) => {
-      setData((d) => ({ ...d, [field]: value }));
-      setErrors((e) => ({ ...e, [field]: undefined }));
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    clearErrors,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm<AccountSettingsFormValues>({
+    defaultValues: {
+      ...initialData,
+      phoneNumber: formatPhoneNumber(
+        initialPhone.country,
+        initialPhone.localNumber
+      ),
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
     },
-    []
-  );
+  });
 
-  const updatePhone = useCallback((country: CountryOption, value: string) => {
+  const newPassword = watch('newPassword');
+
+  const handlePhoneChange = (country: CountryOption, value: string) => {
     setSelectedCountry(country);
     setLocalPhoneNumber(value);
-    setData((d) => ({
-      ...d,
-      phoneNumber: formatPhoneNumber(country, value),
-    }));
-    setErrors((e) => ({ ...e, phoneNumber: undefined }));
-  }, []);
+    setValue('phoneNumber', formatPhoneNumber(country, value));
+    clearErrors('phoneNumber');
+  };
 
-  const updatePw = useCallback((field: keyof PasswordData, val: string) => {
-    setPw((d) => ({ ...d, [field]: val }));
-    setErrors((e) => ({ ...e, [field]: undefined }));
-  }, []);
+  const onSubmit = (data: AccountSettingsFormValues) => {
+    startTransition(async () => {
+      await onSave({ ...data, email: initialData.email });
+      setValue('currentPassword', '');
+      setValue('newPassword', '');
+      setValue('confirmPassword', '');
+      onSuccess();
+    });
+  };
 
-  const handleSubmit = useCallback(
-    (e: FormEvent) => {
-      e.preventDefault();
-      const nextData = {
-        ...data,
-        phoneNumber: formatPhoneNumber(selectedCountry, localPhoneNumber),
-      };
-      const errs = validateAccountSettings(nextData, pw, t);
-      if (Object.values(errs).some(Boolean)) {
-        setErrors(errs);
-        if (errs.currentPassword || errs.newPassword || errs.confirmPassword)
-          setPwOpen(true);
-        return;
-      }
-      startTransition(async () => {
-        await onSave({ ...nextData, ...pw });
-        setData(nextData);
-        setPw(emptyPasswordData);
-        onSuccess();
-      });
-    },
-    [data, selectedCountry, localPhoneNumber, pw, onSave, onSuccess, t]
-  );
+  const onInvalid = () => {
+    if (
+      errors.currentPassword ||
+      errors.newPassword ||
+      errors.confirmPassword
+    ) {
+      setPwOpen(true);
+    }
+  };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit, onInvalid)}
       noValidate
       className="space-y-3 settings-surface-enter"
     >
@@ -158,13 +114,17 @@ export function AccountSettingsForm({
                 {t('settings.account.firstName')}
               </p>
               <TextInput
-                value={data.firstName}
-                error={errors.firstName}
-                onChange={(e) => update('firstName', e.target.value)}
+                error={errors.firstName?.message}
+                {...register('firstName', {
+                  required: t('settings.errors.firstNameRequired'),
+                  validate: (v) =>
+                    v.trim() !== '' ||
+                    t('settings.errors.firstNameRequired'),
+                })}
               />
               {errors.firstName && (
                 <p className="settings-pop-enter mt-1 text-[12px] text-red-500">
-                  {errors.firstName}
+                  {errors.firstName.message}
                 </p>
               )}
             </div>
@@ -173,13 +133,17 @@ export function AccountSettingsForm({
                 {t('settings.account.lastName')}
               </p>
               <TextInput
-                value={data.lastName}
-                error={errors.lastName}
-                onChange={(e) => update('lastName', e.target.value)}
+                error={errors.lastName?.message}
+                {...register('lastName', {
+                  required: t('settings.errors.lastNameRequired'),
+                  validate: (v) =>
+                    v.trim() !== '' ||
+                    t('settings.errors.lastNameRequired'),
+                })}
               />
               {errors.lastName && (
                 <p className="settings-pop-enter mt-1 text-[12px] text-red-500">
-                  {errors.lastName}
+                  {errors.lastName.message}
                 </p>
               )}
             </div>
@@ -191,7 +155,9 @@ export function AccountSettingsForm({
             </p>
             <div className="relative">
               <div className="h-10 px-3 pr-10 flex items-center border border-gray-200 rounded-md bg-white transition-all duration-200 ease-out ">
-                <span className="text-[13px] text-gray-500">{data.email}</span>
+                <span className="text-[13px] text-gray-500">
+                  {initialData.email}
+                </span>
               </div>
               <span className="absolute inset-y-0 right-3 flex items-center text-gray-400">
                 <Lock size={14} />
@@ -218,32 +184,48 @@ export function AccountSettingsForm({
             <p className="text-xs font-bold text-[#090909] mb-1.5">
               {t('settings.account.phoneNumber')}
             </p>
-            <div
-              className={cn(
-                'flex h-10 items-center rounded-md border bg-white px-3 transition-all duration-200 ease-out focus-within:border-[#090909] focus-within:ring-1 focus-within:ring-gray-200',
-                errors.phoneNumber
-                  ? 'border-red-400 bg-red-50'
-                  : 'border-gray-200'
+            <Controller
+              name="phoneNumber"
+              control={control}
+              rules={{
+                required: t('settings.errors.invalidPhone'),
+                validate: (v) =>
+                  isValidPhoneNumber(v) ||
+                  t('settings.errors.invalidPhone'),
+              }}
+              render={({ fieldState: { error } }) => (
+                <>
+                  <div
+                    className={cn(
+                      'flex h-10 items-center rounded-md border bg-white px-3 transition-all duration-200 ease-out focus-within:border-[#090909] focus-within:ring-1 focus-within:ring-gray-200',
+                      error ? 'border-red-400 bg-red-50' : 'border-gray-200'
+                    )}
+                  >
+                    <CountryCodeSelector
+                      value={selectedCountry}
+                      onChange={(country) =>
+                        handlePhoneChange(country, localPhoneNumber)
+                      }
+                      onOpenChange={setCountryDropdownOpen}
+                    />
+                    <input
+                      value={localPhoneNumber}
+                      inputMode="tel"
+                      className="min-w-0 flex-1 bg-transparent pl-2 text-[13px] text-gray-900 outline-none placeholder:text-gray-400"
+                      placeholder="50 123 4567"
+                      onChange={(e) =>
+                        handlePhoneChange(selectedCountry, e.target.value)
+                      }
+                    />
+                  </div>
+                  {error && (
+                    <p className="settings-pop-enter mt-1 text-[12px] text-red-500">
+                      {error.message}
+                    </p>
+                  )}
+                </>
               )}
-            >
-              <CountryCodeSelector
-                value={selectedCountry}
-                onChange={(country) => updatePhone(country, localPhoneNumber)}
-                onOpenChange={setCountryDropdownOpen}
-              />
-              <input
-                value={localPhoneNumber}
-                inputMode="tel"
-                className="min-w-0 flex-1 bg-transparent pl-2 text-[13px] text-gray-900 outline-none placeholder:text-gray-400"
-                placeholder="50 123 4567"
-                onChange={(e) => updatePhone(selectedCountry, e.target.value)}
-              />
-            </div>
-            {errors.phoneNumber && (
-              <p className="settings-pop-enter mt-1 text-[12px] text-red-500">
-                {errors.phoneNumber}
-              </p>
-            )}
+            />
           </div>
         </div>
       </SectionCard>
@@ -255,7 +237,7 @@ export function AccountSettingsForm({
               <p className="text-base font-bold text-[#090909]">
                 {t('settings.account.changePassword')}
               </p>
-              <p className="text-xs font-normal text-[#545454] mt-1">
+              <p className="text-xs text-normal text-[#545454] mt-1">
                 {t('settings.account.changePasswordDescription')}
               </p>
             </div>
@@ -290,31 +272,85 @@ export function AccountSettingsForm({
                   pwOpen ? 'translate-y-0' : '-translate-y-2'
                 )}
               >
-                <PasswordInput
-                  label={t('settings.account.currentPassword')}
-                  value={pw.currentPassword}
-                  error={errors.currentPassword}
-                  onChange={(v) => updatePw('currentPassword', v)}
+                <Controller
+                  name="currentPassword"
+                  control={control}
+                  rules={{
+                    validate: (val, formValues) => {
+                      const hasPw = Boolean(
+                        val ||
+                        formValues.newPassword ||
+                        formValues.confirmPassword
+                      );
+                      if (hasPw && !val)
+                        return t('settings.errors.currentPasswordRequired');
+                      return true;
+                    },
+                  }}
+                  render={({ field, fieldState: { error } }) => (
+                    <PasswordInput
+                      label={t('settings.account.currentPassword')}
+                      value={field.value ?? ''}
+                      error={error?.message}
+                      onChange={field.onChange}
+                    />
+                  )}
                 />
 
                 <div>
-                  <PasswordInput
-                    label={t('settings.account.newPassword')}
-                    value={pw.newPassword}
-                    error={errors.newPassword}
-                    onChange={(v) => updatePw('newPassword', v)}
+                  <Controller
+                    name="newPassword"
+                    control={control}
+                    rules={{
+                      validate: (val, formValues) => {
+                        const hasPw = Boolean(
+                          val ||
+                          formValues.currentPassword ||
+                          formValues.confirmPassword
+                        );
+                        if (hasPw && getPasswordStrength(val) < 4)
+                          return t('settings.errors.newPasswordWeak');
+                        return true;
+                      },
+                    }}
+                    render={({ field, fieldState: { error } }) => (
+                      <PasswordInput
+                        label={t('settings.account.newPassword')}
+                        value={field.value ?? ''}
+                        error={error?.message}
+                        onChange={field.onChange}
+                      />
+                    )}
                   />
                   <PasswordStrengthBar
-                    password={pw.newPassword}
-                    error={errors.newPassword}
+                    password={newPassword ?? ''}
+                    error={errors.newPassword?.message}
                   />
                 </div>
 
-                <PasswordInput
-                  label={t('settings.account.confirmPassword')}
-                  value={pw.confirmPassword}
-                  error={errors.confirmPassword}
-                  onChange={(v) => updatePw('confirmPassword', v)}
+                <Controller
+                  name="confirmPassword"
+                  control={control}
+                  rules={{
+                    validate: (val, formValues) => {
+                      const hasPw = Boolean(
+                        val ||
+                        formValues.currentPassword ||
+                        formValues.newPassword
+                      );
+                      if (hasPw && val !== formValues.newPassword)
+                        return t('settings.errors.passwordMismatch');
+                      return true;
+                    },
+                  }}
+                  render={({ field, fieldState: { error } }) => (
+                    <PasswordInput
+                      label={t('settings.account.confirmPassword')}
+                      value={field.value ?? ''}
+                      error={error?.message}
+                      onChange={field.onChange}
+                    />
+                  )}
                 />
 
                 <div className="settings-surface-enter flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-md px-3 py-2.5">
