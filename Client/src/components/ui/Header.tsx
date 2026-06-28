@@ -67,7 +67,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 lg:gap-4 lg:flex hidden">
+        <div className="items-center gap-3 lg:gap-4 lg:flex hidden">
           <div className="flex-1 lg:flex-none lg:block hidden">
             <InputSearch />
           </div>
