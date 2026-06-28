@@ -78,7 +78,32 @@
     "contactSupport": "Contact support",
     "noAccount": "Don't have an account?",
     "register": "Register",
-    "errorFillAll": "Please fill in all fields."
+    "errorFillAll": "Please fill in all fields.",
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Password is required"
+    }
+  },
+  "forgetPass": {
+    "title": "Change Your Password",
+    "subtitle": "You must change your temporary password before accessing your dashboard.",
+    "alert": "This is your first time signing in. Please update your password.",
+    "tempPassword": "Temporary Password",
+    "tempPasswordPlaceholder": "Enter temporary password",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Create new password",
+    "confirmPassword": "Confirm New Password",
+    "confirmPasswordPlaceholder": "Confirm new password",
+    "submit": "Set New Password",
+    "errors": {
+      "tempPasswordRequired": "Temporary password is required",
+      "newPasswordRequired": "New password is required",
+      "newPasswordMinLength": "Password must be at least 8 characters",
+      "newPasswordWeak": "Password must contain at least one uppercase letter and one number",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordsMismatch": "Passwords do not match"
+    }
   },
   "register": {
     "step1": "personal information",
@@ -203,9 +228,9 @@
 
     "save": "Save Changes",
     "cancel": "Cancel",
-      "continue": "Continue",
-      "publish": "Publish",
-      "previous": "Previous", 
+    "continue": "Continue",
+    "publish": "Publish",
+    "previous": "Previous",
     "uploadImage": "Upload Image",
     "dragImage": "Drag image here or click to upload",
 
@@ -217,7 +242,16 @@
 
     "productAddedSuccessfully": "Product Added Successfully",
     "productAddedMessage": "Your product has been added successfully.",
-    "done": "Done"
+    "done": "Done",
+    "errors": {
+      "nameArRequired": "Product name in Arabic is required",
+      "nameEnRequired": "Product name in English is required",
+      "descriptionRequired": "Description is required",
+      "basePriceRequired": "Base price is required",
+      "comparePriceRequired": "Compare-at price is required",
+      "skuRequired": "SKU is required",
+      "priceMinValue": "Price must be greater than or equal to 0"
+    }
   },
   "ordersPage": {
     "title": "Incoming Orders",
@@ -351,7 +385,8 @@
       "lastNameRequired": "Last name is required.",
       "currentPasswordRequired": "Current password is required.",
       "newPasswordWeak": "Must contain at least 8 characters, one uppercase letter, and one number.",
-      "passwordMismatch": "Passwords do not match."
+      "passwordMismatch": "Passwords do not match.",
+      "storeDescriptionMaxLength": "Description must not exceed 500 characters."
     }
   },
   "inventoryPage": {

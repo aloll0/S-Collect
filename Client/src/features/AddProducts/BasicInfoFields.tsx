@@ -1,15 +1,19 @@
-// pages/AddProduct/BasicInfoFields.tsx
-import type { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useFormContext } from 'react-hook-form';
 import type { ProductFormData } from './types';
 
-interface BasicInfoFieldsProps {
-  formData: Pick<ProductFormData, 'nameAr' | 'nameEn' | 'description'>;
-  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-}
-
-const BasicInfoFields = ({ formData, onChange }: BasicInfoFieldsProps) => {
+const BasicInfoFields = () => {
   const { t } = useTranslation();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<ProductFormData>();
+
+  const inputCls = (hasError?: string) =>
+    `w-full rounded-xl border px-4 py-2.5 focus:outline-none ${hasError
+      ? 'border-red-500 focus:border-red-500'
+      : 'border-gray-300 focus:border-gray-950'
+    }`;
 
   return (
     <>
@@ -18,13 +22,17 @@ const BasicInfoFields = ({ formData, onChange }: BasicInfoFieldsProps) => {
           {t('addProduct.nameAr')} <span className="text-red-500">*</span>
         </label>
         <input
-          name="nameAr"
-          required
-          value={formData.nameAr}
-          onChange={onChange}
+          className={inputCls(errors.nameAr?.message)}
           placeholder={t('addProduct.nameArPlaceholder')}
-          className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-gray-950 focus:outline-none"
+          {...register('nameAr', {
+            required: t('addProduct.errors.nameArRequired'),
+          })}
         />
+        {errors.nameAr && (
+          <p className="mt-1 text-sm text-red-500">
+            {errors.nameAr.message}
+          </p>
+        )}
       </div>
 
       <div>
@@ -32,13 +40,17 @@ const BasicInfoFields = ({ formData, onChange }: BasicInfoFieldsProps) => {
           {t('addProduct.nameEn')} <span className="text-red-500">*</span>
         </label>
         <input
-          name="nameEn"
-          required
-          value={formData.nameEn}
-          onChange={onChange}
+          className={inputCls(errors.nameEn?.message)}
           placeholder={t('addProduct.nameEnPlaceholder')}
-          className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-gray-950 focus:outline-none"
+          {...register('nameEn', {
+            required: t('addProduct.errors.nameEnRequired'),
+          })}
         />
+        {errors.nameEn && (
+          <p className="mt-1 text-sm text-red-500">
+            {errors.nameEn.message}
+          </p>
+        )}
       </div>
 
       <div>
@@ -47,12 +59,17 @@ const BasicInfoFields = ({ formData, onChange }: BasicInfoFieldsProps) => {
         </label>
         <textarea
           rows={5}
-          name="description"
-          value={formData.description}
-          onChange={onChange}
+          className={inputCls(errors.description?.message)}
           placeholder={t('addProduct.descriptionPlaceholder')}
-          className="w-full rounded-xl border border-gray-300 p-4 focus:border-gray-950 focus:outline-none"
+          {...register('description', {
+            required: t('addProduct.errors.descriptionRequired'),
+          })}
         />
+        {errors.description && (
+          <p className="mt-1 text-sm text-red-500">
+            {errors.description.message}
+          </p>
+        )}
       </div>
     </>
   );

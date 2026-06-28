@@ -1,13 +1,25 @@
 import { useState } from 'react';
+import { type InputHTMLAttributes, type Ref } from 'react';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
-import {
-  type PasswordInfo,
-  type PersonalInfo,
-  type StoreInfo,
-  useAuthStore,
-} from '../../store/authStore';
+import { useAuthStore } from '../../store/authStore';
+
+// ─── Types ───────────────────────────────────────────────────────────────────
+
+interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  storeName: string;
+  category: string;
+  website: string;
+  description: string;
+  password: string;
+  confirmPassword: string;
+}
 
 // ─── Step Indicator ───────────────────────────────────────────────────────────
 
@@ -34,9 +46,8 @@ const StepIndicator = ({ current }: { current: number }) => {
             <div className="flex flex-col items-center gap-1.5">
               {/* Circle */}
               <div
-                className={`lg:w-12 lg:h-12 w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-                  done || active ? 'bg-green' : 'bg-gray-200'
-                }`}
+                className={`lg:w-12 lg:h-12 w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${done || active ? 'bg-green' : 'bg-gray-200'
+                  }`}
               >
                 {done ? (
                   <svg
@@ -59,9 +70,8 @@ const StepIndicator = ({ current }: { current: number }) => {
               </div>
               {/* Label */}
               <span
-                className={`lg:text-md text-[10px] whitespace-nowrap ${
-                  active ? 'text-gray-900 font-semibold' : 'text-gray-400'
-                }`}
+                className={`lg:text-md text-[10px] whitespace-nowrap ${active ? 'text-gray-900 font-semibold' : 'text-gray-400'
+                  }`}
               >
                 {t(key)}
               </span>
@@ -70,9 +80,8 @@ const StepIndicator = ({ current }: { current: number }) => {
             {/* Connector line */}
             {i < STEP_KEYS.length - 1 && (
               <div
-                className={`flex-1 h-0.5 mt-6.5 mx-1.5 rounded-full transition-colors ${
-                  done ? 'bg-green' : 'bg-gray-200'
-                }`}
+                className={`flex-1 h-0.5 mt-6.5 mx-1.5 rounded-full transition-colors ${done ? 'bg-green' : 'bg-gray-200'
+                  }`}
               />
             )}
           </div>
@@ -84,38 +93,23 @@ const StepIndicator = ({ current }: { current: number }) => {
 
 // ─── Shared Input ─────────────────────────────────────────────────────────────
 
-interface InputProps {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  placeholder: string;
-  value: string;
-  onChange: (v: string) => void;
-  type?: string;
-  required?: boolean;
   error?: string;
+  ref?: Ref<HTMLInputElement>;
 }
 
-const Input = ({
-  label,
-  placeholder,
-  value,
-  onChange,
-  type = 'text',
-  required,
-  error,
-}: InputProps) => (
+const Input = ({ label, error, ref, ...rest }: InputProps) => (
   <div>
     <label className="block text-label-sm text-gray-700 mb-1.5">
       {label}
-      {required && <span className="text-red ml-0.5">*</span>}
+      {rest.required && <span className="text-red ml-0.5">*</span>}
     </label>
     <input
-      type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
-        error ? 'border-red bg-red-light' : 'border-gray-300 bg-gray-50'
-      }`}
+      ref={ref}
+      className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${error ? 'border-red bg-red-light' : 'border-gray-300 bg-gray-50'
+        }`}
+      {...rest}
     />
     {error && <p className="text-red text-caption-sm mt-1">{error}</p>}
   </div>
@@ -150,63 +144,64 @@ const EyeIcon = ({ open }: { open: boolean }) => (
 
 // ─── Step 1: Personal Info ────────────────────────────────────────────────────
 
-interface Step1Props {
-  data: PersonalInfo;
-  onChange: (k: keyof PersonalInfo, v: string) => void;
-  errors: Partial<Record<keyof PersonalInfo, string>>;
-}
-
-const Step1 = ({ data, onChange, errors }: Step1Props) => {
+const Step1 = () => {
   const { t } = useTranslation();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<RegisterFormData>();
+
   return (
     <div className="flex flex-col gap-8">
       <div className="grid grid-cols-2 gap-4">
         <Input
           label={t('register.firstNameLabel')}
           placeholder={t('register.firstNamePlaceholder')}
-          value={data.firstName}
-          onChange={(v) => onChange('firstName', v)}
           required
-          error={errors.firstName}
+          error={errors.firstName?.message}
+          {...register('firstName', {
+            required: t('register.errors.firstNameRequired'),
+          })}
         />
         <Input
           label={t('register.lastNameLabel')}
           placeholder={t('register.lastNamePlaceholder')}
-          value={data.lastName}
-          onChange={(v) => onChange('lastName', v)}
           required
-          error={errors.lastName}
+          error={errors.lastName?.message}
+          {...register('lastName', {
+            required: t('register.errors.lastNameRequired'),
+          })}
         />
       </div>
       <Input
         label={t('register.emailLabel')}
         placeholder={t('register.emailPlaceholder')}
-        value={data.email}
-        onChange={(v) => onChange('email', v)}
         type="email"
         required
-        error={errors.email}
+        error={errors.email?.message}
+        {...register('email', {
+          required: t('register.errors.emailRequired'),
+          pattern: {
+            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            message: t('register.errors.emailInvalid'),
+          },
+        })}
       />
       <Input
         label={t('register.phoneLabel')}
         placeholder={t('register.phonePlaceholder')}
-        value={data.phone}
-        onChange={(v) => onChange('phone', v)}
         type="tel"
         required
-        error={errors.phone}
+        error={errors.phone?.message}
+        {...register('phone', {
+          required: t('register.errors.phoneRequired'),
+        })}
       />
     </div>
   );
 };
 
 // ─── Step 2: Store Info ───────────────────────────────────────────────────────
-
-interface Step2Props {
-  data: StoreInfo;
-  onChange: (k: keyof StoreInfo, v: string) => void;
-  errors: Partial<Record<keyof StoreInfo, string>>;
-}
 
 const CATEGORY_KEYS = [
   'electronics',
@@ -219,18 +214,25 @@ const CATEGORY_KEYS = [
   'other',
 ] as const;
 
-const Step2 = ({ data, onChange, errors }: Step2Props) => {
+const Step2 = () => {
   const { t } = useTranslation();
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext<RegisterFormData>();
+  const category = watch('category');
 
   return (
     <div className="flex flex-col gap-4">
       <Input
         label={t('register.storeNameLabel')}
         placeholder={t('register.storeNamePlaceholder')}
-        value={data.storeName}
-        onChange={(v) => onChange('storeName', v)}
         required
-        error={errors.storeName}
+        error={errors.storeName?.message}
+        {...register('storeName', {
+          required: t('register.errors.storeNameRequired'),
+        })}
       />
 
       {/* Category select */}
@@ -240,13 +242,13 @@ const Step2 = ({ data, onChange, errors }: Step2Props) => {
           <span className="text-red ml-0.5">*</span>
         </label>
         <select
-          value={data.category}
-          onChange={(e) => onChange('category', e.target.value)}
-          className={`w-full px-3 py-2.5 border rounded-lg text-body-md outline-none transition-colors cursor-pointer focus:border-gray-900 ${
-            errors.category
+          {...register('category', {
+            required: t('register.errors.categoryRequired'),
+          })}
+          className={`w-full px-3 py-2.5 border rounded-lg text-body-md outline-none transition-colors cursor-pointer focus:border-gray-900 ${errors.category
               ? 'border-red bg-red-light text-gray-900'
               : 'border-gray-300 bg-gray-50'
-          } ${!data.category ? 'text-gray-400' : 'text-gray-900'}`}
+            } ${!category ? 'text-gray-400' : 'text-gray-900'}`}
         >
           <option value="">{t('register.categoryPlaceholder')}</option>
           {CATEGORY_KEYS.map((key) => (
@@ -256,15 +258,16 @@ const Step2 = ({ data, onChange, errors }: Step2Props) => {
           ))}
         </select>
         {errors.category && (
-          <p className="text-red text-caption-sm mt-1">{errors.category}</p>
+          <p className="text-red text-caption-sm mt-1">
+            {errors.category.message}
+          </p>
         )}
       </div>
 
       <Input
         label={t('register.websiteLabel')}
         placeholder={t('register.websitePlaceholder')}
-        value={data.website}
-        onChange={(v) => onChange('website', v)}
+        {...register('website')}
       />
 
       {/* Description textarea */}
@@ -275,17 +278,19 @@ const Step2 = ({ data, onChange, errors }: Step2Props) => {
         </label>
         <textarea
           placeholder={t('register.descriptionPlaceholder')}
-          value={data.description}
-          onChange={(e) => onChange('description', e.target.value)}
           rows={3}
-          className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none resize-vertical transition-colors placeholder:text-gray-400 focus:border-gray-900 font-sans ${
-            errors.description
+          className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none resize-vertical transition-colors placeholder:text-gray-400 focus:border-gray-900 font-sans ${errors.description
               ? 'border-red bg-red-light'
               : 'border-gray-300 bg-gray-50'
-          }`}
+            }`}
+          {...register('description', {
+            required: t('register.errors.descriptionRequired'),
+          })}
         />
         {errors.description && (
-          <p className="text-red text-caption-sm mt-1">{errors.description}</p>
+          <p className="text-red text-caption-sm mt-1">
+            {errors.description.message}
+          </p>
         )}
       </div>
     </div>
@@ -373,15 +378,15 @@ const PasswordStrength = ({ password }: { password: string }) => {
 
 // ─── Step 3: Set Password ─────────────────────────────────────────────────────
 
-interface Step3Props {
-  data: PasswordInfo;
-  onChange: (k: keyof PasswordInfo, v: string) => void;
-  errors: Partial<Record<keyof PasswordInfo, string>>;
-}
-
-const Step3 = ({ data, onChange, errors }: Step3Props) => {
+const Step3 = () => {
   const { t } = useTranslation();
   const [show, setShow] = useState({ password: false, confirm: false });
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext<RegisterFormData>();
+  const password = watch('password');
 
   return (
     <div className="flex flex-col gap-5">
@@ -395,13 +400,17 @@ const Step3 = ({ data, onChange, errors }: Step3Props) => {
           <input
             type={show.password ? 'text' : 'password'}
             placeholder={t('register.passwordPlaceholder')}
-            value={data.password}
-            onChange={(e) => onChange('password', e.target.value)}
-            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
-              errors.password
+            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${errors.password
                 ? 'border-red bg-red-light'
                 : 'border-gray-300 bg-gray-50'
-            }`}
+              }`}
+            {...register('password', {
+              required: t('register.errors.passwordRequired'),
+              minLength: {
+                value: 8,
+                message: t('register.errors.passwordMinLength'),
+              },
+            })}
           />
           <button
             type="button"
@@ -412,9 +421,11 @@ const Step3 = ({ data, onChange, errors }: Step3Props) => {
           </button>
         </div>
         {errors.password && (
-          <p className="text-red text-caption-sm mt-1">{errors.password}</p>
+          <p className="text-red text-caption-sm mt-1">
+            {errors.password.message}
+          </p>
         )}
-        <PasswordStrength password={data.password} />
+        <PasswordStrength password={password ?? ''} />
       </div>
 
       {/* Confirm Password */}
@@ -427,13 +438,16 @@ const Step3 = ({ data, onChange, errors }: Step3Props) => {
           <input
             type={show.confirm ? 'text' : 'password'}
             placeholder={t('register.confirmPasswordPlaceholder')}
-            value={data.confirmPassword}
-            onChange={(e) => onChange('confirmPassword', e.target.value)}
-            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
-              errors.confirmPassword
+            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${errors.confirmPassword
                 ? 'border-red bg-red-light'
                 : 'border-gray-300 bg-gray-50'
-            }`}
+              }`}
+            {...register('confirmPassword', {
+              required: t('register.errors.confirmPasswordRequired'),
+              validate: (val, formValues) =>
+                val === formValues.password ||
+                t('register.errors.passwordsMismatch'),
+            })}
           />
           <button
             type="button"
@@ -445,7 +459,7 @@ const Step3 = ({ data, onChange, errors }: Step3Props) => {
         </div>
         {errors.confirmPassword && (
           <p className="text-red text-caption-sm mt-1">
-            {errors.confirmPassword}
+            {errors.confirmPassword.message}
           </p>
         )}
       </div>
@@ -509,6 +523,12 @@ const EmailSent = ({
 
 // ─── Register ─────────────────────────────────────────────────────────────────
 
+const STEP_FIELDS: Record<number, (keyof RegisterFormData)[]> = {
+  0: ['firstName', 'lastName', 'email', 'phone'],
+  1: ['storeName', 'category', 'description'],
+  2: ['password', 'confirmPassword'],
+};
+
 const Register = () => {
   const { t } = useTranslation();
 
@@ -516,64 +536,38 @@ const Register = () => {
     step,
     submitted,
     registerLoading,
-    personal,
-    store,
-    passwords,
-    errors,
-    setErrors,
-    updatePersonal,
-    updateStore,
-    updatePasswords,
     nextStep,
     previousStep,
     submitRegister,
   } = useAuthStore();
 
-  const validate = (): boolean => {
-    const e: Record<string, string> = {};
-
-    if (step === 0) {
-      if (!personal.firstName.trim())
-        e.firstName = t('register.errors.firstNameRequired');
-      if (!personal.lastName.trim())
-        e.lastName = t('register.errors.lastNameRequired');
-      if (!personal.email.trim()) e.email = t('register.errors.emailRequired');
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personal.email))
-        e.email = t('register.errors.emailInvalid');
-      if (!personal.phone.trim()) e.phone = t('register.errors.phoneRequired');
-    }
-
-    if (step === 1) {
-      if (!store.storeName.trim())
-        e.storeName = t('register.errors.storeNameRequired');
-      if (!store.category) e.category = t('register.errors.categoryRequired');
-      if (!store.description.trim())
-        e.description = t('register.errors.descriptionRequired');
-    }
-
-    if (step === 2) {
-      if (!passwords.password)
-        e.password = t('register.errors.passwordRequired');
-      else if (passwords.password.length < 8)
-        e.password = t('register.errors.passwordMinLength');
-      if (!passwords.confirmPassword)
-        e.confirmPassword = t('register.errors.confirmPasswordRequired');
-      else if (passwords.password !== passwords.confirmPassword)
-        e.confirmPassword = t('register.errors.passwordsMismatch');
-    }
-
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
+  const methods = useForm<RegisterFormData>({
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      storeName: '',
+      category: '',
+      website: '',
+      description: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
 
   const handleContinue = async () => {
-    if (!validate()) return;
+    const isValid = await methods.trigger(STEP_FIELDS[step]);
+    if (!isValid) return;
+
     if (step < 2) {
       nextStep();
       return;
     }
 
-    await submitRegister();
+    await methods.handleSubmit(async () => {
+      await submitRegister();
+    })();
   };
 
   return (
@@ -584,7 +578,7 @@ const Register = () => {
         <div className="w-full max-w-[480px] mt-6 lg:mt-48">
           {submitted ? (
             <EmailSent
-              email={personal.email}
+              email={methods.getValues('email')}
               onResend={() => {
                 /* resend logic */
               }}
@@ -593,27 +587,11 @@ const Register = () => {
             <>
               <StepIndicator current={step} />
 
-              {step === 0 && (
-                <Step1
-                  data={personal}
-                  onChange={updatePersonal}
-                  errors={errors as Partial<Record<keyof PersonalInfo, string>>}
-                />
-              )}
-              {step === 1 && (
-                <Step2
-                  data={store}
-                  onChange={updateStore}
-                  errors={errors as Partial<Record<keyof StoreInfo, string>>}
-                />
-              )}
-              {step === 2 && (
-                <Step3
-                  data={passwords}
-                  onChange={updatePasswords}
-                  errors={errors as Partial<Record<keyof PasswordInfo, string>>}
-                />
-              )}
+              <FormProvider {...methods}>
+                {step === 0 && <Step1 />}
+                {step === 1 && <Step2 />}
+                {step === 2 && <Step3 />}
+              </FormProvider>
 
               {/* Navigation buttons */}
               <div className="flex gap-3 mt-7">

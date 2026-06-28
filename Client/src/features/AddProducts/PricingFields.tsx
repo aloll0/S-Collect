@@ -1,15 +1,19 @@
-// pages/AddProduct/PricingFields.tsx
-import type { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useFormContext } from 'react-hook-form';
 import type { ProductFormData } from './types';
 
-interface PricingFieldsProps {
-  formData: Pick<ProductFormData, 'basePrice' | 'comparePrice' | 'sku'>;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-}
-
-const PricingFields = ({ formData, onChange }: PricingFieldsProps) => {
+const PricingFields = () => {
   const { t } = useTranslation();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<ProductFormData>();
+
+  const inputCls = (hasError?: string) =>
+    `w-full rounded-xl border px-4 py-3 focus:outline-none ${hasError
+      ? 'border-red-500 focus:border-red-500'
+      : 'border-gray-300 focus:border-gray-950'
+    }`;
 
   return (
     <>
@@ -22,14 +26,20 @@ const PricingFields = ({ formData, onChange }: PricingFieldsProps) => {
           </label>
           <input
             type="number"
-            name="basePrice"
-            value={formData.basePrice}
-            onChange={onChange}
+            className={inputCls(errors.basePrice?.message)}
             placeholder="0.00"
             step="0.01"
             min="0"
-            className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-gray-950 focus:outline-none"
+            {...register('basePrice', {
+              required: t('addProduct.errors.basePriceRequired'),
+              min: { value: 0, message: t('addProduct.errors.priceMinValue') },
+            })}
           />
+          {errors.basePrice && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.basePrice.message}
+            </p>
+          )}
         </div>
 
         <div>
@@ -39,14 +49,20 @@ const PricingFields = ({ formData, onChange }: PricingFieldsProps) => {
           </label>
           <input
             type="number"
-            name="comparePrice"
-            value={formData.comparePrice}
-            onChange={onChange}
+            className={inputCls(errors.comparePrice?.message)}
             placeholder="0.00"
             step="0.01"
             min="0"
-            className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-gray-950 focus:outline-none"
+            {...register('comparePrice', {
+              required: t('addProduct.errors.comparePriceRequired'),
+              min: { value: 0, message: t('addProduct.errors.priceMinValue') },
+            })}
           />
+          {errors.comparePrice && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.comparePrice.message}
+            </p>
+          )}
         </div>
       </div>
 
@@ -55,12 +71,15 @@ const PricingFields = ({ formData, onChange }: PricingFieldsProps) => {
           {t('addProduct.sku')} <span className="text-red-500">*</span>
         </label>
         <input
-          name="sku"
-          value={formData.sku}
-          onChange={onChange}
+          className={inputCls(errors.sku?.message)}
           placeholder="SKU-001"
-          className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-gray-950 focus:outline-none"
+          {...register('sku', {
+            required: t('addProduct.errors.skuRequired'),
+          })}
         />
+        {errors.sku && (
+          <p className="mt-1 text-sm text-red-500">{errors.sku.message}</p>
+        )}
       </div>
     </>
   );

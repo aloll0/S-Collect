@@ -1,6 +1,7 @@
-// pages/AddProduct/index.tsx
-import { useState, type ChangeEvent } from 'react';
+import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 import ProductMedia from '../components/ui/ProductMedia';
 import ProductStatus from '../components/ui/ProductStatus';
 import ReviewPage from '../features/AddProducts/ReviewPage';
@@ -10,7 +11,7 @@ import TagInput from '../features/AddProducts/TagInput';
 import PricingFields from '../features/AddProducts/PricingFields';
 import SuccessPopup from '../features/AddProducts/SuccessPopup';
 import type { ProductFormData } from '../features/AddProducts/types';
-import { useNavigate } from 'react-router';
+
 const AddProduct = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -20,40 +21,39 @@ const AddProduct = () => {
   const [showReview, setShowReview] = useState(false);
   const [quantity, setQuantity] = useState(0);
 
-  const [formData, setFormData] = useState<ProductFormData>({
-    nameAr: '',
-    nameEn: '',
-    description: '',
-    basePrice: '',
-    comparePrice: '',
-    sku: '',
-  });
-
   const [categories, setCategories] = useState<string[]>([]);
   const [sizes, setSizes] = useState<string[]>([]);
   const [colors, setColors] = useState<string[]>([]);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const methods = useForm<ProductFormData>({
+    defaultValues: {
+      nameAr: '',
+      nameEn: '',
+      description: '',
+      basePrice: '',
+      comparePrice: '',
+      sku: '',
+    },
+  });
 
   const makeAdder =
     (setter: React.Dispatch<React.SetStateAction<string[]>>) =>
-    (value: string) =>
-      setter((prev) => [...prev, value]);
+      (value: string) =>
+        setter((prev) => [...prev, value]);
 
   const makeRemover =
     (setter: React.Dispatch<React.SetStateAction<string[]>>, list: string[]) =>
-    (index: number) =>
-      setter(list.filter((_, i) => i !== index));
+      (index: number) =>
+        setter(list.filter((_, i) => i !== index));
+
+  const onSubmit = () => {
+    setShowReview(true);
+  };
 
   if (showReview) {
     return (
       <ReviewPage
-        formData={formData}
+        formData={methods.getValues()}
         categories={categories}
         sizes={sizes}
         colors={colors}
@@ -62,7 +62,7 @@ const AddProduct = () => {
         onPublish={() => {
           setShowReview(false);
           setIsSuccess(true);
-          navigate('/products');
+          navigate('/');
         }}
       />
     );
@@ -85,49 +85,55 @@ const AddProduct = () => {
               {t('addProduct.productInformation')}
             </h5>
 
-            <div className="space-y-5">
-              <BasicInfoFields formData={formData} onChange={handleChange} />
+            <FormProvider {...methods}>
+              <form
+                id="add-product-form"
+                onSubmit={methods.handleSubmit(onSubmit)}
+                className="space-y-5"
+              >
+                <BasicInfoFields />
 
-              <QuantityInput value={quantity} onChange={setQuantity} />
+                <QuantityInput value={quantity} onChange={setQuantity} />
 
-              <TagInput
-                label={t('addProduct.categories')}
-                required
-                items={categories}
-                onAdd={makeAdder(setCategories)}
-                onRemove={makeRemover(setCategories, categories)}
-                placeholder={t('addProduct.enterCategory')}
-                addLabel={t('addProduct.addCategory')}
-                addBtnLabel={t('addProduct.add')}
-                cancelBtnLabel={t('addProduct.cancel')}
-              />
+                <TagInput
+                  label={t('addProduct.categories')}
+                  required
+                  items={categories}
+                  onAdd={makeAdder(setCategories)}
+                  onRemove={makeRemover(setCategories, categories)}
+                  placeholder={t('addProduct.enterCategory')}
+                  addLabel={t('addProduct.addCategory')}
+                  addBtnLabel={t('addProduct.add')}
+                  cancelBtnLabel={t('addProduct.cancel')}
+                />
 
-              <TagInput
-                label={t('addProduct.sizes')}
-                required
-                items={sizes}
-                onAdd={makeAdder(setSizes)}
-                onRemove={makeRemover(setSizes, sizes)}
-                placeholder={t('addProduct.enterSize')}
-                addLabel={t('addProduct.addSize')}
-                addBtnLabel={t('addProduct.add')}
-                cancelBtnLabel={t('addProduct.cancel')}
-              />
+                <TagInput
+                  label={t('addProduct.sizes')}
+                  required
+                  items={sizes}
+                  onAdd={makeAdder(setSizes)}
+                  onRemove={makeRemover(setSizes, sizes)}
+                  placeholder={t('addProduct.enterSize')}
+                  addLabel={t('addProduct.addSize')}
+                  addBtnLabel={t('addProduct.add')}
+                  cancelBtnLabel={t('addProduct.cancel')}
+                />
 
-              <TagInput
-                label={t('addProduct.colors')}
-                required
-                items={colors}
-                onAdd={makeAdder(setColors)}
-                onRemove={makeRemover(setColors, colors)}
-                placeholder={t('addProduct.enterColor')}
-                addLabel={t('addProduct.addColor')}
-                addBtnLabel={t('addProduct.add')}
-                cancelBtnLabel={t('addProduct.cancel')}
-              />
+                <TagInput
+                  label={t('addProduct.colors')}
+                  required
+                  items={colors}
+                  onAdd={makeAdder(setColors)}
+                  onRemove={makeRemover(setColors, colors)}
+                  placeholder={t('addProduct.enterColor')}
+                  addLabel={t('addProduct.addColor')}
+                  addBtnLabel={t('addProduct.add')}
+                  cancelBtnLabel={t('addProduct.cancel')}
+                />
 
-              <PricingFields formData={formData} onChange={handleChange} />
-            </div>
+                <PricingFields />
+              </form>
+            </FormProvider>
           </div>
 
           {/* Right */}
@@ -144,7 +150,8 @@ const AddProduct = () => {
             {t('addProduct.cancel')}
           </button>
           <button
-            onClick={() => setShowReview(true)}
+            type="submit"
+            form="add-product-form"
             className="rounded-xl bg-gray-950 px-6 py-3 text-white transition hover:bg-gray-800 cursor-pointer"
           >
             {t('addProduct.continue')}

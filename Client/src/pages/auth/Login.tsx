@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -36,6 +37,11 @@ const EyeIcon = ({ open }: { open: boolean }) => (
   </svg>
 );
 
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
 interface LoginProps {
   onGoToRegister?: () => void;
 }
@@ -60,37 +66,38 @@ const Login = ({ onGoToRegister }: LoginProps) => {
   const initialPassword = initialState === 'locked' ? '••••••••' : '';
 
   const {
-    loginEmail,
-    loginPassword,
     showLoginPassword,
     loginLoading,
     loginError,
     loginState,
     initializeLogin,
-    setLoginEmail,
-    setLoginPassword,
     setLoginError,
     toggleLoginPassword,
     submitLogin,
   } = useAuthStore();
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    defaultValues: {
+      email: initialEmail,
+      password: initialPassword,
+    },
+  });
+
   useEffect(() => {
-    initializeLogin(initialState, initialEmail, initialPassword);
-  }, [initialState, initialEmail, initialPassword, initializeLogin]);
+    initializeLogin(initialState);
+  }, [initialState, initializeLogin]);
 
   const isLocked = loginState === 'locked';
   const isExpired = loginState === 'expired';
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginFormValues) => {
     if (isLocked) return;
 
-    if (!loginEmail || !loginPassword) {
-      setLoginError(t('login.errorFillAll'));
-      return;
-    }
-
-    const result = await submitLogin();
+    const result = await submitLogin(data.email, data.password);
 
     if (result === 'locked' || result === 'expired') {
       return;
@@ -122,6 +129,11 @@ const Login = ({ onGoToRegister }: LoginProps) => {
       ? t('login.expiredSubtitle')
       : t('login.subtitle');
 
+  const resetState = () => {
+    if (loginState !== 'default') initializeLogin('default');
+    if (loginError) setLoginError('');
+  };
+
   return (
     <div className="flex flex-col lg:flex-row min-h-screen font-sans">
       <AuthLeftPanel />
@@ -149,7 +161,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label className="block text-label-sm text-gray-700 mb-1.5">
                   {t('login.emailLabel')}
@@ -157,11 +169,22 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                 <input
                   type="email"
                   placeholder={t('login.emailPlaceholder')}
-                  value={loginEmail}
                   disabled={isLocked}
-                  onChange={(e) => setLoginEmail(e.target.value)}
+                  {...register('email', {
+                    required: t('login.errors.emailRequired'),
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: t('login.errors.emailInvalid'),
+                    },
+                    onChange: resetState,
+                  })}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-body-md text-gray-900 outline-none focus:border-gray-900 disabled:bg-gray-100 disabled:text-gray-500 transition-colors placeholder:text-gray-400"
                 />
+                {errors.email && (
+                  <p className="text-red text-caption-sm mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -172,9 +195,11 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                   <input
                     type={showLoginPassword ? 'text' : 'password'}
                     placeholder={t('login.passwordPlaceholder')}
-                    value={loginPassword}
                     disabled={isLocked}
-                    onChange={(e) => setLoginPassword(e.target.value)}
+                    {...register('password', {
+                      required: t('login.errors.passwordRequired'),
+                      onChange: resetState,
+                    })}
                     className="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-lg text-body-md text-gray-900 outline-none focus:border-gray-900 disabled:bg-gray-100 disabled:text-gray-500 transition-colors placeholder:text-gray-400"
                   />
                   <button
@@ -185,6 +210,11 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                     <EyeIcon open={showLoginPassword} />
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="text-red text-caption-sm mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
 
               {!isLocked && (
