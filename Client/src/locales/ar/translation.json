@@ -201,7 +201,9 @@
       "promotions": "العروض",
       "searchResults": "نتائج البحث",
 
-      "save": "حفظ التغييرات",
+      "continue": "متابعة",
+      "publish": "نشر",
+      "previous": "السابق",
       "cancel": "إلغاء",
 
       "uploadImage": "رفع صورة",
