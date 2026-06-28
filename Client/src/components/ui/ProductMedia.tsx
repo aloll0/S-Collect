@@ -35,19 +35,19 @@ const ProductMedia = () => {
         onChange={handleUpload}
       />
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {images.map((image, index) => (
           <img
             key={index}
             src={image.preview}
             alt=""
-            className="h-24 w-full rounded-xl object-cover"
+            className="h-28 w-full rounded-xl object-cover sm:h-24"
           />
         ))}
 
         <label
           htmlFor="images"
-          className="flex h-24 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300"
+          className="flex h-28 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 sm:h-24"
         >
           <Plus />
         </label>
