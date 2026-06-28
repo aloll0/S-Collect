@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import ProductMedia from '../components/ui/ProductMedia';
 import ProductStatus from '../components/ui/ProductStatus';
 import ReviewPage from '../features/AddProducts/ReviewPage';
