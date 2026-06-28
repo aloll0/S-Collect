@@ -1,12 +1,12 @@
 import {
-  LayoutDashboard,
-  Package,
-  Plus,
   Boxes,
-  ShoppingCart,
+  PackageOpen ,
   Settings,
   X,
   Globe,
+  ChartNoAxesCombined,
+  CirclePlus,
+  Handbag,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import type { ReactNode } from 'react';
@@ -90,7 +90,7 @@ const NAV_SECTIONS: NavSectionProps[] = [
     titleKey: 'sidebar.sections.main',
     items: [
       {
-        icon: <LayoutDashboard size={18} />,
+        icon: <ChartNoAxesCombined  size={18} />,
         labelKey: 'sidebar.items.dashboard',
         to: '/',
       },
@@ -100,12 +100,12 @@ const NAV_SECTIONS: NavSectionProps[] = [
     titleKey: 'sidebar.sections.products',
     items: [
       {
-        icon: <Package size={18} />,
+        icon: <PackageOpen size={18} />,
         labelKey: 'sidebar.items.management',
         to: '/management',
       },
       {
-        icon: <Plus size={18} />,
+        icon: <CirclePlus  size={18} />,
         labelKey: 'sidebar.items.addProduct',
         to: '/add-product',
       },
@@ -120,7 +120,7 @@ const NAV_SECTIONS: NavSectionProps[] = [
         to: '/inventory',
       },
       {
-        icon: <ShoppingCart size={18} />,
+        icon: <Handbag  size={18} />,
         labelKey: 'sidebar.items.incomingOrders',
         to: '/incoming-orders',
       },
@@ -164,7 +164,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       )}
 
       <aside
-        className={`w-64 h-screen bg-[var(--gray-950)] flex flex-col fixed top-0 z-50 transition-transform duration-300 lg:sticky ${
+        className={`w-64 h-screen bg-(--gray-950) flex flex-col fixed top-0 z-50 transition-transform duration-300 lg:sticky ${
           isArabic ? 'right-0 lg:right-auto' : 'left-0 lg:left-auto'
         } ${
           isOpen
