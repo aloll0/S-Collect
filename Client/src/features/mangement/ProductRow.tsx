@@ -22,7 +22,6 @@ export default function ProductRow({
   onToggle,
 }: Props) {
   const { t } = useTranslation();
-  // Removed isArabic detection - no longer needed at row level
   const thumb = THUMB_STYLES[product.category] ?? {
     bg: 'bg-gray-100',
     icon: 'text-gray-500',
@@ -36,12 +35,39 @@ export default function ProductRow({
     );
   };
 
+  const handleToggle = () => {
+    if (product.enabled) {
+      showDeleteConfirmation(
+        'managementTable.toggleUnpublishConfirmMessage',
+        { name: product.name },
+        onToggle,
+        {
+          titleKey: 'managementTable.toggleUnpublishConfirmTitle',
+          confirmKey: 'managementTable.unpublish',
+          confirmClassName: 'bg-amber-600 hover:bg-amber-700',
+          iconVariant: 'unpublish',
+        }
+      );
+    } else {
+      showDeleteConfirmation(
+        'managementTable.togglePublishConfirmMessage',
+        { name: product.name },
+        onToggle,
+        {
+          titleKey: 'managementTable.togglePublishConfirmTitle',
+          confirmKey: 'managementTable.publish',
+          confirmClassName: 'bg-green-600 hover:bg-green-700',
+          iconVariant: 'publish',
+        }
+      );
+    }
+  };
+
   return (
-    /* Removed individual dir attribute - inherited from parent container */
     <tr
-      className={`transition-colors ${
-        selected ? 'bg-indigo-50 hover:bg-indigo-50' : 'hover:bg-gray-50'
-      }`}
+      className={`transition-all ${!product.enabled ? 'opacity-50' : ''
+        } ${selected ? 'bg-indigo-50 hover:bg-indigo-50' : 'hover:bg-gray-50'
+        }`}
     >
       <td className="px-3 py-3 border-b border-gray-100 text-start">
         <input
@@ -80,7 +106,7 @@ export default function ProductRow({
       </td>
 
       <td className="px-3 py-3 border-b border-gray-100">
-        <Toggle checked={product.enabled} onChange={onToggle} />
+        <Toggle checked={product.enabled} onChange={handleToggle} />
       </td>
 
       <td className="px-3 py-3 border-b border-gray-100">

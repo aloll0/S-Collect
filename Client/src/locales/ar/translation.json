@@ -469,6 +469,10 @@
     "deleteSelectedConfirmMessage": "هل أنت متأكد من حذف {{count}} منتج محدد؟ لا يمكن التراجع عن هذا الإجراء.",
     "publishSelectedConfirmMessage": "هل أنت متأكد من نشر {{count}} منتج محدد؟",
     "unpublishSelectedConfirmMessage": "هل أنت متأكد من إلغاء نشر {{count}} منتج محدد؟",
+    "togglePublishConfirmTitle": "نشر المنتج؟",
+    "togglePublishConfirmMessage": "هل أنت متأكد من نشر {{name}}؟",
+    "toggleUnpublishConfirmTitle": "إلغاء نشر المنتج؟",
+    "toggleUnpublishConfirmMessage": "هل أنت متأكد من إلغاء نشر {{name}}؟",
     "cancel": "إلغاء",
     "delete": "حذف",
     "categories": {
