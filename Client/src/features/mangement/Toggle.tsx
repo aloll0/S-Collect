@@ -5,7 +5,7 @@ type Props = {
 
 export default function Toggle({ checked, onChange }: Props) {
   return (
-    <label className="relative inline-flex items-center cursor-pointer w-10 h-[22px] flex-shrink-0">
+    <label className="relative inline-flex items-center cursor-pointer w-10 h-[22px] shrink-0">
       <input
         type="checkbox"
         checked={checked}

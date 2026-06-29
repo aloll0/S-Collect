@@ -6,6 +6,7 @@ type ConfirmationOptions = {
   titleKey?: string;
   confirmKey?: string;
   confirmClassName?: string;
+  iconVariant?: 'delete' | 'publish' | 'unpublish';
 };
 
 export function showDeleteConfirmation(

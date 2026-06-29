@@ -471,6 +471,10 @@
     "deleteSelectedConfirmMessage": "Are you sure you want to delete {{count}} selected products? This action cannot be undone.",
     "publishSelectedConfirmMessage": "Are you sure you want to publish {{count}} selected products?",
     "unpublishSelectedConfirmMessage": "Are you sure you want to unpublish {{count}} selected products?",
+    "togglePublishConfirmTitle": "Publish Product?",
+    "togglePublishConfirmMessage": "Are you sure you want to publish {{name}}?",
+    "toggleUnpublishConfirmTitle": "Unpublish Product?",
+    "toggleUnpublishConfirmMessage": "Are you sure you want to unpublish {{name}}?",
     "cancel": "Cancel",
     "delete": "Delete",
     "categories": {

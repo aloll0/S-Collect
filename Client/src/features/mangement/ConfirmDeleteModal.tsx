@@ -1,5 +1,21 @@
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { Check, Pause, Trash2 } from 'lucide-react';
+
+type IconVariant = 'delete' | 'publish' | 'unpublish';
+
+const iconConfig: Record<
+  IconVariant,
+  { bg: string; icon: typeof Check; iconClass: string }
+> = {
+  delete: { bg: 'bg-red-100', icon: Trash2, iconClass: 'text-red-500' },
+  publish: { bg: 'bg-green-100', icon: Check, iconClass: 'text-green-500' },
+  unpublish: {
+    bg: 'bg-amber-100',
+    icon: Pause,
+    iconClass: 'text-amber-500',
+  },
+};
 
 type ConfirmDeleteModalProps = {
   titleKey?: string;
@@ -7,6 +23,7 @@ type ConfirmDeleteModalProps = {
   messageValues?: Record<string, string | number>;
   confirmKey?: string;
   confirmClassName?: string;
+  iconVariant?: IconVariant;
   onConfirm: () => void;
 };
 
@@ -16,18 +33,20 @@ export function ConfirmDeleteModal({
   messageValues,
   confirmKey = 'managementTable.delete',
   confirmClassName = 'bg-red-600 hover:bg-red-700',
+  iconVariant = 'delete',
   onConfirm,
 }: ConfirmDeleteModalProps) {
   const { t } = useTranslation();
+  const { bg, icon: Icon, iconClass } = iconConfig[iconVariant];
 
   return (
     <div className="fixed inset-0 z-[9999] h-screen w-screen flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
       <div className="w-full max-w-[420px] rounded-2xl bg-white p-8 shadow-2xl">
         {/* Warning Icon */}
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-          <span className="text-4xl font-bold leading-none text-red-500">
-            !
-          </span>
+        <div
+          className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full ${bg}`}
+        >
+          <Icon className={`h-8 w-8 ${iconClass}`} />
         </div>
 
         {/* Title */}

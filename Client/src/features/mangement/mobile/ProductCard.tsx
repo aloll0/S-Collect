@@ -34,14 +34,45 @@ const ProductCard = ({ product, onDelete, onToggle }: Props) => {
     );
   };
 
+  const handleToggle = () => {
+    if (product.enabled) {
+      showDeleteConfirmation(
+        'managementTable.toggleUnpublishConfirmMessage',
+        { name: product.name },
+        onToggle,
+        {
+          titleKey: 'managementTable.toggleUnpublishConfirmTitle',
+          confirmKey: 'managementTable.unpublish',
+          confirmClassName: 'bg-amber-600 hover:bg-amber-700',
+          iconVariant: 'unpublish',
+        }
+      );
+    } else {
+      showDeleteConfirmation(
+        'managementTable.togglePublishConfirmMessage',
+        { name: product.name },
+        onToggle,
+        {
+          titleKey: 'managementTable.togglePublishConfirmTitle',
+          confirmKey: 'managementTable.publish',
+          confirmClassName: 'bg-green-600 hover:bg-green-700',
+          iconVariant: 'publish',
+        }
+      );
+    }
+  };
+
   return (
-    <div className="p-4 bg-white rounded-lg shadow-sm transition-colors">
+    <div
+      className={`p-4 bg-white rounded-lg shadow-sm transition-all ${!product.enabled ? 'opacity-50' : ''
+        }`}
+    >
       <div className="pb-4 border-t border-gray-100 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <StatusBadge status={product.status} />
         </div>
         <div className="flex items-center gap-2">
-          <Toggle checked={product.enabled} onChange={onToggle} />
+          <Toggle checked={product.enabled} onChange={handleToggle} />
           <div ref={menuRef} className="relative">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
