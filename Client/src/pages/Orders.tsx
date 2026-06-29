@@ -1,12 +1,12 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Order, OrderStatus } from '../../src/pages/Orders/types/order';
-import { FAKE_ORDERS } from '../../src/pages/Orders/data/orders/fakeOrders';
-import { OrderFilters } from '../../src/pages/Orders/components/OrderFilters';
-import { OrdersTable } from '../../src/pages/Orders/components/OrdersTable';
-import { Pagination } from '../../src/pages/Orders/components/Pagination';
-import { EmptyState } from '../../src/pages/Orders/components/ EmptyState';
-import { TrackingModal } from '../../src/pages/Orders/components/TrackingModal';
+import type { Order, OrderStatus } from '../features/Orders/types/order';
+import { FAKE_ORDERS } from '../features/Orders/data/orders/fakeOrders';
+import { OrderFilters } from '../features/Orders/components/OrderFilters';
+import { OrdersTable } from '../features/Orders/components/OrdersTable';
+import { Pagination } from '../features/Orders/components/Pagination';
+import { EmptyState } from '../features/Orders/components/ EmptyState';
+import { TrackingModal } from '../features/Orders/components/TrackingModal';
 import { OrderDetails } from './OrderDetails';
 
 const ITEMS_PER_PAGE = 8;
