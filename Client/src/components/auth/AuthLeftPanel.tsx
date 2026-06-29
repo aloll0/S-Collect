@@ -1,6 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import Logo from '../ui/Logo';
-import { TrendingUp, Shield, ChartNoAxesColumnIncreasing } from 'lucide-react';
+import {
+  TrendingUp,
+  Shield,
+  ChartNoAxesColumnIncreasing,
+} from 'lucide-react';
 
 const AuthLeftPanel = () => {
   const { t } = useTranslation();
@@ -23,52 +27,52 @@ const AuthLeftPanel = () => {
   return (
     <div
       className="
-      relative overflow-hidden bg-cover bg-center bg-no-repeat
-      px-6 py-8
-      lg:min-h-screen lg:h-auto
-      lg:px-10 lg:py-12
-      lg:flex-1
-      h-[220px]
-    "
+        relative overflow-hidden bg-cover bg-center bg-no-repeat
+        px-6 py-8
+        lg:min-h-screen lg:h-auto
+        lg:px-10 lg:py-12
+        lg:flex-1
+        h-[220px]
+      "
       style={{
         backgroundImage: "url('/bg_login.png')",
       }}
     >
-      <div className="absolute inset-0 bg-black/60"></div>
-
-      <div className="relative z-10 lg:mt-25 lg:ml-12 ">
+      <div className="relative z-10 lg:mt-25 lg:ml-12">
         <Logo />
 
+        {/* Desktop */}
         <div className="mt-4 mb-12 hidden lg:block">
           <h1 className="text-white text-[56px] font-bold">
-            Power your store
+            {t('panel.tagline1')}
             <br />
-            Grow your sales
+            {t('panel.tagline2')}
           </h1>
 
           <p className="text-white/80 mt-2">
-            Join thousands of vendors already scaling their business with <br />{' '}
-            HubMarket
+            {t('panel.subtitle')}
           </p>
         </div>
 
-        <div className="mt-4  lg:hidden block">
-          <h5 className="text-white text-[24px] font-bold">Power your store</h5>
+        {/* Mobile */}
+        <div className="mt-4 lg:hidden block">
+          <h5 className="text-white text-[24px] font-bold">
+            {t('panel.mobileTitle')}
+          </h5>
 
           <p className="text-white/80 mt-2">
-            Sign in to manage your marketplace account
+            {t('panel.mobileSubtitle')}
           </p>
         </div>
 
         <div className="hidden lg:block">
           <div className="mb-8">
             <h3 className="text-white text-[24px] font-bold mb-2">
-              Become a Vendor
+              {t('panel.becomeVendor')}
             </h3>
 
             <p className="text-[#ddd] text-[13px] leading-relaxed mb-5">
-              Join our marketplace and start selling today. Manage your store,{' '}
-              <br /> fulfill orders, and grow your brand with Nexus.
+              {t('panel.becomeVendorDesc')}
             </p>
           </div>
 
