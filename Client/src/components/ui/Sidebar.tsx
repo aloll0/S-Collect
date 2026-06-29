@@ -158,28 +158,28 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/70 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/70 z-60 sidebar:hidden"
           onClick={onClose}
         />
       )}
 
       <aside
-        className={`w-64 h-screen bg-(--gray-950) flex flex-col fixed top-0 z-50 transition-transform duration-300 lg:sticky ${
-          isArabic ? 'right-0 lg:right-auto' : 'left-0 lg:left-auto'
+        className={`w-64 h-screen bg-(--gray-950) flex flex-col fixed top-0 z-70 transition-transform duration-300 sidebar:sticky ${
+          isArabic ? 'right-0 sidebar:right-auto' : 'left-0 sidebar:left-auto'
         } ${
           isOpen
             ? 'translate-x-0'
             : isArabic
-              ? 'translate-x-full lg:translate-x-0'
-              : '-translate-x-full lg:translate-x-0'
+              ? 'translate-x-full sidebar:translate-x-0'
+              : '-translate-x-full sidebar:translate-x-0'
         }`}
       >
-        <div className="shrink-0 flex items-center justify-between pt-5 px-5 lg:justify-start">
+        <div className="shrink-0 flex items-center justify-between pt-5 px-5 sidebar:justify-start">
           <Logo />
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-300 hover:bg-gray-800 lg:hidden cursor-pointer"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-300 hover:bg-gray-800 sidebar:hidden cursor-pointer"
             aria-label="Close sidebar"
           >
             <X size={20} />
@@ -195,7 +195,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             />
           ))}
 
-          <div className="px-3 mt-5 lg:hidden">
+          <div className="px-3 mt-5 sidebar:hidden">
             <div className="group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out relative overflow-hidden text-label-md text-gray-400">
               <Globe className="text-gray-400" size={18} />
 

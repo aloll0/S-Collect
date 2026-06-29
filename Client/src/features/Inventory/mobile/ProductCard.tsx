@@ -14,8 +14,8 @@ export const ProductCard = ({ product, onStockChange }: ProductCardProps) => {
     product.status === 'In Stock'
       ? t('inventoryPage.inStock')
       : product.status === 'Low Stock'
-      ? t('inventoryPage.lowStock')
-      : t('inventoryPage.outOfStock');
+        ? t('inventoryPage.lowStock')
+        : t('inventoryPage.outOfStock');
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-4">

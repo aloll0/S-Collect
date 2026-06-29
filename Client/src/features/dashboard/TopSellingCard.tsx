@@ -12,9 +12,9 @@ type ProductSale = {
 
 const TopSellingCard = ({ cardData }: { cardData: ProductSale }) => {
   return (
-    <div className="flex items-center gap-4 rounded-xl bg-white p-3">
+    <div className="flex items-center gap-2 rounded-xl bg-white p-3 w-full overflow-hidden">
       {/* Product Image */}
-      <div className="h-14 w-14 rounded-lg overflow-hidden shrink-0">
+      <div className="h-10 w-10 xl:h-14 xl:w-14 rounded-lg overflow-hidden shrink-0">
         <img
           className="object-cover w-full h-full"
           src={cardData.imageUrl}
@@ -23,13 +23,13 @@ const TopSellingCard = ({ cardData }: { cardData: ProductSale }) => {
       </div>
 
       {/* Product Info */}
-      <div className="flex-1">
-        <h6 className="text-base font-medium text-gray-900 mb-2">
+      <div className="flex-1 min-w-0">
+        <h6 className="text-xs lg:text-sm xl:text-base font-medium text-gray-900 mb-2 truncate">
           {cardData.name}
         </h6>
 
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-500 whitespace-nowrap">
+        <div className="flex items-center gap-2">
+          <span className="text-xs xl:text-sm text-gray-500 whitespace-nowrap">
             {cardData.unitsSold} {t('dashboardMetrics.unit.product')}
           </span>
 
@@ -45,12 +45,12 @@ const TopSellingCard = ({ cardData }: { cardData: ProductSale }) => {
       </div>
 
       {/* Revenue */}
-      <div className="flex flex-col items-end min-w-[100px]">
-        <span className="text-lg font-bold text-green-600">
+      <div className="flex flex-col items-end shrink-0">
+        <span className="text-sm lg:text-base xl:text-lg font-bold text-green-600 whitespace-nowrap">
           {cardData.revenue.toLocaleString()} {cardData.currency}
         </span>
 
-        <span className="text-sm text-gray-400 mt-2">
+        <span className="text-xs xl:text-sm text-gray-400 mt-1">
           {cardData.percentage}%
         </span>
       </div>

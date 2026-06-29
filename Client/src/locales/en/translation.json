@@ -55,7 +55,10 @@
     "day3": "Day 3",
     "day4": "Day 4",
     "day5": "Day 5",
-    "day6": "Day 6"
+    "day6": "Day 6",
+    "lastMonth": "Last Month",
+    "lastWeek": "Last Week",
+    "lastDay": "Last Day"
   },
   "login": {
     "title": "Welcome Back",
@@ -259,15 +262,15 @@
       "inventory": "Inventory",
       "reviewPublish": "Review & Publish",
       "sku": "SKU",
-      "stockQuantity":"Stock Quantity",
-      "productStatus":"Product Status",
-      "visibility":"Visibility",
-      "adding":"Adding...",
-      "addingProduct":"Adding Product",
-      "pleaseWait":"Please wait while we add your product.",
-      "productAddedSuccessfully":"Product Added Successfully",
-      "productAddedMessage":"Your product has been added successfully.",
-      "done":"Done"
+      "stockQuantity": "Stock Quantity",
+      "productStatus": "Product Status",
+      "visibility": "Visibility",
+      "adding": "Adding...",
+      "addingProduct": "Adding Product",
+      "pleaseWait": "Please wait while we add your product.",
+      "productAddedSuccessfully": "Product Added Successfully",
+      "productAddedMessage": "Your product has been added successfully.",
+      "done": "Done"
     }
   },
   "ordersPage": {

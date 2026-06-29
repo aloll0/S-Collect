@@ -1,7 +1,12 @@
 // features/Orders/mobile/MobileOrderCard.tsx
 import { useTranslation } from 'react-i18next';
 import { ChevronDown } from 'lucide-react';
-import { type Order, type OrderStatus, STATUS_STYLES, ALL_STATUSES } from '../types/order';
+import {
+  type Order,
+  type OrderStatus,
+  STATUS_STYLES,
+  ALL_STATUSES,
+} from '../types/order';
 
 interface MobileOrderCardProps {
   order: Order;
@@ -34,12 +39,16 @@ export const MobileOrderCard = ({
       <div className="flex items-center justify-between mt-3">
         {/* Status selector */}
         <div className="relative inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-2.5 py-1.5">
-          <span className={`rounded-lg px-2.5 py-0.5 text-xs font-semibold ${STATUS_STYLES[order.status]}`}>
+          <span
+            className={`rounded-lg px-2.5 py-0.5 text-xs font-semibold ${STATUS_STYLES[order.status]}`}
+          >
             {t(`ordersPage.${order.status.toLowerCase()}`)}
           </span>
           <select
             value={order.status}
-            onChange={(e) => onStatusChange(order.id, e.target.value as OrderStatus)}
+            onChange={(e) =>
+              onStatusChange(order.id, e.target.value as OrderStatus)
+            }
             className="absolute inset-0 cursor-pointer opacity-0 w-full h-full"
           >
             {ALL_STATUSES.map((s) => (
@@ -48,7 +57,10 @@ export const MobileOrderCard = ({
               </option>
             ))}
           </select>
-          <ChevronDown size={13} className="text-gray-400 pointer-events-none shrink-0" />
+          <ChevronDown
+            size={13}
+            className="text-gray-400 pointer-events-none shrink-0"
+          />
         </div>
 
         <button

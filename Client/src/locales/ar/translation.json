@@ -55,7 +55,10 @@
     "day3": "اليوم 3",
     "day4": "اليوم 4",
     "day5": "اليوم 5",
-    "day6": "اليوم 6"
+    "day6": "اليوم 6",
+    "lastMonth": "آخر شهر",
+    "lastWeek": "آخر أسبوع",
+    "lastDay": "آخر يوم"
   },
   "login": {
     "title": "مرحباً بعودتك",
@@ -260,15 +263,15 @@
       "inventory": "المخزون",
       "reviewPublish": "مراجعة ونشر",
       "sku": "رمز المنتج",
-      "stockQuantity":"كمية المخزون",
-      "productStatus":"حالة المنتج",
-      "visibility":"الظهور",
-      "adding":"جاري الإضافة...",
-      "addingProduct":"جاري إضافة المنتج",
-      "pleaseWait":"يرجى الانتظار بينما نقوم بإضافة منتجك.",
-      "productAddedSuccessfully":"تمت إضافة المنتج بنجاح",
-      "productAddedMessage":"تمت إضافة منتجك بنجاح.",
-      "done":"تم"
+      "stockQuantity": "كمية المخزون",
+      "productStatus": "حالة المنتج",
+      "visibility": "الظهور",
+      "adding": "جاري الإضافة...",
+      "addingProduct": "جاري إضافة المنتج",
+      "pleaseWait": "يرجى الانتظار بينما نقوم بإضافة منتجك.",
+      "productAddedSuccessfully": "تمت إضافة المنتج بنجاح",
+      "productAddedMessage": "تمت إضافة منتجك بنجاح.",
+      "done": "تم"
     }
   },
   "ordersPage": {

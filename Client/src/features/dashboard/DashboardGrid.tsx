@@ -95,7 +95,7 @@ const DashboardGrid = () => {
         }
       `}</style>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
         {dashboardMetrics.map((metric, index) => (
           <div
             key={metric.title}
@@ -116,7 +116,7 @@ const DashboardGrid = () => {
             <div className="flex items-end justify-between  max-sm:flex-col max-sm:items-start">
               <div className="pb-2">
                 <div className="flex items-end gap-2">
-                  <span className="lg:text-3xl text-xl font-bold text-gray-900">
+                  <span className="lg:text-xl xl:text-3xl text-xl font-bold text-gray-900">
                     {metric.value}
                   </span>
 

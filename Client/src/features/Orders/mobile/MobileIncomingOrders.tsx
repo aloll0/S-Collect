@@ -12,13 +12,17 @@ const ITEMS_PER_PAGE = 8;
 
 const FILTER_TABS = [
   { key: 'allOrders', label: 'ordersPage.allOrders' },
-  { key: 'Pending',   label: 'ordersPage.pending' },
-  { key: 'Processing',label: 'ordersPage.processing' },
-  { key: 'Shipped',   label: 'ordersPage.shipped' },
+  { key: 'Pending', label: 'ordersPage.pending' },
+  { key: 'Processing', label: 'ordersPage.processing' },
+  { key: 'Shipped', label: 'ordersPage.shipped' },
   { key: 'Delivered', label: 'ordersPage.delivered' },
 ];
 
-type ToastState = { type: 'success' | 'warning'; message: string; description?: string } | null;
+type ToastState = {
+  type: 'success' | 'warning';
+  message: string;
+  description?: string;
+} | null;
 
 const MobileIncomingOrders = () => {
   const { t } = useTranslation();
@@ -54,7 +58,11 @@ const MobileIncomingOrders = () => {
     setTimeout(() => setToast(null), 4000);
   };
 
-  const applyStatusChange = (orderId: string, newStatus: OrderStatus, tracking: string) => {
+  const applyStatusChange = (
+    orderId: string,
+    newStatus: OrderStatus,
+    tracking: string
+  ) => {
     const isShipped = newStatus === 'Shipped';
 
     // Warn if shipped without tracking
@@ -71,14 +79,21 @@ const MobileIncomingOrders = () => {
       showToast({
         type: 'success',
         message: t('ordersPage.orderStatus', 'Order Status'),
-        description: t('ordersPage.statusUpdatedSuccessfully', 'Order status updated successfully'),
+        description: t(
+          'ordersPage.statusUpdatedSuccessfully',
+          'Order status updated successfully'
+        ),
       });
     }
 
     setOrders((prev) =>
       prev.map((o) =>
         o.id === orderId
-          ? { ...o, status: newStatus, trackingNumber: tracking || o.trackingNumber }
+          ? {
+              ...o,
+              status: newStatus,
+              trackingNumber: tracking || o.trackingNumber,
+            }
           : o
       )
     );
@@ -86,7 +101,13 @@ const MobileIncomingOrders = () => {
 
     if (selectedOrder?.id === orderId) {
       setSelectedOrder((prev) =>
-        prev ? { ...prev, status: newStatus, trackingNumber: tracking || prev.trackingNumber } : null
+        prev
+          ? {
+              ...prev,
+              status: newStatus,
+              trackingNumber: tracking || prev.trackingNumber,
+            }
+          : null
       );
     }
   };
@@ -105,7 +126,9 @@ const MobileIncomingOrders = () => {
       <MobileOrderDetails
         order={selectedOrder}
         onBack={() => setSelectedOrder(null)}
-        onUpdateStatus={(id, status, tracking) => applyStatusChange(id, status, tracking)}
+        onUpdateStatus={(id, status, tracking) =>
+          applyStatusChange(id, status, tracking)
+        }
       />
     );
   }
@@ -164,7 +187,15 @@ const MobileIncomingOrders = () => {
       {/* Orders list */}
       {paginatedData.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <svg width="56" height="56" fill="none" stroke="#ccc" strokeWidth="1.2" viewBox="0 0 24 24" className="mb-4">
+          <svg
+            width="56"
+            height="56"
+            fill="none"
+            stroke="#ccc"
+            strokeWidth="1.2"
+            viewBox="0 0 24 24"
+            className="mb-4"
+          >
             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
             <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
             <line x1="12" y1="22.08" x2="12" y2="12" />
@@ -173,7 +204,10 @@ const MobileIncomingOrders = () => {
             {t('ordersPage.noOrders', 'No orders yet')}
           </h2>
           <p className="text-sm text-gray-400">
-            {t('ordersPage.noOrdersDesc', 'They will appear here once you receive your first order')}
+            {t(
+              'ordersPage.noOrdersDesc',
+              'They will appear here once you receive your first order'
+            )}
           </p>
         </div>
       ) : (

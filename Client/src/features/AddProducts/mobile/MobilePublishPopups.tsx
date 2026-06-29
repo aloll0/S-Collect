@@ -63,8 +63,18 @@ export const MobileSuccessPopup = ({ onClose }: MobileSuccessPopupProps) => {
       <div className="w-full rounded-t-3xl bg-white px-6 py-8 text-center shadow-xl">
         {/* Success icon */}
         <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white">
-          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+          <svg
+            className="h-8 w-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </div>
 

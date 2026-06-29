@@ -94,7 +94,6 @@ const MobileOrderCards = ({ getStatusLabel, t }: MobileOrdersProps) => (
             >
               {getStatusLabel(order.status)}
             </span>
-
           </div>
 
           {/* Bottom row: avatar + info + amount */}
@@ -135,11 +134,16 @@ const RecentOrdersTable = () => {
 
   const getStatusLabel = (status: OrderStatus) => {
     switch (status) {
-      case 'Delivered': return t('ordersPage.delivered');
-      case 'Shipped': return t('ordersPage.shipped');
-      case 'Processing': return t('ordersPage.processing');
-      case 'Pending': return t('ordersPage.pending');
-      default: return status;
+      case 'Delivered':
+        return t('ordersPage.delivered');
+      case 'Shipped':
+        return t('ordersPage.shipped');
+      case 'Processing':
+        return t('ordersPage.processing');
+      case 'Pending':
+        return t('ordersPage.pending');
+      default:
+        return status;
     }
   };
 

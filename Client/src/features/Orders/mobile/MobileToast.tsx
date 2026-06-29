@@ -8,7 +8,12 @@ interface MobileToastProps {
   onClose: () => void;
 }
 
-export const MobileToast = ({ type, message, description, onClose }: MobileToastProps) => {
+export const MobileToast = ({
+  type,
+  message,
+  description,
+  onClose,
+}: MobileToastProps) => {
   const isSuccess = type === 'success';
 
   return (
@@ -28,7 +33,9 @@ export const MobileToast = ({ type, message, description, onClose }: MobileToast
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold leading-tight">{message}</p>
         {description && (
-          <p className={`text-xs mt-0.5 ${isSuccess ? 'text-green-600' : 'text-red-500'}`}>
+          <p
+            className={`text-xs mt-0.5 ${isSuccess ? 'text-green-600' : 'text-red-500'}`}
+          >
             {description}
           </p>
         )}
@@ -37,7 +44,9 @@ export const MobileToast = ({ type, message, description, onClose }: MobileToast
       <button
         onClick={onClose}
         className={`shrink-0 mt-0.5 transition-colors ${
-          isSuccess ? 'text-green-500 hover:text-green-700' : 'text-red-400 hover:text-red-600'
+          isSuccess
+            ? 'text-green-500 hover:text-green-700'
+            : 'text-red-400 hover:text-red-600'
         }`}
       >
         <X size={15} />

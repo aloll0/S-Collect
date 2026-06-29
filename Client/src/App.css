@@ -125,6 +125,9 @@ html,
     --orange: #f97316; /* Token: Orange       */
     --orange-light: #fff7ed; /* Token: Light Orange */
 
+    /* Chart palette */
+    --chart-1: #218c21; /* matches --green */
+
     /* Stroke width */
     --icon-stroke-width: 1.5; /* Token: Icon StrockNumber */
 
@@ -240,6 +243,9 @@ html,
    ============================================================ */
 
 @theme {
+  /* ---------- Custom Breakpoints ---------- */
+  --breakpoint-sidebar: 1440px;
+
   /* ---------- Colors ---------- */
   --color-gray-50: var(--gray-50);
   --color-gray-100: var(--gray-100);

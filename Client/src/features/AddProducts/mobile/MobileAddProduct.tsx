@@ -76,7 +76,7 @@ const MobileAddProduct = () => {
           <h1 className="text-base font-bold text-gray-900">
             {t('addProduct.mobile.addProduct')}
           </h1>
-        </div> 
+        </div>
 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-4 py-5">
@@ -89,8 +89,6 @@ const MobileAddProduct = () => {
               {stepTitles[step]}
             </h2>
           )}
-
-          
 
           {/* Step content */}
           {step === 1 && <MobileBasicInfoStep />}

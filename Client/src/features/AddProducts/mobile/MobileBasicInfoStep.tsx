@@ -29,7 +29,6 @@ const MobileBasicInfoStep = () => {
 
   return (
     <div className="flex flex-col gap-5">
-
       <BasicInfoFields />
 
       {/* Categories */}

@@ -59,8 +59,8 @@ export function TextAreaInput({
       ref={ref}
       className={cn(
         'w-full px-3 py-2 text-sm text-gray-900 bg-white/50 border border-gray-200 rounded-md ' +
-        'outline-none transition-all duration-200 ease-out placeholder:text-gray-400 resize-none ' +
-        'focus:border-gray-400 focus:ring-1 focus:ring-gray-200 focus:-translate-y-0.5',
+          'outline-none transition-all duration-200 ease-out placeholder:text-gray-400 resize-none ' +
+          'focus:border-gray-400 focus:ring-1 focus:ring-gray-200 focus:-translate-y-0.5',
         error ? inputErrorCls : '',
         className
       )}
