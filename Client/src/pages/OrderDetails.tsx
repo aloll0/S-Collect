@@ -13,7 +13,7 @@ import {
   type OrderStatus,
   STATUS_STYLES,
   ALL_STATUSES,
-} from './Orders/types/order';
+} from '../features/Orders/types/order';
 
 interface OrderDetailsProps {
   order: Order;
