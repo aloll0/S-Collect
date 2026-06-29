@@ -13,7 +13,7 @@ const Dashboard = () => {
         <h1 className="text-h4 py-5">{t('dashboard')}</h1>
       </div>
 
-      <main className=" px-4 lg:px-14">
+      <main className=" px-4 lg:px-14 pb-6">
         <DashboardGrid />
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 items-stretch mb-6">
           <div className="col-span-1 lg:col-span-3">

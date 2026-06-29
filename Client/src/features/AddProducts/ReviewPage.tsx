@@ -22,7 +22,7 @@ const ReviewPage = ({
   onPrevious,
   onPublish,
 }: ReviewPageProps) => (
-  <div className="flex-1 overflow-y-auto bg-gray-100 px-4 py-6 md:p-8">
+  <div className="flex-1 overflow-y-auto  px-4 py-6 lg:p-14">
     <div className="mb-6 md:mb-8 md:ml-4">
       <h1 className="text-h5 font-bold">Add Product</h1>
       <div className="mt-1 flex items-center gap-2 text-sm text-gray-500">

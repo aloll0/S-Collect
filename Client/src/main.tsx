@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom';
 import './i18n/index.js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import '@fontsource/inter';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

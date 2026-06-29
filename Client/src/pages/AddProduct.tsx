@@ -41,13 +41,13 @@ const AddProduct = () => {
 
   const makeAdder =
     (setter: React.Dispatch<React.SetStateAction<string[]>>) =>
-    (value: string) =>
-      setter((prev) => [...prev, value]);
+      (value: string) =>
+        setter((prev) => [...prev, value]);
 
   const makeRemover =
     (setter: React.Dispatch<React.SetStateAction<string[]>>, list: string[]) =>
-    (index: number) =>
-      setter(list.filter((_, i) => i !== index));
+      (index: number) =>
+        setter(list.filter((_, i) => i !== index));
 
   const onSubmit = () => {
     setShowReview(true);
@@ -75,16 +75,13 @@ const AddProduct = () => {
     );
   }
 
-  return (
-    <div className="flex-1 overflow-y-auto bg-gray-100 px-4 py-6 md:p-8">
-      <div className="mb-6 md:mb-8 md:ml-4">
-        <h1 className="text-h5 font-bold">{t('addProduct.title')}</h1>
-        <p className="mt-2 text-body-sm text-gray-500">
-          {t('addProduct.subtitle')}
-        </p>
-      </div>
+  return (<>
+    <div className="px-4 lg:px-14 py-3 bg-white">
+      <h1 className="text-h5 font-bold">{t('addProduct.title')}</h1>
+    </div>
+    <div className="flex-1 overflow-y-auto px-4  lg:px-14">
 
-      <div className="rounded-2xl bg-white p-4 shadow-sm md:p-6 md:shadow-none">
+      <div className="rounded-2xl  shadow-sm py-4 md:shadow-none">
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-[1fr_400px] xl:gap-10">
           {/* Left */}
           <div>
@@ -168,6 +165,7 @@ const AddProduct = () => {
 
       {isSuccess && <SuccessPopup onClose={() => setIsSuccess(false)} />}
     </div>
+  </>
   );
 };
 
