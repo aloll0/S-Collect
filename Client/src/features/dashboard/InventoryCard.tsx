@@ -10,9 +10,9 @@ interface CardData {
   theme: {
     text: 'var(--red)' | 'var(--yellow)' | 'var(--green)';
     background:
-      | 'var(--red-light)'
-      | 'var(--yellow-light)'
-      | 'var(--green-light)';
+    | 'var(--red-light)'
+    | 'var(--yellow-light)'
+    | 'var(--green-light)';
   };
 }
 
@@ -34,22 +34,26 @@ const InventoryCard = ({ cardData }: { cardData: CardData }) => {
 
   return (
     <div className="flex  items-center gap-3 shadow">
-      <div className="h-14 w-14 rounded-lg overflow-hidden ">
+      <div className="lg:h-14 lg:w-14 h-8 w-8 rounded-lg overflow-hidden ">
         <img
           className="object-cover w-full h-full"
           src={cardData.image}
           alt={cardData.name}
         />
       </div>
-      <div className="flex flex-col gap-2.5 flex-1 ">
-        <h6 className="text-base">{cardData.name}</h6>
-        <p className="text-sm text-gray-400">
+      <div className="flex flex-col gap-2.5 flex-1 max-sm:py-1.5">
+        <h6 className="text-xs line-clamp-1 lg:text-base">{cardData.name}</h6>
+        <p className="text-xs  lg:text-sm text-gray-400">
           {t('inventoryItem.sku')} : {cardData.sku}
+          . <span className="text-gray-400">
+            {t('inventoryItem.stock')} : {cardData.stockCount}
+          </span>
         </p>
+
       </div>
       <div className="flex flex-col  items-end pe-1.5">
         <span
-          className="py-1 px-2 rounded-full inline-block mb-3"
+          className="px-[5px] rounded-[2px] inline-block text-[10px] "
           style={{
             background: cardData.theme.background,
             color: cardData.theme.text,
@@ -58,7 +62,7 @@ const InventoryCard = ({ cardData }: { cardData: CardData }) => {
           {' '}
           {getStatusLabel(cardData.status)}
         </span>
-        <span className="text-gray-400">
+        <span className="text-gray-400 max-sm:hidden max-md:hidden">
           {' '}
           {t('inventoryItem.stock')} : {cardData.stockCount}
         </span>

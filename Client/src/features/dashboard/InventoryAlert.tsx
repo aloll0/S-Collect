@@ -125,14 +125,14 @@ const InventoryAlert = () => {
         }
       `}</style>
 
-      <div className="w-full rounded-lg bg-white p-8 shadow h-[512px] inv-animate-in">
+      <div className="w-full rounded-lg bg-white p-3 lg:p-8 shadow h-[300px]  lg:h-[512px] inv-animate-in">
         {/* Header & Alert Banner appear with the container */}
-        <div className="flex gap-2 items-center mb-6">
-          <TriangleAlert className="text-yellow" />
-          <h3 className="text-xl font-bold">{t('inventoryAlerts')}</h3>
+        <div className="flex gap-2 items-center mb-3 lg:mb-6">
+          <TriangleAlert className="text-yellow w-4 h-4 lg:w-6 lg:h-6" />
+          <h3 className="text-sm lg:text-xl font-bold">{t('inventoryAlerts')}</h3>
         </div>
 
-        <div className="bg-yellow-light text-yellow px-4 py-2.5 rounded-lg text-sm mb-6">
+        <div className="bg-yellow-light text-yellow px-4 py-2.5 rounded-lg text-sm mb-6 hidden lg:block">
           <p>{t('inventoryItem.alertMessage')}</p>
         </div>
 
@@ -153,7 +153,7 @@ const InventoryAlert = () => {
 
         <Link
           to={'/inventory'}
-          className="w-full text-center rounded-lg border-2 block py-3 mt-auto inv-animate-in hover:bg-gray-50 transition-colors"
+          className="w-full text-center rounded-lg border block py-1.5   lg:py-3 mt-auto inv-animate-in hover:bg-gray-50 transition-colors"
           style={{ animationDelay: '600ms' }}
         >
           {t('inventoryItem.manageInventory')}

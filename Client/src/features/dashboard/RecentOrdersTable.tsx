@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 type OrderStatus = 'Delivered' | 'Shipped' | 'Processing' | 'Pending';
 
@@ -40,11 +41,11 @@ const orders: Order[] = [
     status: 'Pending',
   },
   {
-    id: '#ORD-0009',
-    date: 'Jun 13, 2025',
-    customer: 'Fahad Al-Harbi',
-    amount: 890,
-    status: 'Pending',
+    id: '#ORD-0008',
+    date: 'Jun 12, 2025',
+    customer: 'Nour Al-Salem',
+    amount: 450,
+    status: 'Shipped',
   },
 ];
 
@@ -55,21 +56,90 @@ const statusStyles: Record<OrderStatus, string> = {
   Pending: 'bg-gray-100 text-gray-600',
 };
 
+/** Avatar colour keyed by first letter of name */
+const avatarColors: Record<string, string> = {
+  S: 'bg-purple-100 text-purple-700',
+  K: 'bg-blue-100 text-blue-700',
+  L: 'bg-pink-100 text-pink-700',
+  F: 'bg-amber-100 text-amber-700',
+  N: 'bg-teal-100 text-teal-700',
+};
+const defaultAvatarCls = 'bg-gray-100 text-gray-600';
+
+// ─── Mobile card list ────────────────────────────────────────────────────────
+
+interface MobileOrdersProps {
+  getStatusLabel: (s: OrderStatus) => string;
+  t: ReturnType<typeof useTranslation>['t'];
+}
+
+const MobileOrderCards = ({ getStatusLabel, t }: MobileOrdersProps) => (
+  <div className="flex flex-col gap-3">
+    {orders.map((order, index) => {
+      const orderKey = order.id.replace('#', '').toLowerCase();
+      const initial = order.customer.charAt(0).toUpperCase();
+      const avatarCls = avatarColors[initial] ?? defaultAvatarCls;
+
+      return (
+        <div
+          key={`${order.id}-${index}`}
+          className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm tbl-animate-in"
+          style={{ animationDelay: `${index * 70}ms` }}
+        >
+          {/* Top row: status badge + view button */}
+          <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-100">
+            <span className="text-xs  font-medium">{order.id}</span>
+            <span
+              className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${statusStyles[order.status]}`}
+            >
+              {getStatusLabel(order.status)}
+            </span>
+
+          </div>
+
+          {/* Bottom row: avatar + info + amount */}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="flex flex-col min-w-0">
+                <span className="font-medium text-gray-900 truncate leading-tight">
+                  {t(`recentOrders.orders.${orderKey}.customer`, {
+                    defaultValue: order.customer,
+                  })}
+                </span>
+                <span className="text-xs text-gray-400">
+                  {t(`recentOrders.orders.${orderKey}.date`, {
+                    defaultValue: order.date,
+                  })}
+                </span>
+              </div>
+            </div>
+
+            <span className="text-sm font-semibold text-gray-900 tabular-nums shrink-0">
+              {order.amount.toLocaleString()}{' '}
+              <span className="text-xs font-normal text-gray-500">
+                {t('dashboardMetrics.unit.sar')}
+              </span>
+            </span>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+);
+
+// ─── Main component ──────────────────────────────────────────────────────────
+
 const RecentOrdersTable = () => {
   const { t } = useTranslation();
+  const { isMobile } = useBreakpoint();
 
   const getStatusLabel = (status: OrderStatus) => {
     switch (status) {
-      case 'Delivered':
-        return t('ordersPage.delivered');
-      case 'Shipped':
-        return t('ordersPage.shipped');
-      case 'Processing':
-        return t('ordersPage.processing');
-      case 'Pending':
-        return t('ordersPage.pending');
-      default:
-        return status;
+      case 'Delivered': return t('ordersPage.delivered');
+      case 'Shipped': return t('ordersPage.shipped');
+      case 'Processing': return t('ordersPage.processing');
+      case 'Pending': return t('ordersPage.pending');
+      default: return status;
     }
   };
 
@@ -87,101 +157,114 @@ const RecentOrdersTable = () => {
         }
       `}</style>
 
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white h-[550px]">
-        {/* Header fades in first */}
-        <div className="flex items-center justify-between px-8 py-6 tbl-animate-in">
-          <h2 className="text-2xl font-semibold text-gray-900">
-            {t('recentOrders.title')}
-          </h2>
-
-          <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-black transition-colors">
-            {t('recentOrders.viewAll')}
-            <span className="inline-block rtl:rotate-180">→</span>
-          </button>
+      {isMobile ? (
+        /* ── Mobile: card list ── */
+        <div>
+          <div className="flex items-center justify-between mb-4 tbl-animate-in">
+            <h2 className="text-lg font-semibold text-gray-900">
+              {t('recentOrders.title')}
+            </h2>
+            <button className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-black transition-colors">
+              {t('recentOrders.viewAll')}
+              <span className="inline-block rtl:rotate-180">→</span>
+            </button>
+          </div>
+          <MobileOrderCards getStatusLabel={getStatusLabel} t={t} />
         </div>
+      ) : (
+        /* ── Desktop: original table ── */
+        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white h-[550px]">
+          {/* Header fades in first */}
+          <div className="flex items-center justify-between px-8 py-6 tbl-animate-in">
+            <h2 className="text-2xl font-semibold text-gray-900">
+              {t('recentOrders.title')}
+            </h2>
+            <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-black transition-colors">
+              {t('recentOrders.viewAll')}
+              <span className="inline-block rtl:rotate-180">→</span>
+            </button>
+          </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto overflow-y-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr
-                className="border-t border-gray-200 bg-gray-50 tbl-animate-in"
-                style={{ animationDelay: '100ms' }}
-              >
-                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                  {t('recentOrders.table.id')}
-                </th>
-                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                  {t('recentOrders.table.date')}
-                </th>
-                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                  {t('recentOrders.table.customer')}
-                </th>
-                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                  {t('recentOrders.table.amount')}
-                </th>
-                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                  {t('recentOrders.table.status')}
-                </th>
-                <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
-                  {t('recentOrders.table.action')}
-                </th>
-              </tr>
-            </thead>
+          {/* Table */}
+          <div className="overflow-x-auto overflow-y-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr
+                  className="border-t border-gray-200 bg-gray-50 tbl-animate-in"
+                  style={{ animationDelay: '100ms' }}
+                >
+                  <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                    {t('recentOrders.table.id')}
+                  </th>
+                  <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                    {t('recentOrders.table.date')}
+                  </th>
+                  <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                    {t('recentOrders.table.customer')}
+                  </th>
+                  <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                    {t('recentOrders.table.amount')}
+                  </th>
+                  <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                    {t('recentOrders.table.status')}
+                  </th>
+                  <th className="px-8 py-4 text-left rtl:text-right text-sm font-medium text-gray-500">
+                    {t('recentOrders.table.action')}
+                  </th>
+                </tr>
+              </thead>
 
-            <tbody>
-              {orders.map((order, index) => {
-                const orderKey = order.id.replace('#', '').toLowerCase();
-                return (
-                  <tr
-                    key={`${order.id}-${index}`}
-                    className="border-t border-gray-200 transition-colors hover:bg-gray-50 tbl-animate-in"
-                    // Stagger rows: header finishes at ~100ms, rows start at 200ms + 60ms each
-                    style={{ animationDelay: `${200 + index * 60}ms` }}
-                  >
-                    <td className="px-8 py-6 font-medium text-amber-700">
-                      {order.id}
-                    </td>
+              <tbody>
+                {orders.map((order, index) => {
+                  const orderKey = order.id.replace('#', '').toLowerCase();
+                  return (
+                    <tr
+                      key={`${order.id}-${index}`}
+                      className="border-t border-gray-200 transition-colors hover:bg-gray-50 tbl-animate-in"
+                      style={{ animationDelay: `${200 + index * 60}ms` }}
+                    >
+                      <td className="px-8 py-6 font-medium text-amber-700">
+                        {order.id}
+                      </td>
 
-                    <td className="px-8 py-6 text-gray-500">
-                      {t(`recentOrders.orders.${orderKey}.date`, {
-                        defaultValue: order.date,
-                      })}
-                    </td>
+                      <td className="px-8 py-6 text-gray-500">
+                        {t(`recentOrders.orders.${orderKey}.date`, {
+                          defaultValue: order.date,
+                        })}
+                      </td>
 
-                    <td className="px-8 py-6 font-medium text-gray-900">
-                      {t(`recentOrders.orders.${orderKey}.customer`, {
-                        defaultValue: order.customer,
-                      })}
-                    </td>
+                      <td className="px-8 py-6 font-medium text-gray-900">
+                        {t(`recentOrders.orders.${orderKey}.customer`, {
+                          defaultValue: order.customer,
+                        })}
+                      </td>
 
-                    <td className="px-8 py-6 text-gray-900">
-                      {order.amount.toLocaleString()}{' '}
-                      {t('dashboardMetrics.unit.sar')}
-                    </td>
+                      <td className="px-8 py-6 text-gray-900">
+                        {order.amount.toLocaleString()}{' '}
+                        {t('dashboardMetrics.unit.sar')}
+                      </td>
 
-                    <td className="px-8 py-6">
-                      <span
-                        className={`inline-flex rounded-full px-4 py-2 text-sm font-medium ${
-                          statusStyles[order.status]
-                        }`}
-                      >
-                        {getStatusLabel(order.status)}
-                      </span>
-                    </td>
+                      <td className="px-8 py-6">
+                        <span
+                          className={`inline-flex rounded-full px-4 py-2 text-sm font-medium ${statusStyles[order.status]}`}
+                        >
+                          {getStatusLabel(order.status)}
+                        </span>
+                      </td>
 
-                    <td className="px-8 py-6">
-                      <button className="font-medium text-gray-900 underline hover:text-amber-700 transition-colors">
-                        {t('recentOrders.table.view')}
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                      <td className="px-8 py-6">
+                        <button className="font-medium text-gray-900 underline hover:text-amber-700 transition-colors">
+                          {t('recentOrders.table.view')}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
