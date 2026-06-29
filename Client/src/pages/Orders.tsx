@@ -8,10 +8,12 @@ import { Pagination } from '../features/Orders/components/Pagination';
 import { EmptyState } from '../features/Orders/components/ EmptyState';
 import { TrackingModal } from '../features/Orders/components/TrackingModal';
 import { OrderDetails } from './OrderDetails';
+import { useBreakpoint } from '../hooks/useBreakpoint';
+import MobileIncomingOrders from '../features/Orders/mobile/MobileIncomingOrders';
 
 const ITEMS_PER_PAGE = 8;
 
-const IncomingOrders = () => {
+const IncomingOrdersDesktop = () => {
   const { t } = useTranslation();
 
   const [orders, setOrders] = useState<Order[]>(FAKE_ORDERS);
@@ -137,6 +139,12 @@ const IncomingOrders = () => {
       </div>
     </div>
   );
+};
+
+const IncomingOrders = () => {
+  const { isMobile } = useBreakpoint();
+
+  return isMobile ? <MobileIncomingOrders /> : <IncomingOrdersDesktop />;
 };
 
 export default IncomingOrders;
