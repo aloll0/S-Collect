@@ -35,7 +35,7 @@ const BasicInfoFields = () => {
 
   return (
     <>
-    <MobileImageUploader />
+    {isMobile && <MobileImageUploader />}
       <div>
         <label className={labelCls}>
           {t('addProduct.nameAr')} <span className="text-red-500">*</span>
