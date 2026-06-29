@@ -21,6 +21,11 @@ const MobileImageUploader = () => {
 
   const [previews, setPreviews] = useState<PreviewImage[]>([]);
 
+  // Use a stable key based on file names+sizes to avoid re-running on every
+  // render (watch() returns a new array reference each render, which would
+  // cause an infinite loop if used directly as a useEffect dependency).
+  const filesKey = files.map((f) => `${f.name}-${f.size}`).join(",");
+
   useEffect(() => {
     const newPreviews = files.map((file) => ({
       id: crypto.randomUUID(),
@@ -35,7 +40,8 @@ const MobileImageUploader = () => {
         URL.revokeObjectURL(image.preview)
       );
     };
-  }, [files]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filesKey]);
 
   const handleSelect = (selectedFiles: FileList | null) => {
     if (!selectedFiles) return;
