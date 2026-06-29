@@ -8,7 +8,6 @@ import MobileBasicInfoStep from './MobileBasicInfoStep';
 import MobilePricingStep from './MobilePricingStep';
 import MobileInventoryStep from './MobileInventoryStep';
 import MobileReviewStep from './MobileReviewStep';
-import MobileImageUploader from './MobileImageUploader';
 import { MobileLoadingPopup, MobileSuccessPopup } from './MobilePublishPopups';
 import { useMobileAddProductStore } from './mobileAddProductStore';
 
@@ -91,7 +90,7 @@ const MobileAddProduct = () => {
             </h2>
           )}
 
-          <MobileImageUploader />
+          
 
           {/* Step content */}
           {step === 1 && <MobileBasicInfoStep />}

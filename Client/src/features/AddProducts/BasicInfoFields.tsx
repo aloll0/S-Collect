@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useFormContext } from 'react-hook-form';
 import type { ProductFormData } from './types';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import MobileImageUploader from './mobile/MobileImageUploader';
 
 const BasicInfoFields = () => {
   const { t } = useTranslation();
@@ -34,6 +35,7 @@ const BasicInfoFields = () => {
 
   return (
     <>
+    <MobileImageUploader />
       <div>
         <label className={labelCls}>
           {t('addProduct.nameAr')} <span className="text-red-500">*</span>
