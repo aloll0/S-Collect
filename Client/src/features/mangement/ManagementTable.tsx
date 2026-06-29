@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Trash2, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import ProductRow from './ProductRow';
 import { showDeleteConfirmation } from './deleteConfirmation';
 import { useManagementStore, useManagementTable } from './managementStore';
