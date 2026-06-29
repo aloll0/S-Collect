@@ -29,11 +29,6 @@ const MobileBasicInfoStep = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <div>
-        <h2 className="text-base font-semibold text-gray-900">
-          {t('addProduct.basicInfo', 'Basic Info')}
-        </h2>
-      </div>
 
       <BasicInfoFields />
 
@@ -83,7 +78,7 @@ const MobileBasicInfoStep = () => {
           onClick={handleContinue}
           className="flex-1 rounded-xl bg-gray-900 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 active:scale-[0.98]"
         >
-          {t('addProduct.continue', 'Continue')}
+          {t('addProduct.continue')}
         </button>
       </div>
     </div>

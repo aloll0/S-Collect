@@ -32,10 +32,10 @@ export const MobileLoadingPopup = () => {
         </div>
 
         <h3 className="text-lg font-bold text-gray-900">
-          {t('addProduct.addingProduct', 'Adding Product...')}
+          {t('addProduct.mobile.addingProduct')}
         </h3>
         <p className="mt-1.5 text-sm text-gray-400">
-          {t('addProduct.pleaseWait', 'Please wait while we add your product.')}
+          {t('addProduct.mobile.pleaseWait')}
         </p>
 
         {/* Disabled button during loading */}
@@ -43,7 +43,7 @@ export const MobileLoadingPopup = () => {
           disabled
           className="mt-6 w-full rounded-xl bg-gray-200 py-3 text-sm font-semibold text-gray-400 cursor-not-allowed"
         >
-          {t('addProduct.adding', 'Adding...')}
+          {t('addProduct.mobile.adding')}
         </button>
       </div>
     </div>
@@ -69,17 +69,17 @@ export const MobileSuccessPopup = ({ onClose }: MobileSuccessPopupProps) => {
         </div>
 
         <h3 className="text-lg font-bold text-gray-900">
-          {t('addProduct.productAddedSuccessfully', 'Product Added Successfully')}
+          {t('addProduct.mobile.productAddedSuccessfully')}
         </h3>
         <p className="mt-1.5 text-sm text-gray-400">
-          {t('addProduct.productAddedMessage', 'Your product has been added.')}
+          {t('addProduct.mobile.productAddedMessage')}
         </p>
 
         <button
           onClick={onClose}
           className="mt-6 w-full rounded-xl bg-green-500 py-3 text-sm font-semibold text-white transition hover:bg-green-600 active:scale-[0.98]"
         >
-          {t('addProduct.done', 'Done')}
+          {t('addProduct.mobile.done')}
         </button>
       </div>
     </div>

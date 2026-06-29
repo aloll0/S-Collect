@@ -27,16 +27,11 @@ const MobilePricingStep = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <div>
-        <h2 className="text-base font-semibold text-gray-900">
-          {t('addProduct.pricing', 'Pricing')}
-        </h2>
-      </div>
 
       {/* Base Price */}
       <div>
         <label className="mb-2 block text-sm font-medium text-gray-700">
-          {t('addProduct.basePrice', 'Base Price')}{' '}
+          {t('addProduct.basePrice')}{' '}
           <span className="text-red-500">*</span>
         </label>
         <div className="relative">
@@ -71,7 +66,7 @@ const MobilePricingStep = () => {
       {/* Compare-at Price */}
       <div>
         <label className="mb-2 block text-sm font-medium text-gray-700">
-          {t('addProduct.comparePrice', 'Compare-at Price')}{' '}
+          {t('addProduct.comparePrice')}{' '}
           <span className="text-red-500">*</span>
         </label>
         <div className="relative">
@@ -110,14 +105,14 @@ const MobilePricingStep = () => {
           onClick={previousStep}
           className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 active:scale-[0.98]"
         >
-          {t('addProduct.previous', 'Previous')}
+          {t('addProduct.previous')}
         </button>
         <button
           type="button"
           onClick={handleContinue}
           className="flex-1 rounded-xl bg-gray-900 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 active:scale-[0.98]"
         >
-          {t('addProduct.continue', 'Continue')}
+          {t('addProduct.continue')}
         </button>
       </div>
     </div>

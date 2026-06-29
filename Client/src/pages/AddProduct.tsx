@@ -10,11 +10,14 @@ import QuantityInput from '../features/AddProducts/QuantityInput';
 import TagInput from '../features/AddProducts/TagInput';
 import PricingFields from '../features/AddProducts/PricingFields';
 import SuccessPopup from '../features/AddProducts/SuccessPopup';
+import MobileAddProduct from '../features/AddProducts/mobile/MobileAddProduct';
 import type { ProductFormData } from '../features/AddProducts/types';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const AddProduct = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isMobile } = useBreakpoint();
 
   const [enabled, setEnabled] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -38,17 +41,21 @@ const AddProduct = () => {
 
   const makeAdder =
     (setter: React.Dispatch<React.SetStateAction<string[]>>) =>
-      (value: string) =>
-        setter((prev) => [...prev, value]);
+    (value: string) =>
+      setter((prev) => [...prev, value]);
 
   const makeRemover =
     (setter: React.Dispatch<React.SetStateAction<string[]>>, list: string[]) =>
-      (index: number) =>
-        setter(list.filter((_, i) => i !== index));
+    (index: number) =>
+      setter(list.filter((_, i) => i !== index));
 
   const onSubmit = () => {
     setShowReview(true);
   };
+
+  if (isMobile) {
+    return <MobileAddProduct />;
+  }
 
   if (showReview) {
     return (

@@ -251,6 +251,23 @@
       "comparePriceRequired": "Compare-at price is required",
       "skuRequired": "SKU is required",
       "priceMinValue": "Price must be greater than or equal to 0"
+    },
+    "mobile": {
+      "addProduct": "Add Product",
+      "basicInfo": "Basic Information",
+      "pricing": "Pricing",
+      "inventory": "Inventory",
+      "reviewPublish": "Review & Publish",
+      "sku": "SKU",
+      "stockQuantity":"Stock Quantity",
+      "productStatus":"Product Status",
+      "visibility":"Visibility",
+      "adding":"Adding...",
+      "addingProduct":"Adding Product",
+      "pleaseWait":"Please wait while we add your product.",
+      "productAddedSuccessfully":"Product Added Successfully",
+      "productAddedMessage":"Your product has been added successfully.",
+      "done":"Done"
     }
   },
   "ordersPage": {

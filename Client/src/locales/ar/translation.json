@@ -252,6 +252,23 @@
       "comparePriceRequired": "السعر قبل الخصم مطلوب",
       "skuRequired": "رمز المنتج مطلوب",
       "priceMinValue": "السعر يجب أن يكون أكبر من أو يساوي 0"
+    },
+    "mobile": {
+      "addProduct": "إضافة منتج",
+      "basicInfo": "معلومات أساسية",
+      "pricing": "التسعير",
+      "inventory": "المخزون",
+      "reviewPublish": "مراجعة ونشر",
+      "sku": "رمز المنتج",
+      "stockQuantity":"كمية المخزون",
+      "productStatus":"حالة المنتج",
+      "visibility":"الظهور",
+      "adding":"جاري الإضافة...",
+      "addingProduct":"جاري إضافة المنتج",
+      "pleaseWait":"يرجى الانتظار بينما نقوم بإضافة منتجك.",
+      "productAddedSuccessfully":"تمت إضافة المنتج بنجاح",
+      "productAddedMessage":"تمت إضافة منتجك بنجاح.",
+      "done":"تم"
     }
   },
   "ordersPage": {
