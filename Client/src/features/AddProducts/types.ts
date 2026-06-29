@@ -7,4 +7,3 @@ export interface ProductFormData {
   sku: string;
   images: File[];
 }
- 

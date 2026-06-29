@@ -1,14 +1,13 @@
-import { useRef, useState, useEffect } from "react";
-import { useFormContext } from "react-hook-form";
-import { UploadCloud, X } from "lucide-react";
-import type { ProductFormData } from "../types";
+import { useRef, useState, useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { UploadCloud, X } from 'lucide-react';
+import type { ProductFormData } from '../types';
 
 interface PreviewImage {
   id: string;
   file: File;
   preview: string;
 }
-
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -17,14 +16,14 @@ const MobileImageUploader = () => {
 
   const { setValue, watch } = useFormContext<ProductFormData>();
 
-  const files = watch("images") || [];
+  const files = watch('images') || [];
 
   const [previews, setPreviews] = useState<PreviewImage[]>([]);
 
   // Use a stable key based on file names+sizes to avoid re-running on every
   // render (watch() returns a new array reference each render, which would
   // cause an infinite loop if used directly as a useEffect dependency).
-  const filesKey = files.map((f) => `${f.name}-${f.size}`).join(",");
+  const filesKey = files.map((f) => `${f.name}-${f.size}`).join(',');
 
   useEffect(() => {
     const newPreviews = files.map((file) => ({
@@ -36,23 +35,21 @@ const MobileImageUploader = () => {
     setPreviews(newPreviews);
 
     return () => {
-      newPreviews.forEach((image) =>
-        URL.revokeObjectURL(image.preview)
-      );
+      newPreviews.forEach((image) => URL.revokeObjectURL(image.preview));
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filesKey]);
 
   const handleSelect = (selectedFiles: FileList | null) => {
     if (!selectedFiles) return;
 
     const validFiles = Array.from(selectedFiles).filter((file) => {
-      if (!file.type.startsWith("image/")) return false;
+      if (!file.type.startsWith('image/')) return false;
       if (file.size > MAX_SIZE) return false;
       return true;
     });
 
-    setValue("images", [...files, ...validFiles], {
+    setValue('images', [...files, ...validFiles], {
       shouldValidate: true,
     });
   };
@@ -60,7 +57,7 @@ const MobileImageUploader = () => {
   const removeImage = (index: number) => {
     const updated = files.filter((_, i) => i !== index);
 
-    setValue("images", updated, {
+    setValue('images', updated, {
       shouldValidate: true,
     });
   };
@@ -80,9 +77,7 @@ const MobileImageUploader = () => {
           Tap to upload photos
         </p>
 
-        <span className="text-xs text-gray-400">
-          JPG, PNG up to 10MB
-        </span>
+        <span className="text-xs text-gray-400">JPG, PNG up to 10MB</span>
       </button>
 
       <input

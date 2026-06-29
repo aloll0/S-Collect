@@ -27,12 +27,10 @@ const MobilePricingStep = () => {
 
   return (
     <div className="flex flex-col gap-5">
-
       {/* Base Price */}
       <div>
         <label className="mb-2 block text-sm font-medium text-gray-700">
-          {t('addProduct.basePrice')}{' '}
-          <span className="text-red-500">*</span>
+          {t('addProduct.basePrice')} <span className="text-red-500">*</span>
         </label>
         <div className="relative">
           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-medium">
@@ -66,8 +64,7 @@ const MobilePricingStep = () => {
       {/* Compare-at Price */}
       <div>
         <label className="mb-2 block text-sm font-medium text-gray-700">
-          {t('addProduct.comparePrice')}{' '}
-          <span className="text-red-500">*</span>
+          {t('addProduct.comparePrice')} <span className="text-red-500">*</span>
         </label>
         <div className="relative">
           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-medium">

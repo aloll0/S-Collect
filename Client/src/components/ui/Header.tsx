@@ -33,8 +33,8 @@ const Header = ({ onMenuClick }: HeaderProps) => {
 
   return (
     <header className="bg-(--gray-950) shadow-md p-4 text-white sticky inset-0  z-50">
-      <div className="container mx-auto flex flex-col gap-4 lg:flex-row  lg:justify-between lg:items-center">
-        <div className="flex items-center justify-between gap-4 lg:hidden">
+      <div className="container mx-auto flex flex-col gap-4 sidebar:flex-row sidebar:justify-between sidebar:items-center">
+        <div className="flex items-center justify-between gap-4 sidebar:hidden">
           <div className="flex items-center gap-3">
             <img src="/mobLogo.png" alt="Logo" className="h-10 w-10" />
             <button
@@ -47,7 +47,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             </button>
           </div>
           <div className="flex items-center">
-            <div className="lg:hidden block">
+            <div className="sidebar:hidden block">
               <InputSearch />
             </div>
             <Link
@@ -60,19 +60,19 @@ const Header = ({ onMenuClick }: HeaderProps) => {
           </div>
         </div>
 
-        <div className="hidden items-center justify-between gap-4 lg:flex">
+        <div className="hidden items-center justify-between gap-4 sidebar:flex">
           <div>
             <h1 className="text-2xl font-bold">Hello, Ahmed 👋</h1>
             <p className="text-sm text-gray-400">{today}</p>
           </div>
         </div>
 
-        <div className="items-center gap-3 lg:gap-4 lg:flex hidden">
-          <div className="flex-1 lg:flex-none lg:block hidden">
+        <div className="items-center gap-3 sidebar:gap-4 sidebar:flex hidden">
+          <div className="flex-1 sidebar:flex-none sidebar:block hidden">
             <InputSearch />
           </div>
 
-          <div className="hidden items-center bg-gray-50 text-white px-1 rounded-lg lg:flex">
+          <div className="hidden items-center bg-gray-50 text-white px-1 rounded-lg sidebar:flex">
             <Globe className="text-gray-950" />
 
             <select
@@ -87,7 +87,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
 
           <Link
             to="/login"
-            className="hidden text-2xl hover:text-gray-300 lg:block"
+            className="hidden text-2xl hover:text-gray-300 sidebar:block"
           >
             <User />
           </Link>

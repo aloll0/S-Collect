@@ -35,7 +35,10 @@ export const InventoryMobile = () => {
             {t('inventoryPage.title', 'Inventory Management')}
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">
-            {t('inventoryPage.subtitle', 'Keep your stock quantities updated in real time.')}
+            {t(
+              'inventoryPage.subtitle',
+              'Keep your stock quantities updated in real time.'
+            )}
           </p>
         </div>
 

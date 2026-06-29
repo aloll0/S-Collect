@@ -1,7 +1,12 @@
 // features/Orders/mobile/MobileOrderCard.tsx
 import { useTranslation } from 'react-i18next';
 import { ChevronDown } from 'lucide-react';
-import { type Order, type OrderStatus, STATUS_STYLES, ALL_STATUSES } from '../types/order';
+import {
+  type Order,
+  type OrderStatus,
+  STATUS_STYLES,
+  ALL_STATUSES,
+} from '../types/order';
 
 interface MobileOrderCardProps {
   order: Order;
@@ -39,7 +44,9 @@ export const MobileOrderCard = ({
           </span>
           <select
             value={order.status}
-            onChange={(e) => onStatusChange(order.id, e.target.value as OrderStatus)}
+            onChange={(e) =>
+              onStatusChange(order.id, e.target.value as OrderStatus)
+            }
             className="absolute inset-0 cursor-pointer opacity-0 w-full h-full"
           >
             {ALL_STATUSES.map((s) => (
@@ -48,7 +55,10 @@ export const MobileOrderCard = ({
               </option>
             ))}
           </select>
-          <ChevronDown size={13} className="text-gray-400 pointer-events-none shrink-0" />
+          <ChevronDown
+            size={13}
+            className="text-gray-400 pointer-events-none shrink-0"
+          />
         </div>
 
         <button

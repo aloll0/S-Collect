@@ -10,9 +10,10 @@ const PricingFields = () => {
   } = useFormContext<ProductFormData>();
 
   const inputCls = (hasError?: string) =>
-    `w-full rounded-xl border px-4 py-3 focus:outline-none ${hasError
-      ? 'border-red-500 focus:border-red-500'
-      : 'border-gray-300 focus:border-gray-950'
+    `w-full rounded-xl border px-4 py-3 focus:outline-none ${
+      hasError
+        ? 'border-red-500 focus:border-red-500'
+        : 'border-gray-300 focus:border-gray-950'
     }`;
 
   return (

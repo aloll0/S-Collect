@@ -10,9 +10,9 @@ interface CardData {
   theme: {
     text: 'var(--red)' | 'var(--yellow)' | 'var(--green)';
     background:
-    | 'var(--red-light)'
-    | 'var(--yellow-light)'
-    | 'var(--green-light)';
+      | 'var(--red-light)'
+      | 'var(--yellow-light)'
+      | 'var(--green-light)';
   };
 }
 
@@ -44,12 +44,11 @@ const InventoryCard = ({ cardData }: { cardData: CardData }) => {
       <div className="flex flex-col gap-2.5 flex-1 max-sm:py-1.5">
         <h6 className="text-xs line-clamp-1 lg:text-base">{cardData.name}</h6>
         <p className="text-xs  lg:text-sm text-gray-400">
-          {t('inventoryItem.sku')} : {cardData.sku}
-          . <span className="text-gray-400">
+          {t('inventoryItem.sku')} : {cardData.sku}.{' '}
+          <span className="text-gray-400">
             {t('inventoryItem.stock')} : {cardData.stockCount}
           </span>
         </p>
-
       </div>
       <div className="flex flex-col  items-end pe-1.5">
         <span

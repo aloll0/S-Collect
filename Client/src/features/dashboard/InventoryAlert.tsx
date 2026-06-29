@@ -129,7 +129,9 @@ const InventoryAlert = () => {
         {/* Header & Alert Banner appear with the container */}
         <div className="flex gap-2 items-center mb-3 lg:mb-6">
           <TriangleAlert className="text-yellow w-4 h-4 lg:w-6 lg:h-6" />
-          <h3 className="text-sm lg:text-xl font-bold">{t('inventoryAlerts')}</h3>
+          <h3 className="text-sm lg:text-xl font-bold">
+            {t('inventoryAlerts')}
+          </h3>
         </div>
 
         <div className="bg-yellow-light text-yellow px-4 py-2.5 rounded-lg text-sm mb-6 hidden lg:block">

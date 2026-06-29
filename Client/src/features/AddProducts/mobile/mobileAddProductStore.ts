@@ -75,16 +75,14 @@ export const useMobileAddProductStore = create<MobileAddProductStore>(
     addSize: (value) => set((state) => ({ sizes: [...state.sizes, value] })),
     removeSize: (index) =>
       set((state) => ({ sizes: state.sizes.filter((_, i) => i !== index) })),
-    addColor: (value) =>
-      set((state) => ({ colors: [...state.colors, value] })),
+    addColor: (value) => set((state) => ({ colors: [...state.colors, value] })),
     removeColor: (index) =>
       set((state) => ({
         colors: state.colors.filter((_, i) => i !== index),
       })),
 
     setQuantity: (value) => set({ quantity: Math.max(0, value) }),
-    incrementQuantity: () =>
-      set((state) => ({ quantity: state.quantity + 1 })),
+    incrementQuantity: () => set((state) => ({ quantity: state.quantity + 1 })),
     decrementQuantity: () =>
       set((state) => ({ quantity: Math.max(0, state.quantity - 1) })),
 

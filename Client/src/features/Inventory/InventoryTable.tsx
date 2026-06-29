@@ -2,13 +2,15 @@
 import { useTranslation } from 'react-i18next';
 import { STATUS_STYLES, type ProductRow } from './types';
 
-
 interface InventoryTableProps {
   data: ProductRow[];
   onStockChange: (id: number, value: string) => void;
 }
 
-export const InventoryTable = ({ data, onStockChange }: InventoryTableProps) => {
+export const InventoryTable = ({
+  data,
+  onStockChange,
+}: InventoryTableProps) => {
   const { t } = useTranslation();
 
   const columns = [
@@ -76,8 +78,8 @@ export const InventoryTable = ({ data, onStockChange }: InventoryTableProps) => 
                       product.status === 'In Stock'
                         ? 'inStock'
                         : product.status === 'Low Stock'
-                        ? 'lowStock'
-                        : 'outOfStock'
+                          ? 'lowStock'
+                          : 'outOfStock'
                     }`
                   )}
                 </span>

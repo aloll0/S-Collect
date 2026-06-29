@@ -118,8 +118,7 @@ export function AccountSettingsForm({
                 {...register('firstName', {
                   required: t('settings.errors.firstNameRequired'),
                   validate: (v) =>
-                    v.trim() !== '' ||
-                    t('settings.errors.firstNameRequired'),
+                    v.trim() !== '' || t('settings.errors.firstNameRequired'),
                 })}
               />
               {errors.firstName && (
@@ -137,8 +136,7 @@ export function AccountSettingsForm({
                 {...register('lastName', {
                   required: t('settings.errors.lastNameRequired'),
                   validate: (v) =>
-                    v.trim() !== '' ||
-                    t('settings.errors.lastNameRequired'),
+                    v.trim() !== '' || t('settings.errors.lastNameRequired'),
                 })}
               />
               {errors.lastName && (
@@ -190,8 +188,7 @@ export function AccountSettingsForm({
               rules={{
                 required: t('settings.errors.invalidPhone'),
                 validate: (v) =>
-                  isValidPhoneNumber(v) ||
-                  t('settings.errors.invalidPhone'),
+                  isValidPhoneNumber(v) || t('settings.errors.invalidPhone'),
               }}
               render={({ fieldState: { error } }) => (
                 <>

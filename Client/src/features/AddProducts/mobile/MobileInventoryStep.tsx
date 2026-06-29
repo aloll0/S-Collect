@@ -158,7 +158,7 @@ const MobileInventoryStep = () => {
         </div>
       </div>
 
-      {/* Navigation */} 
+      {/* Navigation */}
       <div className="flex gap-3 mt-2">
         <button
           type="button"

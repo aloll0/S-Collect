@@ -274,8 +274,7 @@ export function StoreProfileForm({
                 {storeName || t('settings.storeNameFallback')}
               </p>
               <p className="text-sm font-medium text-[#969696] mt-0.5 line-clamp-1  md:line-clamp-2">
-                {storeDescription ||
-                  t('settings.storeDescriptionFallback')}
+                {storeDescription || t('settings.storeDescriptionFallback')}
               </p>
               <p className="text-xs text-[#969696] mt-1 flex items-center gap-1.5 flex-wrap font-normal">
                 {publicEmail && <span>{publicEmail}</span>}

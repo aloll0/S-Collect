@@ -70,8 +70,9 @@ const StepIndicator = ({ current }: { current: number }) => {
               </div>
               {/* Label */}
               <span
-                className={`lg:text-md text-[10px] whitespace-nowrap ${active ? 'text-gray-900 font-semibold' : 'text-gray-400'
-                  }`}
+                className={`lg:text-md text-[10px] whitespace-nowrap ${
+                  active ? 'text-gray-900 font-semibold' : 'text-gray-400'
+                }`}
               >
                 {t(key)}
               </span>
@@ -80,8 +81,9 @@ const StepIndicator = ({ current }: { current: number }) => {
             {/* Connector line */}
             {i < STEP_KEYS.length - 1 && (
               <div
-                className={`flex-1 h-0.5 mt-6.5 mx-1.5 rounded-full transition-colors ${done ? 'bg-green' : 'bg-gray-200'
-                  }`}
+                className={`flex-1 h-0.5 mt-6.5 mx-1.5 rounded-full transition-colors ${
+                  done ? 'bg-green' : 'bg-gray-200'
+                }`}
               />
             )}
           </div>
@@ -107,8 +109,9 @@ const Input = ({ label, error, ref, ...rest }: InputProps) => (
     </label>
     <input
       ref={ref}
-      className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${error ? 'border-red bg-red-light' : 'border-gray-300 bg-gray-50'
-        }`}
+      className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
+        error ? 'border-red bg-red-light' : 'border-gray-300 bg-gray-50'
+      }`}
       {...rest}
     />
     {error && <p className="text-red text-caption-sm mt-1">{error}</p>}
@@ -269,10 +272,11 @@ const Step2 = () => {
           {...register('category', {
             required: t('register.errors.categoryRequired'),
           })}
-          className={`w-full px-3 py-2.5 border rounded-lg text-body-md outline-none transition-colors cursor-pointer focus:border-gray-900 ${errors.category
+          className={`w-full px-3 py-2.5 border rounded-lg text-body-md outline-none transition-colors cursor-pointer focus:border-gray-900 ${
+            errors.category
               ? 'border-red bg-red-light text-gray-900'
               : 'border-gray-300 bg-gray-50'
-            } ${!category ? 'text-gray-400' : 'text-gray-900'}`}
+          } ${!category ? 'text-gray-400' : 'text-gray-900'}`}
         >
           <option value="">{t('register.categoryPlaceholder')}</option>
           {CATEGORY_KEYS.map((key) => (
@@ -294,6 +298,31 @@ const Step2 = () => {
         placeholder={t('register.websitePlaceholder')}
         {...register('website')}
       />
+
+      {/* Description textarea */}
+      <div>
+        <label className="block text-label-sm text-gray-700 mb-1.5">
+          {t('register.descriptionLabel')}
+          <span className="text-red ml-0.5">*</span>
+        </label>
+        <textarea
+          placeholder={t('register.descriptionPlaceholder')}
+          rows={3}
+          className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none resize-vertical transition-colors placeholder:text-gray-400 focus:border-gray-900 font-sans ${
+            errors.description
+              ? 'border-red bg-red-light'
+              : 'border-gray-300 bg-gray-50'
+          }`}
+          {...register('description', {
+            required: t('register.errors.descriptionRequired'),
+          })}
+        />
+        {errors.description && (
+          <p className="text-red text-caption-sm mt-1">
+            {errors.description.message}
+          </p>
+        )}
+      </div>
     </div>
   );
 };
@@ -401,10 +430,11 @@ const Step3 = () => {
           <input
             type={show.password ? 'text' : 'password'}
             placeholder={t('register.passwordPlaceholder')}
-            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${errors.password
+            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
+              errors.password
                 ? 'border-red bg-red-light'
                 : 'border-gray-300 bg-gray-50'
-              }`}
+            }`}
             {...register('password', {
               required: t('register.errors.passwordRequired'),
               minLength: {
@@ -439,10 +469,11 @@ const Step3 = () => {
           <input
             type={show.confirm ? 'text' : 'password'}
             placeholder={t('register.confirmPasswordPlaceholder')}
-            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${errors.confirmPassword
+            className={`w-full px-3 py-2.5 pr-10 border rounded-lg text-body-md text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 ${
+              errors.confirmPassword
                 ? 'border-red bg-red-light'
                 : 'border-gray-300 bg-gray-50'
-              }`}
+            }`}
             {...register('confirmPassword', {
               required: t('register.errors.confirmPasswordRequired'),
               validate: (val, formValues) =>
