@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import AppLayout from './pages/AppLayout.js';
 import Dashboard from './pages/Dashboard.js';
-import Inventory from './pages/Inventory.js';
+import Inventory from './pages/Inventory';
 import Settings from './pages/Settings.js';
 import Management from './pages/Mangement.js';
 import AddProduct from './pages/AddProduct.js';
