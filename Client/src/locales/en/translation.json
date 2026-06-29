@@ -79,6 +79,8 @@
     "noAccount": "Don't have an account?",
     "register": "Register",
     "errorFillAll": "Please fill in all fields.",
+    "tryAgainIn": "You can try again in ",
+    "minutes": "minute",
     "errors": {
       "emailRequired": "Email is required",
       "emailInvalid": "Please enter a valid email address",
@@ -127,8 +129,8 @@
     "storeNamePlaceholder": "e.g. My Awesome Store",
     "categoryLabel": "Category",
     "categoryPlaceholder": "Select a category",
-    "websiteLabel": "Website (optional)",
-    "websitePlaceholder": "https://yourstore.com",
+    "websiteLabel": "Commercial Registration Number",
+    "websitePlaceholder": "Commercial Registration Number",
     "descriptionLabel": "Store Description",
     "descriptionPlaceholder": "Tell buyers what your store is about...",
     "passwordLabel": "Password",
@@ -184,7 +186,9 @@
     "becomeVendorDesc": "Join our marketplace and start selling today. Manage your store, fulfill orders, and grow your brand with Nexus.",
     "feature1": "Reach millions of active buyers",
     "feature2": "Secure automated payments",
-    "feature3": "Advanced merchant analytics"
+    "feature3": "Advanced merchant analytics",
+    "mobileTitle": "Power your store",
+    "mobileSubtitle": "Sign in to manage your marketplace account"
   },
   "addProduct": {
     "title": "Add Product",

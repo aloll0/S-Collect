@@ -46,11 +46,11 @@ const StepIndicator = ({ current }: { current: number }) => {
             <div className="flex flex-col items-center gap-1.5">
               {/* Circle */}
               <div
-                className={`lg:w-12 lg:h-12 w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${done || active ? 'bg-green' : 'bg-gray-200'
+                className={`lg:w-[38px] lg:h-[38px] w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${done || active ? 'bg-green' : 'bg-gray-200'
                   }`}
               >
                 {done ? (
-                  <svg
+                  <svg 
                     width="13"
                     height="13"
                     viewBox="0 0 24 24"
@@ -62,7 +62,7 @@ const StepIndicator = ({ current }: { current: number }) => {
                   </svg>
                 ) : (
                   <span
-                    className={`text-caption-sm font-semibold ${active ? 'text-gray-50' : 'text-gray-400'}`}
+                    className={`font-semibold ${active ? 'text-gray-50' : 'text-gray-400'}`}
                   >
                     {i + 1}
                   </span>
@@ -235,6 +235,30 @@ const Step2 = () => {
         })}
       />
 
+      {/* Description textarea */}
+      <div>
+        <label className="block text-label-sm text-gray-700 mb-1.5">
+          {t('register.descriptionLabel')}
+          <span className="text-red ml-0.5">*</span>
+        </label>
+        <textarea
+          placeholder={t('register.descriptionPlaceholder')}
+          rows={1}
+          className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none resize-vertical transition-colors placeholder:text-gray-400 focus:border-gray-900 font-sans ${errors.description
+              ? 'border-red bg-red-light'
+              : 'border-gray-300 bg-gray-50'
+            }`}
+          {...register('description', {
+            required: t('register.errors.descriptionRequired'),
+          })}
+        />
+        {errors.description && (
+          <p className="text-red text-caption-sm mt-1">
+            {errors.description.message}
+          </p>
+        )}
+      </div>
+
       {/* Category select */}
       <div>
         <label className="block text-label-sm text-gray-700 mb-1.5">
@@ -265,34 +289,11 @@ const Step2 = () => {
       </div>
 
       <Input
+        type="number"
         label={t('register.websiteLabel')}
         placeholder={t('register.websitePlaceholder')}
         {...register('website')}
       />
-
-      {/* Description textarea */}
-      <div>
-        <label className="block text-label-sm text-gray-700 mb-1.5">
-          {t('register.descriptionLabel')}
-          <span className="text-red ml-0.5">*</span>
-        </label>
-        <textarea
-          placeholder={t('register.descriptionPlaceholder')}
-          rows={3}
-          className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none resize-vertical transition-colors placeholder:text-gray-400 focus:border-gray-900 font-sans ${errors.description
-              ? 'border-red bg-red-light'
-              : 'border-gray-300 bg-gray-50'
-            }`}
-          {...register('description', {
-            required: t('register.errors.descriptionRequired'),
-          })}
-        />
-        {errors.description && (
-          <p className="text-red text-caption-sm mt-1">
-            {errors.description.message}
-          </p>
-        )}
-      </div>
     </div>
   );
 };
@@ -415,7 +416,7 @@ const Step3 = () => {
           <button
             type="button"
             onClick={() => setShow((s) => ({ ...s, password: !s.password }))}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
           >
             <EyeIcon open={show.password} />
           </button>
@@ -452,7 +453,7 @@ const Step3 = () => {
           <button
             type="button"
             onClick={() => setShow((s) => ({ ...s, confirm: !s.confirm }))}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer "
           >
             <EyeIcon open={show.confirm} />
           </button>
@@ -598,7 +599,7 @@ const Register = () => {
                 {step > 0 && (
                   <button
                     onClick={previousStep}
-                    className="flex-1 py-3 bg-gray-50 text-gray-700 border border-gray-300 rounded-lg text-label-md font-semibold hover:bg-gray-100 transition-colors"
+                    className="flex-1 py-3 bg-gray-50 text-gray-700 border border-gray-300 rounded-lg text-label-md font-semibold hover:bg-gray-100 transition-colors cursor-pointer"
                   >
                     {t('register.back')}
                   </button>
@@ -606,7 +607,7 @@ const Register = () => {
                 <button
                   onClick={handleContinue}
                   disabled={registerLoading}
-                  className="flex-[2] py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                  className="flex-[2] py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 >
                   {registerLoading
                     ? t('register.creatingAccount')
