@@ -31,7 +31,7 @@ const MobileStepIndicator = () => {
                   isCompleted
                     ? 'bg-green-500 text-white'
                     : isActive
-                      ? 'bg-gray-900 text-white'
+                      ? 'bg-green-500 text-white'
                       : 'bg-gray-200 text-gray-400'
                 }`}
               >

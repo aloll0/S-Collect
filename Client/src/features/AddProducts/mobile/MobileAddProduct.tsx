@@ -8,6 +8,7 @@ import MobileBasicInfoStep from './MobileBasicInfoStep';
 import MobilePricingStep from './MobilePricingStep';
 import MobileInventoryStep from './MobileInventoryStep';
 import MobileReviewStep from './MobileReviewStep';
+import MobileImageUploader from './MobileImageUploader';
 import { MobileLoadingPopup, MobileSuccessPopup } from './MobilePublishPopups';
 import { useMobileAddProductStore } from './mobileAddProductStore';
 
@@ -27,6 +28,7 @@ const MobileAddProduct = () => {
       basePrice: '',
       comparePrice: '',
       sku: '',
+      images: [],
     },
   });
 
@@ -39,10 +41,10 @@ const MobileAddProduct = () => {
   };
 
   const stepTitles: Record<number, string> = {
-    1: t('addProduct.basicInfo', 'Basic Info'),
-    2: t('addProduct.pricing', 'Pricing'),
-    3: t('addProduct.inventory', 'Inventory'),
-    4: t('addProduct.reviewPublish', 'Review & Publish'),
+    1: t('addProduct.mobile.basicInfo'),
+    2: t('addProduct.mobile.pricing'),
+    3: t('addProduct.mobile.inventory'),
+    4: t('addProduct.mobile.reviewPublish'),
   };
 
   return (
@@ -73,14 +75,9 @@ const MobileAddProduct = () => {
             </svg>
           </button>
           <h1 className="text-base font-bold text-gray-900">
-            {t('addProduct.addProduct', 'Add Product')}
+            {t('addProduct.mobile.addProduct')}
           </h1>
-          {step === 4 && (
-            <span className="ml-auto rounded-full border border-gray-200 px-2.5 py-0.5 text-xs text-gray-400">
-              Draft
-            </span>
-          )}
-        </div>
+        </div> 
 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-4 py-5">
@@ -93,6 +90,8 @@ const MobileAddProduct = () => {
               {stepTitles[step]}
             </h2>
           )}
+
+          <MobileImageUploader />
 
           {/* Step content */}
           {step === 1 && <MobileBasicInfoStep />}

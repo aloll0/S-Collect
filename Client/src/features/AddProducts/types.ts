@@ -5,4 +5,6 @@ export interface ProductFormData {
   basePrice: string;
   comparePrice: string;
   sku: string;
+  images: File[];
 }
+ 

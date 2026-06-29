@@ -39,16 +39,10 @@ const MobileInventoryStep = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <div>
-        <h2 className="text-base font-semibold text-gray-900">
-          {t('addProduct.inventory', 'Inventory')}
-        </h2>
-      </div>
-
       {/* SKU */}
       <div>
         <label className="mb-2 block text-sm font-medium text-gray-700">
-          {t('addProduct.sku', 'SKU')}
+          {t('addProduct.mobile.sku')}
         </label>
         <input
           className={inputCls(errors.sku?.message)}
@@ -65,7 +59,7 @@ const MobileInventoryStep = () => {
       {/* Stock Quantity */}
       <div>
         <label className="mb-2 block text-sm font-medium text-gray-700">
-          {t('addProduct.stockQuantity', 'Stock Quantity')}
+          {t('addProduct.mobile.stockQuantity')}
         </label>
         <div className="flex items-center gap-3">
           <button
@@ -116,7 +110,7 @@ const MobileInventoryStep = () => {
       {/* Product Status */}
       <div className="flex items-center justify-between rounded-xl border border-gray-200 px-4 py-3 bg-white">
         <span className="text-sm font-medium text-gray-700">
-          {t('addProduct.productStatus', 'Product Status')}
+          {t('addProduct.mobile.productStatus')}
         </span>
         <label className="relative inline-flex cursor-pointer items-center">
           <input
@@ -132,7 +126,7 @@ const MobileInventoryStep = () => {
       {/* Visibility */}
       <div>
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-          {t('addProduct.visibility', 'Visibility')}
+          {t('addProduct.mobile.visibility')}
         </p>
         <div className="flex flex-col gap-2">
           {(
@@ -164,21 +158,21 @@ const MobileInventoryStep = () => {
         </div>
       </div>
 
-      {/* Navigation */}
+      {/* Navigation */} 
       <div className="flex gap-3 mt-2">
         <button
           type="button"
           onClick={previousStep}
           className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 active:scale-[0.98]"
         >
-          {t('addProduct.previous', 'Previous')}
+          {t('addProduct.previous')}
         </button>
         <button
           type="button"
           onClick={handleContinue}
           className="flex-1 rounded-xl bg-gray-900 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 active:scale-[0.98]"
         >
-          {t('addProduct.continue', 'Continue')}
+          {t('addProduct.continue')}
         </button>
       </div>
     </div>
