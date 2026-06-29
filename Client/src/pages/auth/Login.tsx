@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -50,6 +50,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [remainingTime, setRemainingTime] = useState<number>(14 * 60); // 14 دقيقة بالثواني
 
   const initialState: LoginState =
     searchParams.get('state') === 'locked'
@@ -76,6 +77,10 @@ const Login = ({ onGoToRegister }: LoginProps) => {
     submitLogin,
   } = useAuthStore();
 
+  // هوّن المشكلة: انقل تعريف isLocked و isExpired لفوق قبل الـ useEffect
+  const isLocked = loginState === 'locked';
+  const isExpired = loginState === 'expired';
+
   const {
     register,
     handleSubmit,
@@ -91,8 +96,27 @@ const Login = ({ onGoToRegister }: LoginProps) => {
     initializeLogin(initialState);
   }, [initialState, initializeLogin]);
 
-  const isLocked = loginState === 'locked';
-  const isExpired = loginState === 'expired';
+  useEffect(() => {
+    let timer: ReturnType<typeof setInterval>;
+
+    if (isLocked) {
+      setRemainingTime(14 * 60); // reset to 14 minutes
+
+      timer = setInterval(() => {
+        setRemainingTime(prev => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isLocked]);
 
   const onSubmit = async (data: LoginFormValues) => {
     if (isLocked) return;
@@ -147,7 +171,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               </div>
             </div>
 
-            <h2 className="text-h3 font-semibold  text-gray-900 text-center mb-2">
+            <h2 className="lg:text-h3 text-h5 font-semibold text-gray-900 text-center mb-2">
               {title}
             </h2>
             <p className="text-body-md text-gray-500 text-center leading-relaxed mb-6">
@@ -205,7 +229,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                   <button
                     type="button"
                     onClick={toggleLoginPassword}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                   >
                     <EyeIcon open={showLoginPassword} />
                   </button>
@@ -232,7 +256,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               <button
                 type="submit"
                 disabled={loginLoading || isLocked}
-                className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-700 disabled:cursor-not-allowed transition-colors"
+                className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-700 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 {isLocked
                   ? t('login.tryAgain')
@@ -242,28 +266,17 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               </button>
 
               {isLocked && (
-                <p className="flex items-center justify-center gap-1.5 text-body-sm text-gray-700">
-                  <Clock3 size={14} />
-                  {t('login.nextAttempt')}
-                </p>
-              )}
-
-              {!isLocked && !isExpired && (
-                <>
-                  <div className="relative flex items-center">
-                    <div className="flex-1 border-t border-gray-300"></div>
-                    <p className="mx-4 text-gray-400 text-body-md">or</p>
-                    <div className="flex-1 border-t border-gray-300"></div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => navigate('/register')}
-                    className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {t('login.register')}
-                  </button>
-                </>
+                <div className="flex items-center justify-center gap-2 mt-3">
+                  <Clock3 size={16} className="text-gray-700 animate-pulse" />
+                  <p className="text-body-sm text-gray-700">
+                    {t('login.nextAttempt')}{' '}
+                    <span className="font-bold text-gray-900 tabular-nums">
+                      {String(Math.floor(remainingTime / 60)).padStart(2, '0')}:
+                      {String(remainingTime % 60).padStart(2, '0')}
+                    </span>
+                    <span className="text-gray-500"> {t('login.minutes')}</span>
+                  </p>
+                </div>
               )}
 
               {loginError && (
@@ -276,8 +289,12 @@ const Login = ({ onGoToRegister }: LoginProps) => {
             {!isLocked && !isExpired && (
               <p className="text-center mt-6 text-body-sm text-gray-500">
                 {t('login.trouble')}{' '}
-                <button className="text-gray-900 font-semibold hover:underline">
-                  {t('login.contactSupport')}
+                <button
+                  type="button"
+                  onClick={() => navigate('/register')}
+                  className="text-label-sm font-semibold text-gray-900 transition-colors cursor-pointer"
+                >
+                  {t('login.register')}
                 </button>
               </p>
             )}
