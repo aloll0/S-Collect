@@ -294,30 +294,6 @@ const Step2 = () => {
         {...register('website')}
       />
 
-      {/* Description textarea */}
-      <div>
-        <label className="block text-label-sm text-gray-700 mb-1.5">
-          {t('register.descriptionLabel')}
-          <span className="text-red ml-0.5">*</span>
-        </label>
-        <textarea
-          placeholder={t('register.descriptionPlaceholder')}
-          rows={3}
-          className={`w-full px-3 py-2.5 border rounded-lg text-body-md text-gray-900 outline-none resize-vertical transition-colors placeholder:text-gray-400 focus:border-gray-900 font-sans ${
-            errors.description
-              ? 'border-red bg-red-light'
-              : 'border-gray-300 bg-gray-50'
-          }`}
-          {...register('description', {
-            required: t('register.errors.descriptionRequired'),
-          })}
-        />
-        {errors.description && (
-          <p className="text-red text-caption-sm mt-1">
-            {errors.description.message}
-          </p>
-        )}
-      </div>
     </div>
   );
 };
