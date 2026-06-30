@@ -9,7 +9,9 @@
       "Bash(py)",
       "Bash(npm run *)",
       "Agent(Explore)",
-      "Bash(npx *)"
+      "Bash(npx *)",
+      "Bash(ls *)",
+      "Bash(rm *)"
     ]
   },
   "$version": 4
