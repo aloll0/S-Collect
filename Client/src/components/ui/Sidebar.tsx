@@ -171,18 +171,6 @@ const navListVariants: Variants = {
   },
 };
 
-const navItemVariants: Variants = {
-  open: {
-    y: 0,
-    opacity: 1,
-    transition: { y: { stiffness: 1000, velocity: -100 } },
-  },
-  closed: {
-    y: 20,
-    opacity: 0,
-    transition: { y: { stiffness: 1000 } },
-  },
-};
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
@@ -214,7 +202,6 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   const sidebarVariants = getSidebarVariants(isArabic);
 
-  // محتوى السايدبار (متكرر بين نسخة الموبايل المتحركة ونسخة الديسكتوب الثابتة)
   const SidebarContent = (
     <>
       <div className="shrink-0 flex items-center justify-between pt-5 px-5 sidebar:justify-start">
@@ -262,7 +249,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   return (
     <>
-      {/* ── نسخة الديسكتوب: ثابتة زي ما هي، من غير أنيميشن ── */}
+
       <aside
         className={`hidden sidebar:flex w-64 h-dvh bg-(--gray-950) flex-col sticky top-0 z-70 ${
           isArabic ? 'right-0' : 'left-0'
@@ -271,7 +258,6 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         {SidebarContent}
       </aside>
 
-      {/* ── نسخة الموبايل: بالأنيميشن (circle reveal) ── */}
       <AnimatePresence>
         {isOpen && (
           <>
