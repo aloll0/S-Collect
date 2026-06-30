@@ -18,16 +18,17 @@ const InputSearch = () => {
       <div className="hidden md:block relative w-full">
         <input
           type="text"
-          placeholder="Search..."
-          className="w-full bg-[var(--gray-50)] px-8 py-2 rounded-lg text-[var(--gray-700)] outline-none focus:ring-2 focus:ring-gray-600"
+          placeholder=" Search..."
+          className="w-full bg-[var(--gray-50)] px-8 py-2 rounded-lg text-[var(--gray-700)] outline-none focus:ring-2 focus:ring-gray-600 focus:placeholder:text-white" 
         />
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--gray-700)]" />
-      </div>
+        <div className="h-4 w-0.5 bg-gray-300 rounded-full absolute top-2.5 left-7"></div>
+        <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--gray-400)]" />
+      </div> 
 
-      {/* Mobile Button */}
+      {/* Mobile Button */} 
       <button
         onClick={() => setOpen(true)}
-        className="md:hidden flex items-center justify-center"
+        className="md:hidden flex items-center justify-center cursor-pointer"
       >
         <Search className="w-6 h-6 text-[var(--gray-50)]" />
       </button>

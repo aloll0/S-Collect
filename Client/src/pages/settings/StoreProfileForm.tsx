@@ -1,11 +1,14 @@
 import { ImageIcon } from 'lucide-react';
 import { type DragEvent, useId, useState, useTransition } from 'react';
-import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { FieldWrap, TextInput } from './shared';
 import type { StoreProfileData } from './types';
-import { cn, isValidEmail, isValidPhoneNumber } from './utils';
+import { cn, isValidEmail } from './utils';
+
+import { Controller, useForm } from 'react-hook-form';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 function LogoNormal({
   logoUrl,
@@ -182,17 +185,18 @@ export function StoreProfileForm({
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    setError,
-    clearErrors,
-    formState: { errors },
-  } = useForm<StoreProfileData>({
-    defaultValues: initialData,
-  });
+const {
+  register,
+  handleSubmit,
+  watch,
+  setValue,
+  setError,
+  clearErrors,
+  control,
+  formState: { errors },
+} = useForm<StoreProfileData>({
+  defaultValues: initialData,
+});
 
   const storeName = watch('storeName');
   const storeDescription = watch('storeDescription');
@@ -379,16 +383,26 @@ export function StoreProfileForm({
             label={t('settings.phoneNumber')}
             error={errors.phoneNumber?.message}
           >
-            <TextInput
-              type="tel"
-              placeholder={t('settings.phonePlaceholder')}
-              disabled={isPending}
-              error={errors.phoneNumber?.message}
-              {...register('phoneNumber', {
+            <Controller
+              name="phoneNumber"
+              control={control}
+              rules={{
                 required: t('settings.errors.invalidPhone'),
-                validate: (v) =>
-                  isValidPhoneNumber(v) || t('settings.errors.invalidPhone'),
-              })}
+                validate: (v) => (v ? true : t('settings.errors.invalidPhone')),
+              }}
+              render={({ field }) => (
+                <PhoneInput
+                  international
+                  defaultCountry="SA"
+                  value={field.value}
+                  onChange={(v) => field.onChange(v ?? '')}
+                  disabled={isPending}
+                  className={cn(
+                    'phone-input-custom h-10 rounded-lg border bg-white/50 px-3',
+                    errors.phoneNumber ? 'border-red-400 bg-red-50' : 'border-gray-200'
+                  )}
+                />
+              )}
             />
           </FieldWrap>
         </div>

@@ -9,10 +9,6 @@ export function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
-export function isValidPhoneNumber(phone: string) {
-  return /^\+?[1-9]\d{7,14}$/.test(phone.replace(/[\s()-]/g, ''));
-}
-
 export function getPasswordStrength(password: string): number {
   return [
     password.length >= 8,

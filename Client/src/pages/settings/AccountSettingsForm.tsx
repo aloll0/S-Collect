@@ -1,7 +1,9 @@
 import { ArrowRight, ChevronDown, Info, Lock } from 'lucide-react';
-import { useMemo, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 import {
   PasswordInput,
@@ -9,13 +11,7 @@ import {
   SectionCard,
   TextInput,
 } from './shared';
-import { CountryCodeSelector } from './CountryCodeSelector';
-import {
-  formatPhoneNumber,
-  getInitialPhone,
-  type CountryOption,
-} from './countries';
-import { getPasswordStrength, cn, isValidPhoneNumber } from './utils';
+import { getPasswordStrength, cn } from './utils';
 import type { AccountSettingsData, PasswordData } from './types';
 
 type AccountSettingsFormValues = AccountSettingsData & PasswordData;
@@ -30,34 +26,19 @@ export function AccountSettingsForm({
   onSuccess: () => void;
 }) {
   const { t } = useTranslation();
-  const initialPhone = useMemo(
-    () => getInitialPhone(initialData.phoneNumber),
-    [initialData.phoneNumber]
-  );
-
-  const [selectedCountry, setSelectedCountry] = useState(initialPhone.country);
-  const [localPhoneNumber, setLocalPhoneNumber] = useState(
-    initialPhone.localNumber
-  );
   const [pwOpen, setPwOpen] = useState(false);
-  const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const {
     register,
     handleSubmit,
     setValue,
-    clearErrors,
     watch,
     control,
     formState: { errors },
   } = useForm<AccountSettingsFormValues>({
     defaultValues: {
       ...initialData,
-      phoneNumber: formatPhoneNumber(
-        initialPhone.country,
-        initialPhone.localNumber
-      ),
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
@@ -65,13 +46,6 @@ export function AccountSettingsForm({
   });
 
   const newPassword = watch('newPassword');
-
-  const handlePhoneChange = (country: CountryOption, value: string) => {
-    setSelectedCountry(country);
-    setLocalPhoneNumber(value);
-    setValue('phoneNumber', formatPhoneNumber(country, value));
-    clearErrors('phoneNumber');
-  };
 
   const onSubmit = (data: AccountSettingsFormValues) => {
     startTransition(async () => {
@@ -173,12 +147,7 @@ export function AccountSettingsForm({
             </button>
           </div>
 
-          <div
-            className={cn(
-              'transition-[padding-bottom] duration-200 ease-out',
-              countryDropdownOpen ? 'pb-[250px]' : 'pb-0'
-            )}
-          >
+          <div>
             <p className="text-xs font-bold text-[#090909] mb-1.5">
               {t('settings.account.phoneNumber')}
             </p>
@@ -188,33 +157,20 @@ export function AccountSettingsForm({
               rules={{
                 required: t('settings.errors.invalidPhone'),
                 validate: (v) =>
-                  isValidPhoneNumber(v) || t('settings.errors.invalidPhone'),
+                  (v ? true : t('settings.errors.invalidPhone')),
               }}
-              render={({ fieldState: { error } }) => (
+              render={({ field, fieldState: { error } }) => (
                 <>
-                  <div
+                  <PhoneInput
+                    international
+                    defaultCountry="SA"
+                    value={field.value}
+                    onChange={(v) => field.onChange(v ?? '')}
                     className={cn(
-                      'flex h-10 items-center rounded-md border bg-white px-3 transition-all duration-200 ease-out focus-within:border-[#090909] focus-within:ring-1 focus-within:ring-gray-200',
+                      'phone-input-custom h-10 rounded-md border bg-white px-3 transition-all duration-200 ease-out',
                       error ? 'border-red-400 bg-red-50' : 'border-gray-200'
                     )}
-                  >
-                    <CountryCodeSelector
-                      value={selectedCountry}
-                      onChange={(country) =>
-                        handlePhoneChange(country, localPhoneNumber)
-                      }
-                      onOpenChange={setCountryDropdownOpen}
-                    />
-                    <input
-                      value={localPhoneNumber}
-                      inputMode="tel"
-                      className="min-w-0 flex-1 bg-transparent pl-2 text-[13px] text-gray-900 outline-none placeholder:text-gray-400"
-                      placeholder="50 123 4567"
-                      onChange={(e) =>
-                        handlePhoneChange(selectedCountry, e.target.value)
-                      }
-                    />
-                  </div>
+                  />
                   {error && (
                     <p className="settings-pop-enter mt-1 text-[12px] text-red-500">
                       {error.message}
