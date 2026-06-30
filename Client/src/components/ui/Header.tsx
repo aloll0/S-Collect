@@ -36,9 +36,11 @@ const Header = ({ onMenuClick }: HeaderProps) => {
       <div className="container mx-auto flex flex-col gap-4 sidebar:flex-row sidebar:justify-between sidebar:items-center">
         <div className="flex items-center justify-between gap-4 sidebar:hidden">
           <div className="flex items-center gap-3">
-            <img src="/mobLogo.png" alt="Logo" className="h-10 w-10" />
+            <a href="/">
+              <img src="/mobLogo.png" alt="Logo" className="h-10 w-10" />
+            </a> 
             <button
-              type="button"
+              type="button" 
               onClick={onMenuClick}
               className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-gray-50 transition-colors cursor-pointer"
               aria-label="Open sidebar"
