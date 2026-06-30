@@ -588,16 +588,20 @@ const Register = () => {
             />
           ) : (
             <>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0s' }}>
               <StepIndicator current={step} />
+            </div>
 
               <FormProvider {...methods}>
-                {step === 0 && <Step1 />}
-                {step === 1 && <Step2 />}
-                {step === 2 && <Step3 />}
+                <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                  {step === 0 && <Step1 />}
+                  {step === 1 && <Step2 />}
+                  {step === 2 && <Step3 />}
+                </div>
               </FormProvider>
 
               {/* Navigation buttons */}
-              <div className="flex gap-3 mt-7">
+              <div className="flex gap-3 mt-7 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                 {step > 0 && (
                   <button
                     onClick={previousStep}
@@ -619,9 +623,9 @@ const Register = () => {
                 </button>
               </div>
 
-              <p className="text-center mt-5 text-body-sm text-gray-500">
+              <p className="text-center mt-5 text-body-sm text-gray-500 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                 {t('register.alreadyHaveAccount')}{' '}
-                <Link
+                <Link 
                   to="/login"
                   className="text-gray-900 font-semibold hover:underline"
                 >
