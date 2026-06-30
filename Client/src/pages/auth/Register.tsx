@@ -601,7 +601,7 @@ const Register = () => {
     <div className="flex flex-col lg:flex-row min-h-screen font-sans">
       <AuthLeftPanel />
 
-      <div className="flex-1 bg-gray-50 flex items-center justify-center px-10 py-12 overflow-y-auto flex justify-center items-start">
+      <div className="flex-1 bg-gray-50 flex items-center justify-center px-4 md:px-10 py-12 overflow-y-auto flex justify-center items-start">
         <div className="w-full w-auto md:max-w-[480px] mt-6 lg:mt-48">
           {submitted ? (
             <EmailSent
