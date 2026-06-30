@@ -14,6 +14,8 @@ import Logo from '../ui/Logo';
 import LogoutButton from '../auth/LogoutButton';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import type { Variants } from 'motion/react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface NavItemProps {
@@ -139,20 +141,50 @@ const NAV_SECTIONS: NavSectionProps[] = [
   },
 ];
 
+// ─── Animation Variants (circle reveal, à la motion examples) ────────────────
+// نقطة الانطلاق: أعلى يمين أو يسار حسب اللغة (مكان زرار الفتح في الـ topbar)
+const getSidebarVariants = (isArabic: boolean): Variants => ({
+  open: {
+    clipPath: `circle(150% at ${isArabic ? '100%' : '0%'} 0%)`,
+    transition: {
+      type: 'spring',
+      stiffness: 50,
+      damping: 18,
+    },
+  },
+  closed: {
+    clipPath: `circle(0% at ${isArabic ? '100%' : '0%'} 0%)`,
+    transition: {
+      type: 'spring',
+      stiffness: 300,
+      damping: 40,
+    },
+  },
+});
+
+const navListVariants: Variants = {
+  open: {
+    transition: { staggerChildren: 0.06, delayChildren: 0.15 },
+  },
+  closed: {
+    transition: { staggerChildren: 0.04, staggerDirection: -1 },
+  },
+};
+
+
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
-    
-useEffect(() => {
-  if (isOpen) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = 'auto';
-  }
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
 
-  return () => {
-    document.body.style.overflow = 'auto';
-  };
-}, [isOpen]);
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isOpen]);
 
   const { i18n } = useTranslation();
   const isArabic = i18n.language === 'ar';
@@ -168,71 +200,94 @@ useEffect(() => {
     document.documentElement.lang = lang;
   };
 
+  const sidebarVariants = getSidebarVariants(isArabic);
+
+  const SidebarContent = (
+    <>
+      <div className="shrink-0 flex items-center justify-between pt-5 px-5 sidebar:justify-start">
+        <Logo />
+        <button
+          type="button"
+          onClick={onClose}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-300 hover:bg-gray-800 sidebar:hidden cursor-pointer"
+          aria-label="Close sidebar"
+        >
+          <X size={20} />
+        </button>
+      </div>
+
+      <nav className="flex-1 overflow-y-auto py-4 scrollbar-thin scrollbar-thumb-gray-800">
+        {NAV_SECTIONS.map((section) => (
+          <NavSection key={section.titleKey} {...section} onItemClick={onClose} />
+        ))}
+
+        <div className="px-3 mt-5 sidebar:hidden">
+          <div className="group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out relative overflow-hidden text-label-md text-gray-400">
+            <Globe className="text-gray-400" size={18} />
+
+            <select
+              value={i18n.language}
+              onChange={handleLanguageChange}
+              className="bg-transparent text-gray-100 cursor-pointer outline-none"
+            >
+              <option value="en" className="text-black">
+                EN
+              </option>
+              <option value="ar" className="text-black">
+                AR
+              </option>
+            </select>
+          </div>
+        </div>
+      </nav>
+
+      <div className="shrink-0 p-3">
+        <LogoutButton />
+      </div>
+    </>
+  );
+
   return (
     <>
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/70 z-60 sidebar:hidden overscroll-none"
-          onClick={onClose}
-        />
-      )}
 
       <aside
-        className={`w-64 h-dvh bg-(--gray-950) flex flex-col fixed top-0 z-70 transition-transform duration-300 sidebar:sticky ${
-          isArabic ? 'right-0 sidebar:right-auto' : 'left-0 sidebar:left-auto'
-        } ${
-          isOpen
-            ? 'translate-x-0'
-            : isArabic
-              ? 'translate-x-full sidebar:translate-x-0'
-              : '-translate-x-full sidebar:translate-x-0'
+        className={`hidden sidebar:flex w-64 h-dvh bg-(--gray-950) flex-col sticky top-0 z-70 ${
+          isArabic ? 'right-0' : 'left-0'
         }`}
       >
-        <div className="shrink-0 flex items-center justify-between pt-5 px-5 sidebar:justify-start">
-          <Logo />
-          <button
-            type="button"
-            onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-300 hover:bg-gray-800 sidebar:hidden cursor-pointer"
-            aria-label="Close sidebar"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        <nav className="flex-1 overflow-y-auto py-4 scrollbar-thin scrollbar-thumb-gray-800">
-          {NAV_SECTIONS.map((section) => (
-            <NavSection
-              key={section.titleKey}
-              {...section}
-              onItemClick={onClose}
-            />
-          ))}
-
-          <div className="px-3 mt-5 sidebar:hidden">
-            <div className="group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out relative overflow-hidden text-label-md text-gray-400">
-              <Globe className="text-gray-400" size={18} />
-
-              <select
-                value={i18n.language}
-                onChange={handleLanguageChange}
-                className="bg-transparent text-gray-100 cursor-pointer outline-none"
-              >
-                <option value="en" className="text-black">
-                  EN
-                </option>
-                <option value="ar" className="text-black">
-                  AR
-                </option>
-              </select>
-            </div>
-          </div>
-        </nav>
-
-        <div className="shrink-0 p-3">
-          <LogoutButton />
-        </div>
+        {SidebarContent}
       </aside>
+
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+              key="sidebar-overlay"
+              className="fixed inset-0 bg-black/70 z-60 sidebar:hidden overscroll-none"
+              onClick={onClose}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            />
+
+            <motion.aside
+              key="sidebar-mobile"
+              className={`w-64 h-dvh bg-(--gray-950) flex flex-col fixed top-0 z-70 sidebar:hidden ${
+                isArabic ? 'right-0' : 'left-0'
+              }`}
+              variants={sidebarVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+            >
+              <motion.div variants={navListVariants} initial="closed" animate="open" className="contents">
+                {SidebarContent}
+              </motion.div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };
