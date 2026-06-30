@@ -35,21 +35,21 @@ const AuthLeftPanel = () => {
       }}
     >
       <div className="relative z-10 lg:mt-25 lg:ml-12">
-        <Logo />
+        <div className="animate-fade-in-up" style={{ animationDelay: '0s' }}>
+          <Logo />
+        </div>
 
-        {/* Desktop */}
-        <div className="mt-4 mb-12 hidden lg:block">
+        <div className="mt-4 mb-12 hidden lg:block animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <h1 className="text-white text-[56px] font-bold">
             {t('panel.tagline1')}
             <br />
             {t('panel.tagline2')}
           </h1>
-
           <p className="text-white/80 mt-2">{t('panel.subtitle')}</p>
         </div>
 
         {/* Mobile */}
-        <div className="mt-4 lg:hidden block">
+        <div className="mt-4 lg:hidden block animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
           <h5 className="text-white text-[24px] font-bold">
             {t('panel.mobileTitle')}
           </h5>
@@ -57,7 +57,7 @@ const AuthLeftPanel = () => {
           <p className="text-white/80 mt-2">{t('panel.mobileSubtitle')}</p>
         </div>
 
-        <div className="hidden lg:block">
+        <div className="hidden lg:block animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <div className="mb-8">
             <h3 className="text-white text-[24px] font-bold mb-2">
               {t('panel.becomeVendor')}

@@ -35,29 +35,36 @@ const ForgetPass = () => {
 
       <div className="flex-1 bg-gray-50 flex items-start justify-center px-10">
         <div className="w-full max-w-md mt-6 lg:mt-40">
-          {/* Icon */}
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-4 animate-fade-in-up" style={{ animationDelay: '0s' }}>
             <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
               <KeyRound size={20} className="text-gray-700" />
             </div>
           </div>
 
-          {/* Heading */}
-          <h1 className="lg:text-h3 text-h5 font-bold text-gray-900 text-center">
+          <h1
+            className="lg:text-h3 text-h5 font-bold text-gray-900 text-center animate-fade-in-up"
+            style={{ animationDelay: '0.1s' }}
+          >
             {t('forgetPass.title')}
           </h1>
 
-          <p className="text-center text-body-md text-gray-500 mt-3 mb-6">
+          <p
+            className="text-center text-body-md text-gray-500 mt-3 mb-6 animate-fade-in-up"
+            style={{ animationDelay: '0.15s' }}
+          >
             {t('forgetPass.subtitle')}
           </p>
 
-          {/* Alert */}
-          <div className="flex items-center gap-2 bg-blue-light border border-blue-100 text-blue-700 text-body-sm rounded-lg px-4 py-3 mb-6">
+          <div
+            className="flex items-center gap-2 bg-blue-light border border-blue-100 text-blue-700 text-body-sm rounded-lg px-4 py-3 mb-6 animate-fade-in-up"
+            style={{ animationDelay: '0.2s' }}
+          >
             <Info size={14} />
             {t('forgetPass.alert')}
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 animate-fade-in-up"
+            style={{ animationDelay: '0.25s' }}>
             {/* Temporary Password */}
             <div>
               <label className="block text-label-sm text-gray-700 mb-1.5">
