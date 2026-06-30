@@ -13,6 +13,7 @@ import type { ReactNode } from 'react';
 import Logo from '../ui/Logo';
 import LogoutButton from '../auth/LogoutButton';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface NavItemProps {
@@ -140,6 +141,19 @@ const NAV_SECTIONS: NavSectionProps[] = [
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
+    
+useEffect(() => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'auto';
+  }
+
+  return () => {
+    document.body.style.overflow = 'auto';
+  };
+}, [isOpen]);
+
   const { i18n } = useTranslation();
   const isArabic = i18n.language === 'ar';
 
@@ -158,13 +172,13 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/70 z-60 sidebar:hidden"
+          className="fixed inset-0 bg-black/70 z-60 sidebar:hidden overscroll-none"
           onClick={onClose}
         />
       )}
 
       <aside
-        className={`w-64 h-screen bg-(--gray-950) flex flex-col fixed top-0 z-70 transition-transform duration-300 sidebar:sticky ${
+        className={`w-64 h-dvh bg-(--gray-950) flex flex-col fixed top-0 z-70 transition-transform duration-300 sidebar:sticky ${
           isArabic ? 'right-0 sidebar:right-auto' : 'left-0 sidebar:left-auto'
         } ${
           isOpen
