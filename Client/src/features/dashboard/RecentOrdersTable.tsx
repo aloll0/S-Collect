@@ -56,15 +56,7 @@ const statusStyles: Record<OrderStatus, string> = {
   Pending: 'bg-gray-100 text-gray-600',
 };
 
-/** Avatar colour keyed by first letter of name */
-const avatarColors: Record<string, string> = {
-  S: 'bg-purple-100 text-purple-700',
-  K: 'bg-blue-100 text-blue-700',
-  L: 'bg-pink-100 text-pink-700',
-  F: 'bg-amber-100 text-amber-700',
-  N: 'bg-teal-100 text-teal-700',
-};
-const defaultAvatarCls = 'bg-gray-100 text-gray-600';
+
 
 // ─── Mobile card list ────────────────────────────────────────────────────────
 
@@ -77,8 +69,8 @@ const MobileOrderCards = ({ getStatusLabel, t }: MobileOrdersProps) => (
   <div className="flex flex-col gap-3">
     {orders.map((order, index) => {
       const orderKey = order.id.replace('#', '').toLowerCase();
-      const initial = order.customer.charAt(0).toUpperCase();
-      const avatarCls = avatarColors[initial] ?? defaultAvatarCls;
+
+      // const avatarCls = avatarColors[initial] ?? defaultAvatarCls; // removed unused variable
 
       return (
         <div

@@ -4,12 +4,14 @@ interface OrderFiltersProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   onSortToggle: () => void;
+  sortNewest: boolean;
 }
 
 export const OrderFilters = ({
   activeTab,
   onTabChange,
   onSortToggle,
+  sortNewest,
 }: OrderFiltersProps) => {
   const { t } = useTranslation();
 
@@ -43,6 +45,7 @@ export const OrderFilters = ({
         <span className="text-gray-400 text-xs">{t('ordersPage.sortBy')}:</span>
 
         <select
+          value={sortNewest ? 'newest' : 'oldest'}
           onChange={onSortToggle}
           className="flex w-full items-center justify-center gap-1.5 text-sm text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors  cursor-pointer sm:w-fit"
         >
