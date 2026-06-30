@@ -1,10 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import Logo from '../ui/Logo';
-import {
-  TrendingUp,
-  Shield,
-  ChartNoAxesColumnIncreasing,
-} from 'lucide-react';
+import { TrendingUp, Shield, ChartNoAxesColumnIncreasing } from 'lucide-react';
 
 const AuthLeftPanel = () => {
   const { t } = useTranslation();
@@ -49,9 +45,7 @@ const AuthLeftPanel = () => {
             {t('panel.tagline2')}
           </h1>
 
-          <p className="text-white/80 mt-2">
-            {t('panel.subtitle')}
-          </p>
+          <p className="text-white/80 mt-2">{t('panel.subtitle')}</p>
         </div>
 
         {/* Mobile */}
@@ -60,9 +54,7 @@ const AuthLeftPanel = () => {
             {t('panel.mobileTitle')}
           </h5>
 
-          <p className="text-white/80 mt-2">
-            {t('panel.mobileSubtitle')}
-          </p>
+          <p className="text-white/80 mt-2">{t('panel.mobileSubtitle')}</p>
         </div>
 
         <div className="hidden lg:block">

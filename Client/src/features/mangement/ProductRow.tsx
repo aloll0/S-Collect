@@ -65,9 +65,9 @@ export default function ProductRow({
 
   return (
     <tr
-      className={`transition-all ${!product.enabled ? 'opacity-50' : ''
-        } ${selected ? 'bg-indigo-50 hover:bg-indigo-50' : 'hover:bg-gray-50'
-        }`}
+      className={`transition-all ${!product.enabled ? 'opacity-50' : ''} ${
+        selected ? 'bg-indigo-50 hover:bg-indigo-50' : 'hover:bg-gray-50'
+      }`}
     >
       <td className="px-3 py-3 border-b border-gray-100 text-start">
         <input

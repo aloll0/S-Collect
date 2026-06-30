@@ -56,8 +56,6 @@ const statusStyles: Record<OrderStatus, string> = {
   Pending: 'bg-gray-100 text-gray-600',
 };
 
-
-
 // ─── Mobile card list ────────────────────────────────────────────────────────
 
 interface MobileOrdersProps {

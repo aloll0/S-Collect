@@ -33,7 +33,7 @@ const StepIndicator = ({ current }: { current: number }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="flex items-start mb-12">
+    <div className="flex items-center mb-8">
       {STEP_KEYS.map((key, i) => {
         const done = i < current;
         const active = i === current;
@@ -41,36 +41,28 @@ const StepIndicator = ({ current }: { current: number }) => {
         return (
           <div
             key={i}
-            className={`flex items-start ${i < STEP_KEYS.length - 1 ? 'flex-1' : ''}`}
+            className={`flex items-center ${i < STEP_KEYS.length - 1 ? 'flex-1' : ''}`}
           >
-            <div className="flex flex-col items-center gap-1.5">
+            <div className="flex flex-col items-center gap-1 w-[100px] shrink-0">
               {/* Circle */}
               <div
-                className={`lg:w-[38px] lg:h-[38px] w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${done || active ? 'bg-green' : 'bg-gray-200'
-                  }`}
+                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                  done || active ? 'bg-green' : 'bg-gray-200'
+                }`}
               >
                 {done ? (
-                  <svg 
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="3"
-                  >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 ) : (
-                  <span
-                    className={`font-semibold ${active ? 'text-gray-50' : 'text-gray-400'}`}
-                  >
+                  <span className={`text-xs font-semibold ${active ? 'text-gray-50' : 'text-gray-400'}`}>
                     {i + 1}
                   </span>
                 )}
               </div>
               {/* Label */}
               <span
-                className={`lg:text-md text-[10px] whitespace-nowrap ${
+                className={`text-[10px] text-center leading-tight ${
                   active ? 'text-gray-900 font-semibold' : 'text-gray-400'
                 }`}
               >
@@ -80,11 +72,14 @@ const StepIndicator = ({ current }: { current: number }) => {
 
             {/* Connector line */}
             {i < STEP_KEYS.length - 1 && (
-              <div
-                className={`flex-1 h-0.5 mt-6.5 mx-1.5 rounded-full transition-colors ${
-                  done ? 'bg-green' : 'bg-gray-200'
-                }`}
-              />
+              <div className="flex-1 flex items-center px-1">
+                <div
+                  className={`w-full h-0.5 rounded-full transition-colors ${
+                    done ? 'bg-green' : 'bg-gray-200'
+                  }`}
+                  style={{ marginTop: '-1.1rem' }}
+                />
+              </div>
             )}
           </div>
         );
@@ -607,7 +602,7 @@ const Register = () => {
       <AuthLeftPanel />
 
       <div className="flex-1 bg-gray-50 flex items-center justify-center px-10 py-12 overflow-y-auto flex justify-center items-start">
-        <div className="w-full max-w-[480px] mt-6 lg:mt-48">
+        <div className="w-full w-auto md:max-w-[480px] mt-6 lg:mt-48">
           {submitted ? (
             <EmailSent
               email={methods.getValues('email')}

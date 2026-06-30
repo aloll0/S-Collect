@@ -103,7 +103,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
       setRemainingTime(14 * 60); // reset to 14 minutes
 
       timer = setInterval(() => {
-        setRemainingTime(prev => {
+        setRemainingTime((prev) => {
           if (prev <= 1) {
             clearInterval(timer);
             return 0;

@@ -39,7 +39,9 @@ export const MobileOrderCard = ({
       <div className="flex items-center justify-between mt-3">
         {/* Status selector */}
         <div className="relative inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2.5 py-1.5">
-          <span className={`rounded-lg px-2.5 py-0.5 text-xs font-semibold ${STATUS_STYLES[order.status]}`}>
+          <span
+            className={`rounded-lg px-2.5 py-0.5 text-xs font-semibold ${STATUS_STYLES[order.status]}`}
+          >
             {t(`ordersPage.${order.status.toLowerCase()}`)}
           </span>
           <select

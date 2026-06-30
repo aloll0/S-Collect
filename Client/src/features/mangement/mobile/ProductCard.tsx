@@ -64,8 +64,9 @@ const ProductCard = ({ product, onDelete, onToggle }: Props) => {
 
   return (
     <div
-      className={`p-4 bg-white rounded-lg shadow-sm transition-all ${!product.enabled ? 'opacity-50' : ''
-        }`}
+      className={`p-4 bg-white rounded-lg shadow-sm transition-all ${
+        !product.enabled ? 'opacity-50' : ''
+      }`}
     >
       <div className="pb-4 border-t border-gray-100 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
