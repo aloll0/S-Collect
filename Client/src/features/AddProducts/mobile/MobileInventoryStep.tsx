@@ -3,6 +3,7 @@ import { useFormContext } from 'react-hook-form';
 import type { ProductFormData } from '../types';
 import { useMobileAddProductStore } from './mobileAddProductStore';
 import type { Visibility } from './mobileAddProductStore';
+import { AnimateNumber } from "motion-plus/react";
 
 const LOW_STOCK_THRESHOLD = 10;
 
@@ -16,7 +17,6 @@ const MobileInventoryStep = () => {
 
   const {
     quantity,
-    setQuantity,
     incrementQuantity,
     decrementQuantity,
     isActive,
@@ -65,21 +65,36 @@ const MobileInventoryStep = () => {
           <button
             type="button"
             onClick={decrementQuantity}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 text-lg font-semibold text-gray-600 transition hover:bg-gray-50 active:scale-95"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 text-lg font-semibold text-gray-600"
           >
             −
           </button>
-          <input
-            type="number"
-            value={quantity}
-            min={0}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            className="w-20 rounded-xl border border-gray-200 py-2 text-center text-sm font-semibold focus:border-gray-900 focus:outline-none"
-          />
+
+          <div className="flex h-10 w-24 items-center justify-center rounded-xl border border-gray-200 bg-white">
+            <AnimateNumber
+              className="text-lg font-semibold"
+              transition={{
+                layout: {
+                  duration: 0.25,
+                },
+                y: {
+                  type: "spring",
+                  bounce: 0.2,
+                  duration: 0.4,
+                },
+                opacity: {
+                  duration: 0.2,
+                },
+              }}
+            >
+              {quantity}
+            </AnimateNumber>
+          </div>
+
           <button
             type="button"
             onClick={incrementQuantity}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 text-lg font-semibold text-gray-600 transition hover:bg-gray-50 active:scale-95"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 text-lg font-semibold text-gray-600"
           >
             +
           </button>
