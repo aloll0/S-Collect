@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { SquarePen, Trash } from 'lucide-react';
+import { SquarePen, Trash, Check } from 'lucide-react';
 import Toggle from './Toggle';
 import StatusBadge from './StatusBadge';
 import { showDeleteConfirmation } from './deleteConfirmation';
@@ -66,16 +66,28 @@ export default function ProductRow({
   return (
     <tr
       className={`transition-all ${!product.enabled ? 'opacity-50' : ''} ${
-        selected ? 'bg-indigo-50 hover:bg-indigo-50' : 'hover:bg-gray-50'
+        selected
+          ? 'bg-gray-50 hover:bg-gray-50 shadow-[inset_3px_0_0_0_#111827]'
+          : 'hover:bg-gray-50'
       }`}
     >
       <td className="px-3 py-3 border-b border-gray-100 text-start">
-        <input
-          type="checkbox"
-          checked={selected}
-          onChange={onSelect}
-          className="accent-black w-4 h-4 cursor-pointer"
-        />
+        <label className="inline-flex items-center justify-center w-4 h-4 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={onSelect}
+            className="peer sr-only"
+          />
+          <span
+            className="w-4 h-4 rounded-[4px] border border-gray-300 bg-white
+                       flex items-center justify-center
+                       peer-checked:bg-gray-900 peer-checked:border-gray-900
+                       transition-colors"
+          >
+            {selected && <Check className="text-white" size={11} strokeWidth={3} />}
+          </span>
+        </label>
       </td>
 
       <td className="px-3 py-3 border-b border-gray-100">

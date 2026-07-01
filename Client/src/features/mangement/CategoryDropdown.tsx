@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { useOutsideClick } from '../../hooks/useOutsideClick';
 import { useTranslation } from 'react-i18next';
 import { CATEGORIES } from './constant';
-import { ChevronUp } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 const DD_MENU =
   'absolute top-[calc(100%+6px)] left-0 bg-white border border-gray-200 rounded-lg shadow-md z-50 overflow-hidden';
 
@@ -41,7 +41,12 @@ function CategoryDropdown({ selected, onChange }: CategoryDropdownProps) {
         onClick={() => setOpen(!open)}
       >
         {label}
-        <ChevronUp color="black" size={15} />
+        <ChevronDown
+          color="black"
+          size={15}
+          className={`transition-transform duration-200 ${open ? 'rotate-180' : 'rotate-0'
+            }`}
+        />
       </button>
 
       {open && (

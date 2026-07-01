@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Search, X } from 'lucide-react';
+import { TypeAnimation } from 'react-type-animation';
+
+
 
 const InputSearch = () => {
   const [open, setOpen] = useState(false);
@@ -16,14 +19,28 @@ const InputSearch = () => {
     <>
       {/* Desktop Search */}
       <div className="hidden md:block relative w-full">
+        <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--gray-400)]" />
+
         <input
           type="text"
-          placeholder=" Search..."
-          className="w-full bg-[var(--gray-50)] px-8 py-2 rounded-lg text-[var(--gray-700)] outline-none focus:ring-2 focus:ring-gray-600 focus:placeholder:text-white" 
+          className="w-full bg-[var(--gray-50)] pl-8 pr-3 py-2 rounded-lg text-[var(--gray-700)] outline-none focus:ring-2 focus:ring-gray-600"
         />
-        <div className="h-4 w-0.5 bg-gray-300 rounded-full absolute top-2.5 left-7"></div>
-        <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--gray-400)]" />
-      </div> 
+
+        {/* animated placeholder */}
+        <div className="absolute left-8 top-1/2 -translate-y-1/2 pointer-events-none text-sm text-[var(--gray-400)]">
+          <TypeAnimation
+            sequence={[
+              'Search products...',
+              2000,
+              'Search categories...',
+              2000,
+              '',
+            ]}
+            speed={50}
+            repeat={Infinity}
+          />
+        </div>
+      </div>
 
       {/* Mobile Button */} 
       <button

@@ -3,7 +3,7 @@ import type { StatusFilter } from './mangement';
 import { useRef, useState } from 'react';
 import { useOutsideClick } from '../../hooks/useOutsideClick';
 import { STATUS_FILTERS } from './constant';
-import { ChevronUp } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 const DD_BTN =
   'flex items-center gap-1.5 h-9 px-3 border border-gray-200 rounded-lg bg-white text-sm cursor-pointer hover:bg-gray-50 whitespace-nowrap';
@@ -31,7 +31,12 @@ function StatusDropdown({ selected, onChange }: StatusDropdownProps) {
         {selected === 'All'
           ? t('managementTable.status')
           : t(`managementTable.statuses.${selected}`)}
-        <ChevronUp color="black" size={15} />
+        <ChevronDown
+          color="black"
+          size={15}
+          className={`transition-transform duration-200 ${open ? 'rotate-180' : 'rotate-0'
+            }`}
+        />
       </button>
 
       {open && (
