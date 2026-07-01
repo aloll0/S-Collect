@@ -3,7 +3,6 @@ import {
   PackageOpen,
   Settings,
   X,
-  Globe,
   ChartNoAxesCombined,
   CirclePlus,
   Handbag,
@@ -13,9 +12,11 @@ import type { ReactNode } from 'react';
 import Logo from '../ui/Logo';
 import LogoutButton from '../auth/LogoutButton';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import type { Variants } from 'motion/react';
+import { Globe, Check } from 'lucide-react';
+import i18n from '../../i18n';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface NavItemProps {
@@ -36,6 +37,98 @@ interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+// ─── Language Dropdown ────────────────────────────────────────────────────────
+const LANGUAGES = [
+  { code: 'en', label: 'English', short: 'EN' },
+  { code: 'ar', label: 'العربية', short: 'AR' },
+];
+
+const LanguageDropdown = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const isArabic = i18n.language === 'ar';
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleLanguageChange = (lang: string) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('lang', lang);
+    setIsOpen(false);
+  };
+
+  const currentLang =
+    LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0];
+
+  return (
+    <div ref={dropdownRef} className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-label-md text-gray-400 hover:bg-gray-800/40 hover:text-gray-100 transition-all duration-200"
+      >
+        <Globe size={18} className="shrink-0" />
+        <span className="truncate">{currentLang.short}</span>
+        <motion.span
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="ml-auto"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </motion.span>
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
+            className={`absolute ${isArabic ? 'right-0' : 'left-0'} top-full mt-1 z-50 min-w-[140px] bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-1`}
+          >
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => handleLanguageChange(lang.code)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors hover:bg-gray-700 ${
+                  lang.code === i18n.language
+                    ? 'text-white font-medium bg-gray-700/50'
+                    : 'text-gray-400'
+                }`}
+              >
+                <span className="text-base">{lang.short}</span>
+                <span>{lang.label}</span>
+                {lang.code === i18n.language && (
+                  <Check size={14} className="ml-auto text-gray-200" />
+                )}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 // ─── Nav Item ─────────────────────────────────────────────────────────────────
 const NavItem = ({
@@ -146,8 +239,7 @@ const NAV_SECTIONS: NavSectionProps[] = [
   },
 ];
 
-// ─── Animation Variants (circle reveal, à la motion examples) ────────────────
-// نقطة الانطلاق: أعلى يمين أو يسار حسب اللغة (مكان زرار الفتح في الـ topbar)
+// ─── Animation Variants ───────────────────────────────────────────────────────
 const getSidebarVariants = (isArabic: boolean): Variants => ({
   open: {
     clipPath: `circle(150% at ${isArabic ? '100%' : '0%'} 0%)`,
@@ -203,19 +295,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     };
   }, [isOpen]);
 
-  const { i18n } = useTranslation();
   const isArabic = i18n.language === 'ar';
-
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const lang = e.target.value;
-
-    i18n.changeLanguage(lang);
-
-    localStorage.setItem('language', lang);
-
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = lang;
-  };
 
   const sidebarVariants = getSidebarVariants(isArabic);
 
@@ -246,22 +326,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         ))}
 
         <div className="px-3 mt-5 sidebar:hidden">
-          <div className="group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out relative overflow-hidden text-label-md text-gray-400">
-            <Globe className="text-gray-400" size={18} />
-
-            <select
-              value={i18n.language}
-              onChange={handleLanguageChange}
-              className="bg-transparent text-gray-100 cursor-pointer outline-none"
-            >
-              <option value="en" className="text-black">
-                EN
-              </option>
-              <option value="ar" className="text-black">
-                AR
-              </option>
-            </select>
-          </div>
+          <LanguageDropdown />
         </div>
       </motion.nav>
 

@@ -1,12 +1,106 @@
 import { Link } from 'react-router-dom';
-import { Globe, Menu, User } from 'lucide-react';
+import { Menu, User } from 'lucide-react';
 import InputSearch from './InputSearch';
 import { useTranslation } from 'react-i18next';
 import { TypeAnimation } from 'react-type-animation';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Globe, Check } from 'lucide-react';
+import i18n from '../../i18n';
 
 interface HeaderProps {
   onMenuClick: () => void;
 }
+
+const LANGUAGES = [
+  { code: 'en', label: 'English', short: 'EN' },
+  { code: 'ar', label: 'العربية', short: 'AR' },
+];
+
+const LanguageDropdown = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const isArabic = i18n.language === 'ar';
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleLanguageChange = (lang: string) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('lang', lang);
+    setIsOpen(false);
+  };
+
+  const currentLang =
+    LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0];
+
+  return (
+    <div ref={dropdownRef} className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-2 bg-gray-50 text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+      >
+        <Globe size={16} />
+        <span className="text-sm font-medium">{currentLang.short}</span>
+        <motion.span
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </motion.span>
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
+            className={`absolute ${isArabic ? 'left-0' : 'right-0'} top-full mt-1 z-50 min-w-[140px] bg-white border border-gray-200 rounded-lg shadow-lg py-1`}
+          >
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => handleLanguageChange(lang.code)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors hover:bg-gray-50 ${
+                  lang.code === i18n.language
+                    ? 'text-gray-900 font-medium bg-gray-50'
+                    : 'text-gray-600'
+                }`}
+              >
+                <span className="text-base">{lang.short}</span>
+                <span>{lang.label}</span>
+                {lang.code === i18n.language && (
+                  <Check size={14} className="ml-auto text-gray-900" />
+                )}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const Header = ({ onMenuClick }: HeaderProps) => {
   const { i18n } = useTranslation();
@@ -21,29 +115,18 @@ const Header = ({ onMenuClick }: HeaderProps) => {
     }
   );
 
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const lang = e.target.value;
-
-    i18n.changeLanguage(lang);
-
-    localStorage.setItem('language', lang);
-
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = lang;
-  };
-
   const userName = 'Ahmed';
 
   return (
-    <header className="bg-(--gray-950) shadow-md p-4 text-white sticky inset-0  z-50">
+    <header className="bg-(--gray-950) shadow-md p-4 text-white sticky inset-0 z-50">
       <div className="container mx-auto flex flex-col gap-4 sidebar:flex-row sidebar:justify-between sidebar:items-center">
         <div className="flex items-center justify-between gap-4 sidebar:hidden">
           <div className="flex items-center gap-3">
             <a href="/">
               <img src="/mobLogo.png" alt="Logo" className="h-10 w-10" />
-            </a> 
+            </a>
             <button
-              type="button" 
+              type="button"
               onClick={onMenuClick}
               className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-gray-50 transition-colors cursor-pointer"
               aria-label="Open sidebar"
@@ -69,12 +152,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
           <div>
             <h1 className="text-2xl font-bold">
               <TypeAnimation
-                sequence={[
-                  `Hello, ${userName} 👋`,
-                  3000,
-                  '',
-                  500,
-                ]}
+                sequence={[`Hello, ${userName} 👋`, 3000, '', 500]}
                 speed={50}
                 repeat={Infinity}
                 cursor={true}
@@ -89,17 +167,8 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             <InputSearch />
           </div>
 
-          <div className="hidden items-center bg-gray-50 text-white px-1 rounded-lg sidebar:flex">
-            <Globe className="text-gray-950" />
-
-            <select
-              value={i18n.language}
-              onChange={handleLanguageChange}
-              className="bg-gray-50 text-black px-2 py-2 rounded-lg cursor-pointer"
-            >
-              <option value="en">EN</option>
-              <option value="ar">AR</option>
-            </select>
+          <div className="hidden sidebar:flex">
+            <LanguageDropdown />
           </div>
 
           <Link
