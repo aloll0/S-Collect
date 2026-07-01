@@ -48,24 +48,26 @@ const NavItem = ({
   const { t } = useTranslation();
 
   return (
-    <NavLink
-      to={to}
-      onClick={onClick}
-      className={({ isActive }) =>
-        `group flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 ease-in-out relative overflow-hidden text-label-md
-        ${
-          isActive
-            ? 'bg-gray-800 text-gray-50 font-medium'
-            : danger
-              ? 'text-red-500 hover:bg-red-500/10 hover:text-red-500'
-              : 'text-gray-400 hover:bg-gray-800/40 hover:text-gray-100'
-        }`
-      }
-    >
-      <span className="shrink-0">{icon}</span>
-      <span className="truncate">{t(labelKey)}</span>
-      <span className="absolute left-0 top-0 h-full w-0 bg-gray-700/20 group-hover:w-full transition-all duration-300" />
-    </NavLink>
+    <motion.div variants={navItemVariants}>
+      <NavLink
+        to={to}
+        onClick={onClick}
+        className={({ isActive }) =>
+          `group flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 ease-in-out relative overflow-hidden text-label-md
+          ${
+            isActive
+              ? 'bg-gray-800 text-gray-50 font-medium'
+              : danger
+                ? 'text-red-500 hover:bg-red-500/10 hover:text-red-500'
+                : 'text-gray-400 hover:bg-gray-800/40 hover:text-gray-100'
+          }`
+        }
+      >
+        <span className="shrink-0">{icon}</span>
+        <span className="truncate">{t(labelKey)}</span>
+        <span className="absolute left-0 top-0 h-full w-0 bg-gray-700/20 group-hover:w-full transition-all duration-300" />
+      </NavLink>
+    </motion.div>
   );
 };
 
@@ -74,16 +76,19 @@ const NavSection = ({ titleKey, items, onItemClick }: NavSectionProps) => {
   const { t } = useTranslation();
 
   return (
-    <div className="px-3 mt-5">
-      <p className="text-caption font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">
+    <motion.div variants={navListVariants} className="px-3 mt-5">
+      <motion.p
+        variants={navItemVariants}
+        className="text-caption font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2"
+      >
         {t(titleKey)}
-      </p>
-      <div className="flex flex-col gap-0.5">
+      </motion.p>
+      <motion.div variants={navListVariants} className="flex flex-col gap-0.5">
         {items.map((item) => (
           <NavItem key={item.to} {...item} onClick={onItemClick} />
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
@@ -171,6 +176,18 @@ const navListVariants: Variants = {
   },
 };
 
+const navItemVariants: Variants = {
+  open: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 300, damping: 24 },
+  },
+  closed: {
+    opacity: 0,
+    y: 10,
+    transition: { duration: 0.2 },
+  },
+};
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
@@ -216,9 +233,16 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </button>
       </div>
 
-      <nav className="flex-1 overflow-y-auto py-4 scrollbar-thin scrollbar-thumb-gray-800">
+      <motion.nav
+        variants={navListVariants}
+        className="flex-1 overflow-y-auto py-4 scrollbar-thin scrollbar-thumb-gray-800"
+      >
         {NAV_SECTIONS.map((section) => (
-          <NavSection key={section.titleKey} {...section} onItemClick={onClose} />
+          <NavSection
+            key={section.titleKey}
+            {...section}
+            onItemClick={onClose}
+          />
         ))}
 
         <div className="px-3 mt-5 sidebar:hidden">
@@ -239,7 +263,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </select>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
       <div className="shrink-0 p-3">
         <LogoutButton />
@@ -249,7 +273,6 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   return (
     <>
-
       <aside
         className={`hidden sidebar:flex w-64 h-dvh bg-(--gray-950) flex-col sticky top-0 z-70 ${
           isArabic ? 'right-0' : 'left-0'
@@ -281,9 +304,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               animate="open"
               exit="closed"
             >
-              <motion.div variants={navListVariants} initial="closed" animate="open" className="contents">
-                {SidebarContent}
-              </motion.div>
+              <motion.div className="contents">{SidebarContent}</motion.div>
             </motion.aside>
           </>
         )}
