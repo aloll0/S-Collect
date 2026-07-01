@@ -17,7 +17,6 @@ const MobileInventoryStep = () => {
 
   const {
     quantity,
-    setQuantity,
     incrementQuantity,
     decrementQuantity,
     isActive,
