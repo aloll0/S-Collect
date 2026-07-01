@@ -1,6 +1,25 @@
 import { TrendingUp, Box, PackagePlus, Package } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'motion/react';
+import type { Variants } from 'motion/react';
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 100, damping: 15 },
+  },
+};
 
 const DashboardGrid = () => {
   const { t } = useTranslation();
@@ -75,34 +94,18 @@ const DashboardGrid = () => {
   ];
 
   return (
-    <div className="mb-10 ">
-      {/* Injected CSS for smooth first appearance */}
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in-up {
-          opacity: 0;
-          /* Using a smooth cubic-bezier for a modern "ease-out" feel */
-          animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-      `}</style>
-
+    <motion.div
+      className="mb-10"
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+    >
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
-        {dashboardMetrics.map((metric, index) => (
-          <div
+        {dashboardMetrics.map((metric) => (
+          <motion.div
             key={metric.title}
-            // Added the animation class
-            className="bg-white border border-gray-100 rounded-xl p-3 lg:p-5 shadow-sm max-sm:h-[120px] lg:h-[155px] flex flex-col lg:justify-between justify-evenly animate-fade-in-up"
-            // Stagger the animation delay for each card (0ms, 100ms, 200ms...)
-            style={{ animationDelay: `${index * 100}ms` }}
+            variants={itemVariants}
+            className="bg-white border border-gray-100 rounded-xl p-3 lg:p-5 shadow-sm max-sm:h-[120px] lg:h-[155px] flex flex-col lg:justify-between justify-evenly"
           >
             {/* Header */}
             <div className="flex items-center gap-2">
@@ -139,10 +142,10 @@ const DashboardGrid = () => {
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

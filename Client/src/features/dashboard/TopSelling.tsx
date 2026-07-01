@@ -1,5 +1,24 @@
 import { useTranslation } from 'react-i18next';
+import { motion } from 'motion/react';
+import type { Variants } from 'motion/react';
 import TopSellingCard from './TopSellingCard';
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.07, delayChildren: 0.15 },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 100, damping: 15 },
+  },
+};
 
 type ProductSale = {
   id: string;
@@ -118,44 +137,35 @@ const TopSelling = () => {
   const { t } = useTranslation();
 
   return (
-    <>
-      {/* Scoped animation styles matching the rest of the dashboard */}
-      <style>{`
-        @keyframes topSellFadeInUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .ts-animate-in {
-          opacity: 0;
-          animation: topSellFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-      `}</style>
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="flex flex-col gap-4 overflow-hidden bg-white p-4 rounded-xl shadow h-[550px]"
+    >
+      {/* Header appears with container */}
+      <motion.div
+        variants={itemVariants}
+        className="flex items-center justify-between gap-2 shrink-0"
+      >
+        <h2 className="text-xl font-bold">{t('topSelling.title')}</h2>
+        <button className="text-sm text-primary flex items-center gap-2 hover:opacity-80 transition-opacity">
+          {t('topSelling.viewAll')}
+        </button>
+      </motion.div>
 
-      <div className="flex flex-col gap-4 overflow-hidden bg-white p-4 rounded-xl shadow h-[550px] ts-animate-in">
-        {/* Header appears with container */}
-        <div className="flex items-center justify-between gap-2 shrink-0">
-          <h2 className="text-xl font-bold">{t('topSelling.title')}</h2>
-          <button className="text-sm text-primary flex items-center gap-2 hover:opacity-80 transition-opacity">
-            {t('topSelling.viewAll')}
-          </button>
-        </div>
-
-        {/* Scrollable product list with staggered children */}
-        <div className="flex flex-col gap-2 overflow-y-auto h-full pr-1">
-          {topSellingProducts.map((product, index) => (
-            <div
-              key={product.id}
-              className="ts-animate-in"
-              // Tighter stagger (70ms) since there are 10 items
-              // Base delay of 150ms lets the header settle first
-              style={{ animationDelay: `${150 + index * 70}ms` }}
-            >
-              <TopSellingCard cardData={product} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
+      {/* Scrollable product list with staggered children */}
+      <motion.div
+        variants={containerVariants}
+        className="flex flex-col gap-2 overflow-y-auto h-full pr-1"
+      >
+        {topSellingProducts.map((product) => (
+          <motion.div key={product.id} variants={itemVariants}>
+            <TopSellingCard cardData={product} />
+          </motion.div>
+        ))}
+      </motion.div>
+    </motion.div>
   );
 };
 

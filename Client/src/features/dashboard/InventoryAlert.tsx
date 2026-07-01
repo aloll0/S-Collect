@@ -1,7 +1,26 @@
 import { TriangleAlert } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'motion/react';
+import type { Variants } from 'motion/react';
 import InventoryCard from './InventoryCard';
 import { Link } from 'react-router-dom';
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 100, damping: 15 },
+  },
+};
 
 interface InventoryItem {
   id: string;
@@ -110,56 +129,49 @@ const InventoryAlert = () => {
   const { t } = useTranslation();
 
   return (
-    <>
-      {/* Scoped animation styles matching the DashboardGrid easing */}
-      <style>{`
-        @keyframes invFadeInUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .inv-animate-in {
-          opacity: 0;
-          animation: invFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-      `}</style>
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="w-full rounded-lg bg-white p-3 lg:p-8 shadow h-[300px]  lg:h-[512px]"
+    >
+      {/* Header & Alert Banner appear with the container */}
+      <motion.div
+        variants={itemVariants}
+        className="flex gap-2 items-center mb-3 lg:mb-6"
+      >
+        <TriangleAlert className="text-yellow w-4 h-4 lg:w-6 lg:h-6" />
+        <h3 className="text-sm lg:text-xl font-bold">{t('inventoryAlerts')}</h3>
+      </motion.div>
 
-      <div className="w-full rounded-lg bg-white p-3 lg:p-8 shadow h-[300px]  lg:h-[512px] inv-animate-in">
-        {/* Header & Alert Banner appear with the container */}
-        <div className="flex gap-2 items-center mb-3 lg:mb-6">
-          <TriangleAlert className="text-yellow w-4 h-4 lg:w-6 lg:h-6" />
-          <h3 className="text-sm lg:text-xl font-bold">
-            {t('inventoryAlerts')}
-          </h3>
-        </div>
+      <motion.div
+        variants={itemVariants}
+        className="bg-yellow-light text-yellow px-4 py-2.5 rounded-lg text-sm mb-6 hidden lg:block"
+      >
+        <p>{t('inventoryItem.alertMessage')}</p>
+      </motion.div>
 
-        <div className="bg-yellow-light text-yellow px-4 py-2.5 rounded-lg text-sm mb-6 hidden lg:block">
-          <p>{t('inventoryItem.alertMessage')}</p>
-        </div>
+      {/* Scrollable list area */}
+      <motion.div
+        variants={containerVariants}
+        className="mb-6 flex flex-col gap-3 h-[60%] overflow-y-auto pr-1"
+      >
+        {inventoryAlertsData.items.map((item) => (
+          <motion.div key={item.id} variants={itemVariants}>
+            <InventoryCard cardData={item} />
+          </motion.div>
+        ))}
+      </motion.div>
 
-        {/* Scrollable list area */}
-        <div className="mb-6 flex flex-col gap-3 h-[60%] overflow-y-auto pr-1">
-          {inventoryAlertsData.items.map((item, index) => (
-            <div
-              key={item.id}
-              className="inv-animate-in"
-              // Stagger each inventory card after the container has started appearing
-              // Base delay of 200ms + 80ms per item for a tighter cascade than the dashboard
-              style={{ animationDelay: `${200 + index * 80}ms` }}
-            >
-              <InventoryCard cardData={item} />
-            </div>
-          ))}
-        </div>
-
+      <motion.div variants={itemVariants}>
         <Link
           to={'/inventory'}
-          className="w-full text-center rounded-lg border block py-1.5   lg:py-3 mt-auto inv-animate-in hover:bg-gray-50 transition-colors"
-          style={{ animationDelay: '600ms' }}
+          className="w-full text-center rounded-lg border block py-1.5   lg:py-3 mt-auto hover:bg-gray-50 transition-colors"
         >
           {t('inventoryItem.manageInventory')}
         </Link>
-      </div>
-    </>
+      </motion.div>
+    </motion.div>
   );
 };
 
