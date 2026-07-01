@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useMobileAddProductStore } from './mobileAddProductStore';
 
@@ -13,7 +14,7 @@ const MobileStepIndicator = () => {
   const currentStep = useMobileAddProductStore((state) => state.step);
 
   return (
-    <div className="flex items-center gap-0 w-full mb-5">
+    <div className="mb-5 flex w-full items-center gap-0">
       {STEPS.map((step, index) => {
         const stepNumber = index + 1;
         const isCompleted = stepNumber < currentStep;
@@ -22,12 +23,21 @@ const MobileStepIndicator = () => {
         return (
           <div
             key={step.key}
-            className="flex items-center flex-1 last:flex-none"
+            className="flex flex-1 items-center last:flex-none"
           >
-            {/* Circle + label */}
+            {/* Circle + Label */}
             <div className="flex flex-col items-center gap-1">
-              <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+              <motion.div
+                layout
+                animate={{
+                  scale: isActive ? [1, 1.15, 1] : 1,
+                }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 450,
+                  damping: 18,
+                }}
+                className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
                   isCompleted
                     ? 'bg-green-500 text-white'
                     : isActive
@@ -36,8 +46,15 @@ const MobileStepIndicator = () => {
                 }`}
               >
                 {isCompleted ? (
-                  <svg
-                    className="w-3.5 h-3.5"
+                  <motion.svg
+                    initial={{ scale: 0, rotate: -90 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 500,
+                      damping: 20,
+                    }}
+                    className="h-3.5 w-3.5"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -48,31 +65,48 @@ const MobileStepIndicator = () => {
                       strokeWidth={2.5}
                       d="M5 13l4 4L19 7"
                     />
-                  </svg>
+                  </motion.svg>
                 ) : (
-                  stepNumber
+                  <motion.span
+                    key={stepNumber}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    {stepNumber}
+                  </motion.span>
                 )}
-              </div>
-              <span
-                className={`text-[10px] font-medium whitespace-nowrap ${
-                  isActive
-                    ? 'text-gray-900'
-                    : isCompleted
-                      ? 'text-green-500'
-                      : 'text-gray-400'
-                }`}
+              </motion.div>
+
+              <motion.span
+                animate={{
+                  color: isCompleted
+                    ? '#22c55e'
+                    : isActive
+                      ? '#111827'
+                      : '#9ca3af',
+                }}
+                transition={{ duration: 0.25 }}
+                className="whitespace-nowrap text-[10px] font-medium"
               >
                 {t(`addProduct.steps.${step.key}`, step.label)}
-              </span>
+              </motion.span>
             </div>
 
-            {/* Connector line */}
+            {/* Connector */}
             {index < STEPS.length - 1 && (
-              <div
-                className={`flex-1 h-0.5 mb-4 mx-1 transition-colors ${
-                  isCompleted ? 'bg-green-500' : 'bg-gray-200'
-                }`}
-              />
+              <div className="relative mx-1 mb-4 h-0.5 flex-1 overflow-hidden rounded-full bg-gray-200">
+                <motion.div
+                  initial={false}
+                  animate={{
+                    width: isCompleted ? '100%' : '0%',
+                  }}
+                  transition={{
+                    duration: 0.45,
+                    ease: 'easeInOut',
+                  }}
+                  className="absolute left-0 top-0 h-full bg-green-500"
+                />
+              </div>
             )}
           </div>
         );
