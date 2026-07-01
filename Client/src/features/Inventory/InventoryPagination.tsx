@@ -1,3 +1,4 @@
+// features/Inventory/InventoryPagination.tsx
 import { useTranslation } from 'react-i18next';
 import { ITEMS_PER_PAGE } from './types';
 

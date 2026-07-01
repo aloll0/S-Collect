@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 interface OrderFiltersProps {
@@ -30,13 +31,26 @@ export const OrderFilters = ({
           <button
             key={tab.key}
             onClick={() => onTabChange(tab.key)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+            className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
               activeTab === tab.key
-                ? 'bg-gray-900 text-white'
+                ? 'text-white'
                 : 'border border-gray-200 text-gray-500 hover:bg-gray-50'
             }`}
           >
-            {tab.label}
+            {/* Active tab background with smooth layout animation */}
+            {activeTab === tab.key && (
+              <motion.div
+                layoutId="orders-active-tab"
+                className="absolute inset-0 bg-gray-900 rounded-lg"
+                transition={{
+                  type: 'spring',
+                  stiffness: 400,
+                  damping: 35,
+                  mass: 0.8,
+                }}
+              />
+            )}
+            <span className="relative z-10">{tab.label}</span>
           </button>
         ))}
       </div>
@@ -47,7 +61,7 @@ export const OrderFilters = ({
         <select
           value={sortNewest ? 'newest' : 'oldest'}
           onChange={onSortToggle}
-          className="flex w-full items-center justify-center gap-1.5 text-sm text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors  cursor-pointer sm:w-fit"
+          className="flex w-full items-center justify-center gap-1.5 text-sm text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer sm:w-fit"
         >
           <option value="newest">{t('ordersPage.newestFirst')}</option>
           <option value="oldest">{t('ordersPage.oldestFirst')}</option>
