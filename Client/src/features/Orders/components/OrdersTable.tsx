@@ -94,11 +94,11 @@ const StatusDropdown = ({
                 <span
                   className={`w-2 h-2 rounded-full ${
                     status === 'Pending'
-                      ? 'bg-amber-400'
+                      ? 'bg-gray-400'
                       : status === 'Processing'
                         ? 'bg-blue-400'
                         : status === 'Shipped'
-                          ? 'bg-purple-400'
+                          ? 'bg-yellow-400'
                           : status === 'Delivered'
                             ? 'bg-emerald-400'
                             : 'bg-gray-400'
