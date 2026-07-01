@@ -1,4 +1,5 @@
 // features/Inventory/InventoryTable.tsx
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { STATUS_STYLES, type ProductRow } from './types';
 
@@ -24,14 +25,18 @@ export const InventoryTable = ({
 
   if (data.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-400">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center py-12 text-gray-400"
+      >
         {t('inventoryPage.noProducts')}
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-hidden">
       <table className="w-full text-body-md">
         <thead>
           <tr className="border-b border-gray-200">
@@ -46,9 +51,16 @@ export const InventoryTable = ({
           </tr>
         </thead>
         <tbody>
-          {data.map((product) => (
-            <tr
+          {data.map((product, index) => (
+            <motion.tr
               key={product.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.3,
+                delay: index * 0.04,
+                ease: [0.25, 0.1, 0.25, 1],
+              }}
               className="border-b border-gray-100 hover:bg-gray-100 transition-colors"
             >
               <td className="py-3 px-3 text-body-md font-medium text-gray-900">
@@ -87,7 +99,7 @@ export const InventoryTable = ({
               <td className="py-3 px-3 text-body-sm text-gray-400">
                 {product.updatedAt}
               </td>
-            </tr>
+            </motion.tr>
           ))}
         </tbody>
       </table>

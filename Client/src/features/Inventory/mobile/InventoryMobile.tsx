@@ -1,4 +1,5 @@
 // features/Inventory/mobile/InventoryMobile.tsx
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useInventory } from '../hooks/useInventory';
 import { ProductCard } from './ProductCard';
@@ -50,50 +51,77 @@ export const InventoryMobile = () => {
           onFilterChange={handleFilterChange}
         />
 
-        {/* Cards list */}
-        {paginatedData.length === 0 ? (
-          <div className="py-16 text-center text-gray-400 text-sm">
-            {t('inventoryPage.noProducts', 'No products found.')}
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {paginatedData.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onStockChange={handleStockChange}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Pagination */}
-        {totalPages > 0 && (
-          <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-200">
-            <span className="text-xs text-gray-400">
-              {t('inventoryPage.showing', 'Showing')} {start}–{end}{' '}
-              {t('inventoryPage.of', 'of')} {totalItems}
-            </span>
-
-            {totalPages > 1 && (
-              <div className="flex gap-1.5">
-                {pageNumbers.map((n) => (
-                  <button
-                    key={n}
-                    onClick={() => handlePageChange(n)}
-                    className={`w-8 h-8 rounded-lg text-sm font-medium border transition-colors ${
-                      n === currentPage
-                        ? 'bg-gray-900 text-white border-gray-900'
-                        : 'border-gray-200 text-gray-500 bg-white hover:bg-gray-50'
-                    }`}
+        {/* Cards list with animation */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${activeTab}-${currentPage}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.15,
+              ease: 'easeOut',
+            }}
+          >
+            {paginatedData.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="py-16 text-center text-gray-400 text-sm"
+              >
+                {t('inventoryPage.noProducts', 'No products found.')}
+              </motion.div>
+            ) : (
+              <div className="space-y-3">
+                {paginatedData.map((product, index) => (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.3,
+                      delay: index * 0.04,
+                      ease: [0.25, 0.1, 0.25, 1],
+                    }}
                   >
-                    {n}
-                  </button>
+                    <ProductCard
+                      product={product}
+                      onStockChange={handleStockChange}
+                    />
+                  </motion.div>
                 ))}
               </div>
             )}
-          </div>
-        )}
+
+            {/* Pagination */}
+            {totalPages > 0 && (
+              <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-200">
+                <span className="text-xs text-gray-400">
+                  {t('inventoryPage.showing', 'Showing')} {start}–{end}{' '}
+                  {t('inventoryPage.of', 'of')} {totalItems}
+                </span>
+
+                {totalPages > 1 && (
+                  <div className="flex gap-1.5">
+                    {pageNumbers.map((n) => (
+                      <button
+                        key={n}
+                        onClick={() => handlePageChange(n)}
+                        className={`w-8 h-8 rounded-lg text-sm font-medium border transition-colors ${
+                          n === currentPage
+                            ? 'bg-gray-900 text-white border-gray-900'
+                            : 'border-gray-200 text-gray-500 bg-white hover:bg-gray-50'
+                        }`}
+                      >
+                        {n}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Sticky Save Changes button */}

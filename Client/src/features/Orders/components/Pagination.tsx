@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 interface PaginationProps {
@@ -29,7 +30,12 @@ export const Pagination = ({
   return (
     <>
       {totalPages > 1 ? (
-        <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100"
+        >
           <span className="text-xs text-gray-400">
             {t('ordersPage.showing')} {(currentPage - 1) * itemsPerPage + 1} –{' '}
             {Math.min(currentPage * itemsPerPage, totalItems)}{' '}
@@ -50,14 +56,19 @@ export const Pagination = ({
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
       ) : (
-        <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100"
+        >
           <span className="text-xs text-gray-400">
             {t('ordersPage.showing')} 1 – {totalItems} {t('ordersPage.of')}{' '}
             {totalItems} {t('ordersPage.results')}
           </span>
-        </div>
+        </motion.div>
       )}
     </>
   );

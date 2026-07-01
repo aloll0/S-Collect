@@ -1,4 +1,5 @@
 // features/Inventory/mobile/MobileFilter.tsx
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import type { FilterKey } from '../constants';
 import { FILTER_TABS } from '../constants';
@@ -53,13 +54,26 @@ export const MobileFilter = ({
           <button
             key={tab.key}
             onClick={() => onFilterChange(tab.key)}
-            className={`px-4 py-1.5 rounded-xl text-sm font-medium whitespace-nowrap transition-colors shrink-0 ${
+            className={`relative px-4 py-1.5 rounded-xl text-sm font-medium whitespace-nowrap shrink-0 transition-colors ${
               activeTab === tab.key
-                ? 'bg-gray-900 text-white'
+                ? 'text-white'
                 : 'border border-gray-200 text-gray-500 bg-white hover:bg-gray-50'
             }`}
           >
-            {t(tab.label)}
+            {/* Active tab background with smooth layout animation */}
+            {activeTab === tab.key && (
+              <motion.div
+                layoutId="mobile-active-tab-pill"
+                className="absolute inset-0 bg-gray-900 rounded-xl"
+                transition={{
+                  type: 'spring',
+                  stiffness: 400,
+                  damping: 35,
+                  mass: 0.8,
+                }}
+              />
+            )}
+            <span className="relative z-10">{t(tab.label)}</span>
           </button>
         ))}
       </div>

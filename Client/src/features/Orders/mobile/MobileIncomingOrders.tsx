@@ -1,5 +1,6 @@
 // features/Orders/mobile/MobileIncomingOrders.tsx
 import { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import type { Order, OrderStatus } from '../types/order';
 import { FAKE_ORDERS } from '../data/orders/fakeOrders';
@@ -140,12 +141,14 @@ const MobileIncomingOrders = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 px-4 pt-5 pb-6">
       {/* Tracking modal */}
-      {trackingModal && (
-        <TrackingModal
-          onSave={(num) => applyStatusChange(trackingModal, 'Shipped', num)}
-          onCancel={() => setTrackingModal(null)}
-        />
-      )}
+      <AnimatePresence>
+        {trackingModal && (
+          <TrackingModal
+            onSave={(num) => applyStatusChange(trackingModal, 'Shipped', num)}
+            onCancel={() => setTrackingModal(null)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Header */}
       <h1 className="text-xl font-bold text-gray-900 mb-4">
@@ -153,18 +156,25 @@ const MobileIncomingOrders = () => {
       </h1>
 
       {/* Toast */}
-      {toast && (
-        <div className="mb-4">
-          <MobileToast
-            type={toast.type}
-            message={toast.message}
-            description={toast.description}
-            onClose={() => setToast(null)}
-          />
-        </div>
-      )}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: 'auto' }}
+            exit={{ opacity: 0, y: -20, height: 0 }}
+            className="mb-4"
+          >
+            <MobileToast
+              type={toast.type}
+              message={toast.message}
+              description={toast.description}
+              onClose={() => setToast(null)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Filter tabs — horizontally scrollable */}
+      {/* Filter tabs — horizontally scrollable with animation */}
       <div
         className="flex gap-2 overflow-x-auto mb-4"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
@@ -173,82 +183,127 @@ const MobileIncomingOrders = () => {
           <button
             key={tab.key}
             onClick={() => handleTabChange(tab.key)}
-            className={`px-4 py-1.5 rounded-xl text-sm font-medium whitespace-nowrap shrink-0 transition-colors ${
+            className={`relative px-4 py-1.5 rounded-xl text-sm font-medium whitespace-nowrap shrink-0 transition-colors ${
               activeTab === tab.key
-                ? 'bg-gray-900 text-white'
+                ? 'text-white'
                 : 'border border-gray-200 text-gray-500 bg-white hover:bg-gray-50'
             }`}
           >
-            {t(tab.label)}
+            {/* Active tab background with smooth layout animation */}
+            {activeTab === tab.key && (
+              <motion.div
+                layoutId="mobile-orders-active-tab"
+                className="absolute inset-0 bg-gray-900 rounded-xl"
+                transition={{
+                  type: 'spring',
+                  stiffness: 400,
+                  damping: 35,
+                  mass: 0.8,
+                }}
+              />
+            )}
+            <span className="relative z-10">{t(tab.label)}</span>
           </button>
         ))}
       </div>
 
-      {/* Orders list */}
-      {paginatedData.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center">
-          <svg
-            width="56"
-            height="56"
-            fill="none"
-            stroke="#ccc"
-            strokeWidth="1.2"
-            viewBox="0 0 24 24"
-            className="mb-4"
-          >
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-            <line x1="12" y1="22.08" x2="12" y2="12" />
-          </svg>
-          <h2 className="text-base font-semibold text-gray-700 mb-1">
-            {t('ordersPage.noOrders', 'No orders yet')}
-          </h2>
-          <p className="text-sm text-gray-400">
-            {t(
-              'ordersPage.noOrdersDesc',
-              'They will appear here once you receive your first order'
-            )}
-          </p>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-3">
-          {paginatedData.map((order) => (
-            <MobileOrderCard
-              key={order.id}
-              order={order}
-              onStatusChange={handleStatusChange}
-              onViewDetails={setSelectedOrder}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Pagination */}
-      {totalPages > 0 && (
-        <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-200">
-          <span className="text-xs text-gray-400">
-            {t('ordersPage.showing', 'Showing')} {start}–{end}{' '}
-            {t('ordersPage.of', 'of')} {totalItems}
-          </span>
-          {totalPages > 1 && (
-            <div className="flex gap-1.5">
-              {pageNumbers.map((n) => (
-                <button
-                  key={n}
-                  onClick={() => setCurrentPage(n)}
-                  className={`w-8 h-8 rounded-lg text-sm font-medium border transition-colors ${
-                    n === currentPage
-                      ? 'bg-gray-900 text-white border-gray-900'
-                      : 'border-gray-200 text-gray-500 bg-white hover:bg-gray-50'
-                  }`}
+      {/* Orders list with animation */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`${activeTab}-${currentPage}`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            duration: 0.15,
+            ease: 'easeOut',
+          }}
+        >
+          {paginatedData.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col items-center justify-center py-24 text-center"
+            >
+              <svg
+                width="56"
+                height="56"
+                fill="none"
+                stroke="#ccc"
+                strokeWidth="1.2"
+                viewBox="0 0 24 24"
+                className="mb-4"
+              >
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
+              </svg>
+              <h2 className="text-base font-semibold text-gray-700 mb-1">
+                {t('ordersPage.noOrders', 'No orders yet')}
+              </h2>
+              <p className="text-sm text-gray-400">
+                {t(
+                  'ordersPage.noOrdersDesc',
+                  'They will appear here once you receive your first order'
+                )}
+              </p>
+            </motion.div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {paginatedData.map((order, index) => (
+                <motion.div
+                  key={order.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: index * 0.04,
+                    ease: [0.25, 0.1, 0.25, 1],
+                  }}
                 >
-                  {n}
-                </button>
+                  <MobileOrderCard
+                    order={order}
+                    onStatusChange={handleStatusChange}
+                    onViewDetails={setSelectedOrder}
+                  />
+                </motion.div>
               ))}
             </div>
           )}
-        </div>
-      )}
+
+          {/* Pagination */}
+          {totalPages > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="flex items-center justify-between mt-5 pt-4 border-t border-gray-200"
+            >
+              <span className="text-xs text-gray-400">
+                {t('ordersPage.showing', 'Showing')} {start}–{end}{' '}
+                {t('ordersPage.of', 'of')} {totalItems}
+              </span>
+              {totalPages > 1 && (
+                <div className="flex gap-1.5">
+                  {pageNumbers.map((n) => (
+                    <button
+                      key={n}
+                      onClick={() => setCurrentPage(n)}
+                      className={`w-8 h-8 rounded-lg text-sm font-medium border transition-colors ${
+                        n === currentPage
+                          ? 'bg-gray-900 text-white border-gray-900'
+                          : 'border-gray-200 text-gray-500 bg-white hover:bg-gray-50'
+                      }`}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };
