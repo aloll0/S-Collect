@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Globe, Menu, User } from 'lucide-react';
 import InputSearch from './InputSearch';
 import { useTranslation } from 'react-i18next';
+import { TypeAnimation } from 'react-type-animation';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -30,6 +31,8 @@ const Header = ({ onMenuClick }: HeaderProps) => {
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = lang;
   };
+
+  const userName = 'Ahmed';
 
   return (
     <header className="bg-(--gray-950) shadow-md p-4 text-white sticky inset-0  z-50">
@@ -64,7 +67,19 @@ const Header = ({ onMenuClick }: HeaderProps) => {
 
         <div className="hidden items-center justify-between gap-4 sidebar:flex">
           <div>
-            <h1 className="text-2xl font-bold">Hello, Ahmed 👋</h1>
+            <h1 className="text-2xl font-bold">
+              <TypeAnimation
+                sequence={[
+                  `Hello, ${userName} 👋`,
+                  3000,
+                  '',
+                  500,
+                ]}
+                speed={50}
+                repeat={Infinity}
+                cursor={true}
+              />
+            </h1>
             <p className="text-sm text-gray-400">{today}</p>
           </div>
         </div>

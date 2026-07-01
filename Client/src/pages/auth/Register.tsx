@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
 import { useAuthStore } from '../../store/authStore';
+import { motion } from 'framer-motion';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -45,41 +46,82 @@ const StepIndicator = ({ current }: { current: number }) => {
           >
             <div className="flex flex-col items-center gap-1 w-[100px] shrink-0">
               {/* Circle */}
-              <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+             <motion.div
+                layout
+                animate={{
+                  scale: active ? [1, 1.15, 1] : 1,
+                }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 450,
+                  damping: 18,
+                }}
+                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
                   done || active ? 'bg-green' : 'bg-gray-200'
                 }`}
               >
                 {done ? (
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
+                  <motion.svg
+                      initial={{ scale: 0, rotate: -90 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 500,
+                        damping: 18,
+                      }}
+                      width="11"
+                      height="11"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="3"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                  </motion.svg>
                 ) : (
                   <span className={`text-xs font-semibold ${active ? 'text-gray-50' : 'text-gray-400'}`}>
                     {i + 1}
                   </span>
                 )}
-              </div>
+              </motion.div> 
               {/* Label */}
-              <span
+              <motion.span
+                animate={{
+                  color: done
+                    ? '#22c55e'
+                    : active
+                    ? '#111827'
+                    : '#9ca3af',
+                }}
+                transition={{ duration: 0.25 }}
                 className={`text-[10px] text-center leading-tight ${
-                  active ? 'text-gray-900 font-semibold' : 'text-gray-400'
-                }`}
+                  active ? 'font-semibold' : ''
+                }`} 
               >
                 {t(key)}
-              </span>
+              </motion.span>
             </div>
 
             {/* Connector line */}
             {i < STEP_KEYS.length - 1 && (
-              <div className="flex-1 flex items-center px-1">
-                <div
-                  className={`w-full h-0.5 rounded-full transition-colors ${
-                    done ? 'bg-green' : 'bg-gray-200'
-                  }`}
-                  style={{ marginTop: '-1.1rem' }}
+              <div
+              className="flex-1 flex items-center px-1"
+              style={{ marginTop: '-1.1rem' }}
+            >
+              <div className="relative h-0.5 w-full overflow-hidden rounded-full bg-gray-200">
+                <motion.div
+                  initial={false}
+                  animate={{
+                    width: done ? '100%' : '0%',
+                  }}
+                  transition={{
+                    duration: 0.4,
+                    ease: 'easeInOut',
+                  }}
+                  className="absolute left-0 top-0 h-full bg-green"
                 />
               </div>
+            </div>
             )}
           </div>
         );
