@@ -36,7 +36,7 @@ export const Pagination = ({
           transition={{ delay: 0.1 }}
           className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100"
         >
-          <span className="text-xs text-gray-400">
+          <span className="text-body-sm text-gray-400">
             {t('ordersPage.showing')} {(currentPage - 1) * itemsPerPage + 1} –{' '}
             {Math.min(currentPage * itemsPerPage, totalItems)}{' '}
             {t('ordersPage.of')} {totalItems} {t('ordersPage.results')}
@@ -64,7 +64,7 @@ export const Pagination = ({
           transition={{ delay: 0.1 }}
           className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100"
         >
-          <span className="text-xs text-gray-400">
+          <span className="text-body-sm text-gray-400">
             {t('ordersPage.showing')} 1 – {totalItems} {t('ordersPage.of')}{' '}
             {totalItems} {t('ordersPage.results')}
           </span>

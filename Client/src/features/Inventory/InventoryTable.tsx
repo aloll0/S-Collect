@@ -43,7 +43,7 @@ export const InventoryTable = ({
             {columns.map((col) => (
               <th
                 key={col}
-                className="text-left rtl:text-right py-3 px-3 text-caption-sm font-bold text-gray-950 uppercase tracking-wider"
+                className="text-left rtl:text-right py-3 px-3 text-body-sm font-bold text-gray-950 uppercase tracking-wider"
               >
                 {t(col)}
               </th>
@@ -83,7 +83,7 @@ export const InventoryTable = ({
               </td>
               <td className="py-3 px-3">
                 <span
-                  className={`px-3 py-1 rounded-full text-caption font-medium ${STATUS_STYLES[product.status]}`}
+                  className={`px-3 py-1 rounded-full text-body-sm  font-medium ${STATUS_STYLES[product.status]}`}
                 >
                   {t(
                     `inventoryPage.${

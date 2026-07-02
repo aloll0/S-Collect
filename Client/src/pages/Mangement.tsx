@@ -31,7 +31,7 @@ const Management = () => {
           </Link>
         )}
       </div>
-      <div className="flex-1 overflow-y-auto px-4 lg:px-8 xl:px-14 pt-0 bg-[#f5f7fb]">
+      <div className="flex-1 overflow-y-auto px-4 lg:px-8 xl:px-14 pt-0">
         {isMobile ? <MobileManagementTable /> : <ManagementTable />}
       </div>
     </>

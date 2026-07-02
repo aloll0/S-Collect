@@ -92,7 +92,7 @@ export default function MobileManagementTable() {
       )}
 
       <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
-        <span className="text-xs text-gray-400">
+        <span className="text-body-sm text-gray-400">
           {totalItems === 0
             ? t('managementTable.showing', {
                 start: 0,
