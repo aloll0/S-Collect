@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown } from 'lucide-react';
+import PortalDropdown from '../../../components/ui/PortalDropdown';
 import {
   type Order,
   type OrderStatus,
@@ -27,109 +27,86 @@ const StatusDropdown = ({
   onStatusChange: (orderId: string, newStatus: OrderStatus) => void;
   t: (key: string) => string;
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // قفل الدروب داون لما تضغط براه
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
   return (
-    <div ref={dropdownRef} className="relative inline-block">
-      {/* الزر الرئيسي */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-2 py-1.5 hover:border-gray-300 transition-colors"
-      >
-        <span
-          className={`rounded-md px-3 py-1 text-xs font-medium ${
-            STATUS_STYLES[currentStatus]
-          }`}
+    <PortalDropdown
+      align="right"
+      minWidth={160}
+      animate
+      menuClassName="bg-white rounded-lg border border-gray-200 shadow-lg py-1 overflow-hidden"
+      trigger={({ isOpen, toggle }) => (
+        <button
+          onClick={toggle}
+          className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-2 py-1.5 hover:border-gray-300 transition-colors"
         >
-          {t(`ordersPage.${currentStatus.toLowerCase()}`)}
-        </span>
-        <motion.span
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <ChevronDown size={14} className="text-gray-400" />
-        </motion.span>
-      </button>
-
-      {/* القايمة المنسدلة */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.96 }}
-            transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="absolute right-0 top-full mt-1 z-50 min-w-[160px] bg-white rounded-lg border border-gray-200 shadow-lg py-1"
+          <span
+            className={`rounded-md px-3 py-1 text-xs font-medium ${
+              STATUS_STYLES[currentStatus]
+            }`}
           >
-            {ALL_STATUSES.map((status) => (
-              <button
-                key={status}
-                onClick={() => {
-                  onStatusChange(orderId, status);
-                  setIsOpen(false);
-                }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-gray-50 ${
-                  status === currentStatus
-                    ? 'bg-gray-50 font-medium text-gray-900'
-                    : 'text-gray-600'
+            {t(`ordersPage.${currentStatus.toLowerCase()}`)}
+          </span>
+          <motion.span
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <ChevronDown size={14} className="text-gray-400" />
+          </motion.span>
+        </button>
+      )}
+    >
+      {({ close }) => (
+        <>
+          {ALL_STATUSES.map((status) => (
+            <button
+              key={status}
+              onClick={() => {
+                onStatusChange(orderId, status);
+                close();
+              }}
+              className={`w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-gray-50 ${
+                status === currentStatus
+                  ? 'bg-gray-50 font-medium text-gray-900'
+                  : 'text-gray-600'
+              }`}
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  status === 'Pending'
+                    ? 'bg-gray-400'
+                    : status === 'Processing'
+                      ? 'bg-blue-400'
+                      : status === 'Shipped'
+                        ? 'bg-yellow-400'
+                        : status === 'Delivered'
+                          ? 'bg-emerald-400'
+                          : 'bg-gray-400'
+                }`}
+              />
+              <span
+                className={`rounded-md px-2.5 py-1 text-xs font-medium ${
+                  STATUS_STYLES[status]
                 }`}
               >
-                {/* دوايرة صغيرة للدلالة على الستاتس */}
-                <span
-                  className={`w-2 h-2 rounded-full ${
-                    status === 'Pending'
-                      ? 'bg-gray-400'
-                      : status === 'Processing'
-                        ? 'bg-blue-400'
-                        : status === 'Shipped'
-                          ? 'bg-yellow-400'
-                          : status === 'Delivered'
-                            ? 'bg-emerald-400'
-                            : 'bg-gray-400'
-                  }`}
-                />
-                <span
-                  className={`rounded-md px-2.5 py-1 text-xs font-medium ${
-                    STATUS_STYLES[status]
-                  }`}
+                {t(`ordersPage.${status.toLowerCase()}`)}
+              </span>
+              {status === currentStatus && (
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  className="ml-auto text-gray-900"
                 >
-                  {t(`ordersPage.${status.toLowerCase()}`)}
-                </span>
-                {status === currentStatus && (
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    className="ml-auto text-gray-900"
-                  >
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                )}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              )}
+            </button>
+          ))}
+        </>
+      )}
+    </PortalDropdown>
   );
 };
 

@@ -156,8 +156,7 @@ export function AccountSettingsForm({
               control={control}
               rules={{
                 required: t('settings.errors.invalidPhone'),
-                validate: (v) =>
-                  (v ? true : t('settings.errors.invalidPhone')),
+                validate: (v) => (v ? true : t('settings.errors.invalidPhone')),
               }}
               render={({ field, fieldState: { error } }) => (
                 <>
@@ -167,8 +166,8 @@ export function AccountSettingsForm({
                     value={field.value}
                     onChange={(v) => field.onChange(v ?? '')}
                     className={cn(
-                      'phone-input-custom h-10 rounded-md border bg-white px-3 transition-all duration-200 ease-out',
-                      error ? 'border-red-400 bg-red-50' : 'border-gray-200'
+                      'phone-input-custom h-10 rounded-lg px-3',
+                      error && 'phone-error'
                     )}
                   />
                   {error && (
@@ -306,7 +305,7 @@ export function AccountSettingsForm({
                   )}
                 />
 
-                <div className="settings-surface-enter flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-md px-3 py-2.5">
+                <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-md px-3 py-2.5">
                   <Info size={14} className="text-blue-500 shrink-0 mt-0.5" />
                   <p className="text-[12px] text-blue-700 leading-4">
                     {t('settings.account.passwordInfo')}
@@ -318,7 +317,7 @@ export function AccountSettingsForm({
         </div>
       </SectionCard>
 
-      <div className="settings-surface-enter settings-stagger-2 flex justify-center md:justify-end pt-1">
+      <div className="flex justify-center md:justify-end pt-1">
         <button
           type="submit"
           disabled={isPending}

@@ -24,20 +24,19 @@ interface SettingsPageProps {
 }
 
 const defaultStoreProfile: StoreProfileData = {
-  storeName: 'Collect S',
-  storeDescription:
-    'Your one-stop fashion destination for modern styles and quality products.',
-  publicEmail: 'vendor@collectS.com',
-  phoneNumber: '+966 50 123 4567',
+  storeName: '',
+  storeDescription: '',
+  publicEmail: '',
+  phoneNumber: '',
   storeLogoUrl: null,
-  storeLogoFileName: 'logo_final.png',
+  storeLogoFileName: null,
 };
 
 const defaultAccountSettings: AccountSettingsData = {
-  firstName: 'Ahmed',
-  lastName: 'Al-Rashid',
-  email: 'vendor@example.com',
-  phoneNumber: '0987654321000',
+  firstName: '',
+  lastName: '',
+  email: '',
+  phoneNumber: '',
 };
 
 function TabBtn({
@@ -106,7 +105,7 @@ export default function SettingsPage({
     <div className="settings-page-enter min-h-screen bg-gray-100">
       {toast && <SuccessToast message={toast} onClose={() => setToast(null)} />}
 
-      <div className="settings-surface-enter bg-white border-b border-gray-200 p-4 md:px-8 md:py-3">
+      <div className="bg-white border-b border-gray-200 p-4 md:px-8 md:py-3">
         <h1 className="text-2xl font-semibold text-[#090909]">
           {t('settings.title')}
         </h1>

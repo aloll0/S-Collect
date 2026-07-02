@@ -27,11 +27,11 @@ html,
 @keyframes settings-fade-scale {
   from {
     opacity: 0;
-    transform: scale(0.98);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
   }
 }
 
@@ -64,7 +64,7 @@ html,
   }
 
   .settings-surface-enter {
-    animation: settings-fade-scale 0.35s ease-out both;
+    animation: settings-fade-scale 0.3s ease-out both;
   }
 
   .settings-toast-enter {
@@ -76,15 +76,15 @@ html,
   }
 
   .settings-stagger-1 {
-    animation-delay: 0.05s;
+    animation-delay: 0.04s;
   }
 
   .settings-stagger-2 {
-    animation-delay: 0.1s;
+    animation-delay: 0.08s;
   }
 
   .settings-stagger-3 {
-    animation-delay: 0.15s;
+    animation-delay: 0.12s;
   }
 }
 
@@ -92,6 +92,81 @@ html,
   width: 100%;
   max-width: 1720px;
   margin-inline: auto;
+}
+
+/* ============================================================
+   PHONE INPUT — Custom styling for react-phone-number-input
+   ============================================================ */
+.phone-input-custom {
+  --PhoneInput-color--focus: #090909;
+  --PhoneInput-countrySelectArrow-color: #969696;
+  --PhoneInput-countrySelectArrow-opacity: 1;
+  display: flex;
+  align-items: center;
+  border: 1px solid #e9e9e9;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition:
+    border-color 0.2s ease-out,
+    box-shadow 0.2s ease-out;
+}
+
+.phone-input-custom.phone-error {
+  border-color: #f87171;
+  background-color: #fef2f2;
+}
+
+.phone-input-custom .PhoneInputCountry {
+  display: flex;
+  align-items: center;
+  padding-right: 0.5rem;
+  margin-right: 0.5rem;
+  border-right: 1px solid #e9e9e9;
+}
+
+.phone-input-custom .PhoneInputCountryIcon {
+  width: 1.5em;
+  height: 1em;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.phone-input-custom .PhoneInputCountryIconImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.phone-input-custom .PhoneInputCountrySelectArrow {
+  margin-left: 0.3em;
+}
+
+.phone-input-custom .PhoneInputInput {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: #090909;
+  padding: 0;
+  height: 100%;
+}
+
+.phone-input-custom .PhoneInputInput::placeholder {
+  color: #9ca3af;
+}
+
+.phone-input-custom:focus-within {
+  border-color: #090909;
+  box-shadow: 0 0 0 1px #e9e9e9;
+}
+
+.phone-input-custom.phone-error:focus-within {
+  border-color: #f87171;
+  box-shadow: 0 0 0 1px #fca5a5;
 }
 
 @layer base {
@@ -404,7 +479,6 @@ html,
 @utility icon-stroke {
   stroke-width: var(--icon-stroke-width);
 }
-
 
 @keyframes fadeInUp {
   from {
