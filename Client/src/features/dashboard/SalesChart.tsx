@@ -129,6 +129,25 @@ export default function SalesChart() {
               right: 12,
             }}
           >
+            <defs>
+              <linearGradient id="fillGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="0%"
+                  stopColor="var(--color-desktop)"
+                  stopOpacity={0.9}
+                />
+                <stop
+                  offset="50%"
+                  stopColor="var(--color-desktop)"
+                  stopOpacity={0.4}
+                />
+                <stop
+                  offset="100%"
+                  stopColor="var(--color-desktop)"
+                  stopOpacity={0.05}
+                />
+              </linearGradient>
+            </defs>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="label"
@@ -144,8 +163,7 @@ export default function SalesChart() {
             <Area
               dataKey="desktop"
               type="natural"
-              fill="var(--color-desktop)"
-              fillOpacity={0.4}
+              fill="url(#fillGradient)"
               stroke="var(--color-desktop)"
             />
           </AreaChart>
