@@ -1,20 +1,40 @@
-import { motion } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface OrderFiltersProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
-  onSortToggle: () => void;
+  onSortChange: (value: 'newest' | 'oldest') => void;
   sortNewest: boolean;
 }
 
 export const OrderFilters = ({
   activeTab,
   onTabChange,
-  onSortToggle,
+  onSortChange,
   sortNewest,
 }: OrderFiltersProps) => {
   const { t } = useTranslation();
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
+        setIsSortOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const SORT_OPTIONS = [
+    { value: 'newest' as const, label: t('ordersPage.newestFirst') },
+    { value: 'oldest' as const, label: t('ordersPage.oldestFirst') },
+  ];
 
   const FILTER_TABS = [
     { key: 'allOrders', label: t('ordersPage.allOrders') },
@@ -23,6 +43,8 @@ export const OrderFilters = ({
     { key: 'Shipped', label: t('ordersPage.shipped') },
     { key: 'Delivered', label: t('ordersPage.delivered') },
   ];
+
+  const currentSort = sortNewest ? 'newest' : 'oldest';
 
   return (
     <div className="flex flex-col gap-4 mb-6 lg:flex-row lg:items-center lg:justify-between">
@@ -58,14 +80,66 @@ export const OrderFilters = ({
       <div className="flex items-center gap-2">
         <span className="text-gray-400 text-xs">{t('ordersPage.sortBy')}:</span>
 
-        <select
-          value={sortNewest ? 'newest' : 'oldest'}
-          onChange={onSortToggle}
-          className="flex w-full items-center justify-center gap-1.5 text-sm text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer sm:w-fit"
-        >
-          <option value="newest">{t('ordersPage.newestFirst')}</option>
-          <option value="oldest">{t('ordersPage.oldestFirst')}</option>
-        </select>
+        <div ref={sortRef} className="relative">
+          <button
+            onClick={() => setIsSortOpen(!isSortOpen)}
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer sm:w-fit w-full justify-center"
+          >
+            {sortNewest
+              ? t('ordersPage.newestFirst')
+              : t('ordersPage.oldestFirst')}
+            <motion.span
+              animate={{ rotate: isSortOpen ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ChevronDown size={14} className="text-gray-400" />
+            </motion.span>
+          </button>
+
+          <AnimatePresence>
+            {isSortOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                transition={{ duration: 0.15, ease: 'easeOut' }}
+                className="absolute right-0 top-full mt-1 z-50 min-w-[160px] bg-white rounded-lg border border-gray-200 shadow-lg py-1"
+              >
+                {SORT_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => {
+                      onSortChange(option.value);
+                      setIsSortOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-gray-50 ${
+                      option.value === currentSort
+                        ? 'bg-gray-50 font-medium text-gray-900'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    {option.label}
+                    {option.value === currentSort && (
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="ml-auto text-gray-900"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    )}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
