@@ -12,7 +12,7 @@ import { cn, getPasswordStrength } from './utils';
 
 export function SectionCard({ children }: { children: ReactNode }) {
   return (
-    <div className="settings-surface-enter bg-white/50 border border-gray-200 rounded-lg overflow-visible transition-all duration-300 ease-out ">
+    <div className="bg-white/50 border border-gray-200 rounded-lg overflow-visible transition-all duration-300 ease-out ">
       {children}
     </div>
   );

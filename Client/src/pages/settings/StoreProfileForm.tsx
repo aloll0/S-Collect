@@ -1,4 +1,4 @@
-import { ImageIcon } from 'lucide-react';
+import { ImageIcon, CloudUpload } from 'lucide-react';
 import { type DragEvent, useId, useState, useTransition } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -24,7 +24,7 @@ function LogoNormal({
   const id = useId();
   const { t } = useTranslation();
   return (
-    <div className="settings-surface-enter border border-gray-200 rounded-lg bg-white px-4 py-3 flex items-center gap-3 transition-all duration-300 ease-out ">
+    <div className="border border-gray-200 rounded-lg bg-white px-4 py-3 flex items-center gap-3 transition-all duration-300 ease-out ">
       <div className="w-10 h-10 shrink-0 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center overflow-hidden">
         <img
           src={logoUrl}
@@ -73,7 +73,7 @@ function LogoEmpty({ onUpload }: { onUpload: (f: File) => void }) {
     <label
       htmlFor={id}
       className={cn(
-        'settings-surface-enter flex flex-col items-center justify-center border-2 border-dashed rounded-lg py-7 cursor-pointer transition-all duration-300 ease-out ',
+        'flex flex-col items-center justify-center border-2 border-dashed rounded-lg py-7 cursor-pointer transition-all duration-300 ease-out ',
         drag
           ? 'border-gray-400 bg-gray-50'
           : 'border-gray-300 bg-white/50 hover:bg-gray-50'
@@ -101,6 +101,9 @@ function LogoEmpty({ onUpload }: { onUpload: (f: File) => void }) {
           e.target.value = '';
         }}
       />
+      <div className="w-8 h-8 flex items-center justify-center mb-2">
+        <CloudUpload className="text-[#969696] w-6 h-6 md:w-8 md:h-8" />
+      </div>
       <p className="text-[13px] font-medium text-gray-700">
         {t('settings.logo.upload')}
       </p>
@@ -126,7 +129,7 @@ function LogoError({
       <label
         htmlFor={id}
         className={cn(
-          'settings-surface-enter flex flex-col items-center justify-center border-2 border-dashed rounded-lg py-7 cursor-pointer transition-all duration-300 ease-out ',
+          'flex flex-col items-center justify-center border-2 border-dashed rounded-lg py-7 cursor-pointer transition-all duration-300 ease-out ',
           drag
             ? 'border-red-400 bg-red-100'
             : 'border-red-300 bg-red-50 hover:bg-red-100'
@@ -185,18 +188,18 @@ export function StoreProfileForm({
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
 
-const {
-  register,
-  handleSubmit,
-  watch,
-  setValue,
-  setError,
-  clearErrors,
-  control,
-  formState: { errors },
-} = useForm<StoreProfileData>({
-  defaultValues: initialData,
-});
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    setError,
+    clearErrors,
+    control,
+    formState: { errors },
+  } = useForm<StoreProfileData>({
+    defaultValues: initialData,
+  });
 
   const storeName = watch('storeName');
   const storeDescription = watch('storeDescription');
@@ -257,7 +260,7 @@ const {
         <p className="text-xs font-bold text-[#969696] mb-3">
           {t('settings.storePreview')}
         </p>
-        <div className="settings-surface-enter border border-[#E9E9E9] rounded-lg bg-white/50 p-3 md:p-5 transition-all duration-300 ease-out ">
+        <div className="border border-[#E9E9E9] rounded-lg bg-white/50 p-3 md:p-5 transition-all duration-300 ease-out ">
           <div className="flex items-center md:items-start gap-3 md:gap-5">
             <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 rounded-full bg-[#F8F8F8]  flex items-center justify-center overflow-hidden">
               {storeLogoUrl ? (
@@ -398,8 +401,8 @@ const {
                   onChange={(v) => field.onChange(v ?? '')}
                   disabled={isPending}
                   className={cn(
-                    'phone-input-custom h-10 rounded-lg border bg-white/50 px-3',
-                    errors.phoneNumber ? 'border-red-400 bg-red-50' : 'border-gray-200'
+                    'phone-input-custom h-10 rounded-lg px-3',
+                    errors.phoneNumber && 'phone-error'
                   )}
                 />
               )}
@@ -425,3 +428,4 @@ const {
     </form>
   );
 }
+    
