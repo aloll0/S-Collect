@@ -1,4 +1,10 @@
 {
+  "search": {
+    "products": "Search products...",
+    "categories": "Search categories...",
+    "placeholder": "Search products, categories...",
+    "trySearching": "Try searching: shoes, jackets, electronics..."
+  },
   "dashboard": "Dashboard",
   "products": "Products",
   "orders": "Orders",

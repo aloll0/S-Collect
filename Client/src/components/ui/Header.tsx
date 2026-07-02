@@ -152,10 +152,10 @@ const Header = ({ onMenuClick }: HeaderProps) => {
           <div>
             <h1 className="text-2xl font-bold">
               <TypeAnimation
-                sequence={[`Hello, ${userName} 👋`, 3000, '', 500]}
+                sequence={[`Hello, ${userName} 👋`]}
                 speed={50}
-                repeat={Infinity}
-                cursor={true}
+                repeat={0}
+                cursor={false}
               />
             </h1>
             <p className="text-sm text-gray-400">{today}</p>
