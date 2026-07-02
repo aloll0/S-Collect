@@ -24,7 +24,7 @@ export const InventoryPagination = ({
 
   return (
     <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-200">
-      <span className="text-caption-sm text-gray-400">
+      <span className="text-body-sm text-gray-400">
         {t('inventoryPage.showing')} {start} – {end} {t('inventoryPage.of')}{' '}
         {totalItems} {t('inventoryPage.results')}
       </span>

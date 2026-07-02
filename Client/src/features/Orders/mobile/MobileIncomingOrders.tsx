@@ -279,7 +279,7 @@ const MobileIncomingOrders = () => {
               transition={{ delay: 0.1 }}
               className="flex items-center justify-between mt-5 pt-4 border-t border-gray-200"
             >
-              <span className="text-xs text-gray-400">
+              <span className="text-body-sm text-gray-400">
                 {t('ordersPage.showing', 'Showing')} {start}–{end}{' '}
                 {t('ordersPage.of', 'of')} {totalItems}
               </span>
