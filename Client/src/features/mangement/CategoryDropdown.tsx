@@ -1,10 +1,7 @@
-import { useRef, useState } from 'react';
-import { useOutsideClick } from '../../hooks/useOutsideClick';
 import { useTranslation } from 'react-i18next';
 import { CATEGORIES } from './constant';
 import { ChevronDown } from 'lucide-react';
-const DD_MENU =
-  'absolute top-[calc(100%+6px)] left-0 bg-white border border-gray-200 rounded-lg shadow-md z-50 overflow-hidden';
+import PortalDropdown from '../../components/ui/PortalDropdown';
 
 const DD_ITEM =
   'flex items-center gap-2.5 px-3.5 py-2.5 text-sm cursor-pointer hover:bg-gray-50';
@@ -16,9 +13,6 @@ interface CategoryDropdownProps {
 
 function CategoryDropdown({ selected, onChange }: CategoryDropdownProps) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  useOutsideClick(ref, () => setOpen(false));
 
   const allSelected = selected.length === 0;
   const label = allSelected
@@ -35,23 +29,33 @@ function CategoryDropdown({ selected, onChange }: CategoryDropdownProps) {
     );
 
   return (
-    <div className="relative" ref={ref}>
-      <button
-        className="flex items-center gap-1.5 h-9 px-3 border border-gray-200 rounded-lg bg-white text-sm cursor-pointer hover:bg-gray-50 whitespace-nowrap"
-        onClick={() => setOpen(!open)}
-      >
-        {label}
-        <ChevronDown
-          color="black"
-          size={15}
-          className={`transition-transform duration-200 ${open ? 'rotate-180' : 'rotate-0'
-            }`}
-        />
-      </button>
-
-      {open && (
-        <div className={`${DD_MENU} min-w-[200px]`}>
-          <div className={DD_ITEM} onClick={() => onChange([])}>
+    <PortalDropdown
+      minWidth={200}
+      animate={false}
+      menuClassName="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden"
+      trigger={({ isOpen, toggle: toggleOpen }) => (
+        <button
+          className="flex items-center gap-1.5 h-9 px-3 border border-gray-200 rounded-lg bg-white text-sm cursor-pointer hover:bg-gray-50 whitespace-nowrap"
+          onClick={toggleOpen}
+        >
+          {label}
+          <ChevronDown
+            color="black"
+            size={15}
+            className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          />
+        </button>
+      )}
+    >
+      {({ close }) => (
+        <>
+          <div
+            className={DD_ITEM}
+            onClick={() => {
+              onChange([]);
+              close();
+            }}
+          >
             <input
               type="checkbox"
               readOnly
@@ -72,9 +76,9 @@ function CategoryDropdown({ selected, onChange }: CategoryDropdownProps) {
               <span>{t(`managementTable.categories.${cat}`)}</span>
             </div>
           ))}
-        </div>
+        </>
       )}
-    </div>
+    </PortalDropdown>
   );
 }
 

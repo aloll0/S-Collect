@@ -1,15 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import type { StatusFilter } from './mangement';
-import { useRef, useState } from 'react';
-import { useOutsideClick } from '../../hooks/useOutsideClick';
 import { STATUS_FILTERS } from './constant';
 import { ChevronDown } from 'lucide-react';
+import PortalDropdown from '../../components/ui/PortalDropdown';
 
 const DD_BTN =
   'flex items-center gap-1.5 h-9 px-3 border border-gray-200 rounded-lg bg-white text-sm cursor-pointer hover:bg-gray-50 whitespace-nowrap';
-
-const DD_MENU =
-  'absolute top-[calc(100%+6px)] left-0 bg-white border border-gray-200 rounded-lg shadow-md z-50 overflow-hidden';
 
 const DD_ITEM =
   'flex items-center gap-2.5 px-3.5 py-2.5 text-sm cursor-pointer hover:bg-gray-50';
@@ -21,33 +17,34 @@ interface StatusDropdownProps {
 
 function StatusDropdown({ selected, onChange }: StatusDropdownProps) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  useOutsideClick(ref, () => setOpen(false));
 
   return (
-    <div className="relative" ref={ref}>
-      <button className={DD_BTN} onClick={() => setOpen(!open)}>
-        {selected === 'All'
-          ? t('managementTable.status')
-          : t(`managementTable.statuses.${selected}`)}
-        <ChevronDown
-          color="black"
-          size={15}
-          className={`transition-transform duration-200 ${open ? 'rotate-180' : 'rotate-0'
-            }`}
-        />
-      </button>
-
-      {open && (
-        <div className={`${DD_MENU} min-w-[180px]`}>
+    <PortalDropdown
+      minWidth={180}
+      animate={false}
+      menuClassName="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden"
+      trigger={({ isOpen, toggle }) => (
+        <button className={DD_BTN} onClick={toggle}>
+          {selected === 'All'
+            ? t('managementTable.status')
+            : t(`managementTable.statuses.${selected}`)}
+          <ChevronDown
+            color="black"
+            size={15}
+            className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          />
+        </button>
+      )}
+    >
+      {({ close }) => (
+        <>
           {STATUS_FILTERS.map((s) => (
             <div
               key={s}
               className={DD_ITEM}
               onClick={() => {
                 onChange(s);
-                setOpen(false);
+                close();
               }}
             >
               <input
@@ -63,9 +60,9 @@ function StatusDropdown({ selected, onChange }: StatusDropdownProps) {
               </span>
             </div>
           ))}
-        </div>
+        </>
       )}
-    </div>
+    </PortalDropdown>
   );
 }
 

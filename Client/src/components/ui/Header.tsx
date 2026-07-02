@@ -3,10 +3,10 @@ import { Menu, User } from 'lucide-react';
 import InputSearch from './InputSearch';
 import { useTranslation } from 'react-i18next';
 import { TypeAnimation } from 'react-type-animation';
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Globe, Check } from 'lucide-react';
+import { motion } from 'framer-motion';
 import i18n from '../../i18n';
+import PortalDropdown from './PortalDropdown';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -18,87 +18,72 @@ const LANGUAGES = [
 ];
 
 const LanguageDropdown = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const isArabic = i18n.language === 'ar';
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const handleLanguageChange = (lang: string) => {
     i18n.changeLanguage(lang);
     localStorage.setItem('lang', lang);
-    setIsOpen(false);
   };
 
   const currentLang =
     LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0];
 
   return (
-    <div ref={dropdownRef} className="relative">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 bg-gray-50 text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
-      >
-        <Globe size={16} />
-        <span className="text-sm font-medium">{currentLang.short}</span>
-        <motion.span
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
+    <PortalDropdown
+      align={isArabic ? 'left' : 'right'}
+      minWidth={140}
+      animate
+      menuClassName="bg-white border border-gray-200 rounded-lg shadow-lg py-1 overflow-hidden"
+      trigger={({ isOpen, toggle }) => (
+        <button
+          onClick={toggle}
+          className="flex items-center gap-2 bg-gray-50 text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
+          <Globe size={16} />
+          <span className="text-sm font-medium">{currentLang.short}</span>
+          <motion.span
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
           >
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </motion.span>
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.96 }}
-            transition={{ duration: 0.15, ease: 'easeOut' }}
-            className={`absolute ${isArabic ? 'left-0' : 'right-0'} top-full mt-1 z-50 min-w-[140px] bg-white border border-gray-200 rounded-lg shadow-lg py-1`}
-          >
-            {LANGUAGES.map((lang) => (
-              <button
-                key={lang.code}
-                onClick={() => handleLanguageChange(lang.code)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors hover:bg-gray-50 ${
-                  lang.code === i18n.language
-                    ? 'text-gray-900 font-medium bg-gray-50'
-                    : 'text-gray-600'
-                }`}
-              >
-                <span className="text-base">{lang.short}</span>
-                <span>{lang.label}</span>
-                {lang.code === i18n.language && (
-                  <Check size={14} className="ml-auto text-gray-900" />
-                )}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </motion.span>
+        </button>
+      )}
+    >
+      {({ close }) => (
+        <>
+          {LANGUAGES.map((lang) => (
+            <button
+              key={lang.code}
+              onClick={() => {
+                handleLanguageChange(lang.code);
+                close();
+              }}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors hover:bg-gray-50 ${
+                lang.code === i18n.language
+                  ? 'text-gray-900 font-medium bg-gray-50'
+                  : 'text-gray-600'
+              }`}
+            >
+              <span className="text-base">{lang.short}</span>
+              <span>{lang.label}</span>
+              {lang.code === i18n.language && (
+                <Check size={14} className="ml-auto text-gray-900" />
+              )}
+            </button>
+          ))}
+        </>
+      )}
+    </PortalDropdown>
   );
 };
 

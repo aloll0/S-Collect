@@ -19,6 +19,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '../../components/ui/chart';
+import { motion } from 'motion/react';
 
 type Period = 'month' | 'week' | 'day';
 
@@ -92,27 +93,36 @@ export default function SalesChart() {
             <CardDescription>{t('salesChart.sales')}</CardDescription>
           </div>
           <Listbox value={period} onChange={setPeriod}>
-            <div className="relative">
-              <Listbox.Button className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 focus:outline-none">
-                {selectedOption.label}
-                <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
-              </Listbox.Button>
-              <Listbox.Options className="absolute right-0 z-10 mt-1 w-36 overflow-hidden rounded-lg border border-gray-200 bg-white py-1 text-xs shadow-lg focus:outline-none">
-                {periodOptions.map((option) => (
-                  <Listbox.Option
-                    key={option.value}
-                    value={option.value}
-                    className={({ active }) =>
-                      `cursor-pointer px-3 py-2 ${
-                        active ? 'bg-gray-50 text-gray-900' : 'text-gray-600'
-                      }`
-                    }
+            {({ open }) => (
+              <div className="relative">
+                <Listbox.Button className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 focus:outline-none">
+                  {selectedOption.label}
+
+                  <motion.span
+                    animate={{ rotate: open ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    {option.label}
-                  </Listbox.Option>
-                ))}
-              </Listbox.Options>
-            </div>
+                    <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
+                  </motion.span>
+                </Listbox.Button>
+
+                <Listbox.Options className="absolute right-0 z-10 mt-1 w-36 overflow-hidden rounded-lg border border-gray-200 bg-white py-1 text-xs shadow-lg focus:outline-none">
+                  {periodOptions.map((option) => (
+                    <Listbox.Option
+                      key={option.value}
+                      value={option.value}
+                      className={({ active }) =>
+                        `cursor-pointer px-3 py-2 ${
+                          active ? 'bg-gray-50 text-gray-900' : 'text-gray-600'
+                        }`
+                      }
+                    >
+                      {option.label}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </div>
+            )}
           </Listbox>
         </div>
       </CardHeader>
