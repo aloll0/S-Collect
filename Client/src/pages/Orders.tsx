@@ -114,7 +114,7 @@ const IncomingOrdersDesktop = () => {
           activeTab={activeTab}
           onTabChange={handleTabChange}
           sortNewest={sortNewest}
-          onSortToggle={() => setSortNewest((p) => !p)}
+          onSortChange={(value) => setSortNewest(value === 'newest')}
         />
 
         {paginatedData.length === 0 ? (
