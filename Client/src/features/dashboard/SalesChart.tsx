@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Listbox } from '@headlessui/react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { ChevronDown, TrendingUp } from 'lucide-react';
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +19,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '../../components/ui/chart';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 type Period = 'month' | 'week' | 'day';
 
@@ -71,6 +71,115 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+// ─── Portal-based dropdown — لا يُضيف overflow-hidden على الـ body ────────────
+function PeriodDropdown({
+  options,
+  value,
+  onChange,
+}: {
+  options: { value: Period; label: string }[];
+  value: Period;
+  onChange: (v: Period) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const updatePos = () => {
+    if (!btnRef.current) return;
+    const r = btnRef.current.getBoundingClientRect();
+    setPos({ top: r.bottom + 4, left: r.right - 144 });
+  };
+
+  useLayoutEffect(() => {
+    if (open) updatePos();
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (
+        btnRef.current?.contains(e.target as Node) ||
+        menuRef.current?.contains(e.target as Node)
+      )
+        return;
+      setOpen(false);
+    };
+    const onScroll = () => setOpen(false);
+    const onResize = () => updatePos();
+    document.addEventListener('mousedown', onDown);
+    window.addEventListener('scroll', onScroll, true);
+    window.addEventListener('resize', onResize);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      window.removeEventListener('scroll', onScroll, true);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [open]);
+
+  const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
+
+  return (
+    <>
+      <button
+        ref={btnRef}
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 focus:outline-none"
+      >
+        {selectedLabel}
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
+        </motion.span>
+      </button>
+
+      {createPortal(
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              ref={menuRef}
+              initial={{ opacity: 0, y: -6, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -6, scale: 0.97 }}
+              transition={{ duration: 0.15, ease: 'easeOut' }}
+              style={{
+                position: 'fixed',
+                top: pos.top,
+                left: pos.left,
+                width: 144,
+                zIndex: 9999,
+              }}
+              className="rounded-lg border border-gray-200 bg-white py-1 text-xs shadow-lg"
+            >
+              {options.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => {
+                    onChange(opt.value);
+                    setOpen(false);
+                  }}
+                  className={`w-full cursor-pointer px-3 py-2 text-left hover:bg-gray-50 ${
+                    opt.value === value
+                      ? 'font-medium text-gray-900'
+                      : 'text-gray-600'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
+    </>
+  );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
 export default function SalesChart() {
   const { t } = useTranslation();
   const [period, setPeriod] = useState<Period>('month');
@@ -92,41 +201,14 @@ export default function SalesChart() {
             <CardTitle>{t('salesChart.pointStyle')}</CardTitle>
             <CardDescription>{t('salesChart.sales')}</CardDescription>
           </div>
-          <Listbox value={period} onChange={setPeriod}>
-            {({ open }) => (
-              <div className="relative">
-                <Listbox.Button className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 focus:outline-none">
-                  {selectedOption.label}
-
-                  <motion.span
-                    animate={{ rotate: open ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
-                  </motion.span>
-                </Listbox.Button>
-
-                <Listbox.Options className="absolute right-0 z-10 mt-1 w-36 overflow-hidden rounded-lg border border-gray-200 bg-white py-1 text-xs shadow-lg focus:outline-none">
-                  {periodOptions.map((option) => (
-                    <Listbox.Option
-                      key={option.value}
-                      value={option.value}
-                      className={({ active }) =>
-                        `cursor-pointer px-3 py-2 ${
-                          active ? 'bg-gray-50 text-gray-900' : 'text-gray-600'
-                        }`
-                      }
-                    >
-                      {option.label}
-                    </Listbox.Option>
-                  ))}
-                </Listbox.Options>
-              </div>
-            )}
-          </Listbox>
+          <PeriodDropdown
+            options={periodOptions}
+            value={period}
+            onChange={setPeriod}
+          />
         </div>
       </CardHeader>
-      <CardContent className="lg:flex-1 lg:overflow-hidden">
+      <CardContent className="lg:flex-1">
         <ChartContainer
           config={chartConfig}
           className="lg:aspect-auto lg:h-full"
