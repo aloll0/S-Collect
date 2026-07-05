@@ -26,7 +26,7 @@ const LogoutButton = () => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 text-red-500 hover:bg-red-500/10 hover:text-red-600 px-3 py-2 rounded-md transition cursor-pointer focus:outline-none w-full "
+        className="flex items-center gap-2 text-gray-50 hover:bg-gray-500/40 hover:text-gray-100 px-3 py-2 rounded-md transition cursor-pointer focus:outline-none w-full "
       >
         <LogOut size={18} />
         <span className="truncate">{t('sidebar.items.logout')}</span>

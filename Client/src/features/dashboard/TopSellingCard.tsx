@@ -46,7 +46,7 @@ const TopSellingCard = ({ cardData }: { cardData: ProductSale }) => {
 
       {/* Revenue */}
       <div className="flex flex-col items-end shrink-0">
-        <span className="text-sm lg:text-base xl:text-lg font-bold text-green-600 whitespace-nowrap">
+        <span className="text-body-md  font-bold text-green-600 whitespace-nowrap">
           {cardData.revenue.toLocaleString()} {cardData.currency}
         </span>
 
