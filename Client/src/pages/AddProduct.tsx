@@ -13,6 +13,25 @@ import SuccessPopup from '../features/AddProducts/SuccessPopup';
 import MobileAddProduct from '../features/AddProducts/mobile/MobileAddProduct';
 import type { ProductFormData } from '../features/AddProducts/types';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { motion } from 'motion/react';
+import type { Variants } from 'motion/react';
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 100, damping: 15 },
+  },
+};
 
 const AddProduct = () => {
   const { t } = useTranslation();
@@ -76,15 +95,22 @@ const AddProduct = () => {
   }
 
   return (
-    <>
-      <div className="px-4 lg:px-14 py-3 bg-white">
+    <> 
+      <div
+        className="px-4 lg:px-14 py-3 bg-white"
+      >
         <h1 className="text-h4 font-bold">{t('addProduct.title')}</h1>
       </div>
-      <div className="flex-1 overflow-y-auto px-4  lg:px-14">
+      <motion.div
+        className="flex-1 overflow-y-auto px-4  lg:px-14"
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+      >
         <div className="rounded-2xl  shadow-sm py-4 md:shadow-none">
           <div className="grid grid-cols-1 gap-8 xl:grid-cols-[1fr_400px] xl:gap-10">
             {/* Left */}
-            <div>
+            <motion.div variants={itemVariants}>
               <h5 className="mb-6 font-semibold">
                 {t('addProduct.productInformation')}
               </h5>
@@ -138,18 +164,21 @@ const AddProduct = () => {
                   <PricingFields />
                 </form>
               </FormProvider>
-            </div>
+            </motion.div>
 
             {/* Right */}
-            <div>
+            <motion.div variants={itemVariants}>
               <ProductMedia />
               <div className="mt-8">
                 <ProductStatus enabled={enabled} setEnabled={setEnabled} />
               </div>
-            </div>
+            </motion.div>
           </div>
 
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-end sm:gap-4">
+          <motion.div
+            variants={itemVariants}
+            className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-end sm:gap-4"
+          >
             <button className="rounded-xl border border-red-500 px-6 py-3 text-red-500 transition hover:bg-red-50 cursor-pointer">
               {t('addProduct.cancel')}
             </button>
@@ -160,11 +189,11 @@ const AddProduct = () => {
             >
               {t('addProduct.continue')}
             </button>
-          </div>
+          </motion.div>
         </div>
 
         {isSuccess && <SuccessPopup onClose={() => setIsSuccess(false)} />}
-      </div>
+      </motion.div>
     </>
   );
 };
