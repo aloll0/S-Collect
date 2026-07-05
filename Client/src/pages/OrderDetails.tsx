@@ -8,12 +8,31 @@ import {
   Circle,
   CircleCheckBig,
 } from 'lucide-react';
+import { motion } from 'motion/react';
+import type { Variants } from 'motion/react';
 import {
   type Order,
   type OrderStatus,
   STATUS_STYLES,
   ALL_STATUSES,
 } from '../features/Orders/types/order';
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 100, damping: 15 },
+  },
+};
 
 interface OrderDetailsProps {
   order: Order;
@@ -40,8 +59,16 @@ export const OrderDetails = ({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#f5f7fb]">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-3 mb-2">
+    <motion.div
+      className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#f5f7fb]"
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+    >
+      <motion.div
+        variants={itemVariants}
+        className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-3 mb-2"
+      >
         <button
           onClick={onBack}
           className="p-1.5 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer w-fit border border-gray-300 "
@@ -59,11 +86,14 @@ export const OrderDetails = ({
             <span>{t('ordersPage.orderDetails')}</span>
           </p>
         </div>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_470px] gap-5 mt-5">
         {/* Left column */}
-        <div className="flex flex-col gap-5 min-w-0">
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-col gap-5 min-w-0"
+        >
           {/* Order Items */}
           <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5">
             <h6 className="font-semibold text-gray-900 mb-4">
@@ -183,10 +213,13 @@ export const OrderDetails = ({
               })}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right column */}
-        <div className="flex flex-col gap-5 min-w-0">
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-col gap-5 min-w-0"
+        >
           {/* Order Information */}
           <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5 text-sm">
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center mb-3">
@@ -338,8 +371,8 @@ export const OrderDetails = ({
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
