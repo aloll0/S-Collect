@@ -21,19 +21,19 @@ export default function TransactionRow({
         delay: index * 0.04,
         ease: [0.25, 0.1, 0.25, 1],
       }}
-      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+      className="border-b border-gray-100 hover:bg-gray-50 transition-colors py-8"
     >
-      <td className="px-3 py-3 font-semibold text-gray-900">
+      <td className="px-3 py-6 font-semibold text-gray-900">
         {transaction.date}
       </td>
-      <td className="px-3 py-3 font-semibold text-gray-900">
+      <td className="px-3 py-6 font-semibold text-gray-900">
         {transaction.referenceNumber}
       </td>
-      <td className="px-3 py-3">
+      <td className="px-3 py-6">
         <StatusBadge status={transaction.status} />
       </td>
       <td
-        className={`px-3 py-3 font-semibold ${isNegative ? 'text-red-600' : 'text-gray-900'}`}
+        className={`px-3 py-6 font-semibold ${isNegative ? 'text-red-600' : 'text-gray-900'}`}
       >
         {isNegative ? '-' : ''}
         {formatAmount(transaction.amount)} SAR

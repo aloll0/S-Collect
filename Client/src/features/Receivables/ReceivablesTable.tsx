@@ -7,15 +7,18 @@ import {
   type TransactionStatus,
 } from './constants';
 import { getDateKey } from './utils';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import DateFilterDropdown from './DateFilterDropdown';
 import StatusFilterDropdown from './StatusFilterDropdown';
 import TransactionRow from './TransactionRow';
+import MobileTransactionCard from './MobileTransactionCard';
 
 type StatusFilter = TransactionStatus | 'all';
 
 export default function ReceivablesTable() {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === 'ar';
+  const { isMobile } = useBreakpoint();
 
   const [selectedStatus, setSelectedStatus] = useState<StatusFilter>('all');
   const [selectedDate, setSelectedDate] = useState('all');
@@ -74,48 +77,70 @@ export default function ReceivablesTable() {
         />
       </div>
 
-      {/* Table */}
-      <div className="w-full overflow-x-auto">
-        <table className="w-full border-collapse text-sm  ">
-          <thead>
-            <tr className='first:bg-gray-100' >
-              {tableHeaders.map((h) => (
-                <th
-                  key={h}
-                  className="px-3 py-2.5 border-b border-gray-100 text-start text-xs font-medium text-gray-500 whitespace-nowrap"
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>
-            {paginatedData.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={4}
-                  className="text-center py-10 text-gray-400"
-                >
-                  <i
-                    className="ti ti-receipt-off text-2xl block mb-2"
-                    aria-hidden="true"
-                  />
-                  <p>{t('receivables.noTransactions')}</p>
-                </td>
+      {/* Table or mobile cards */}
+      {isMobile ? (
+        <div className="flex flex-col gap-3">
+          {paginatedData.length === 0 ? (
+            <div className="text-center py-10 text-gray-400">
+              <i
+                className="ti ti-receipt-off text-2xl block mb-2"
+                aria-hidden="true"
+              />
+              <p>{t('receivables.noTransactions')}</p>
+            </div>
+          ) : (
+            paginatedData.map((tx, i) => (
+              <MobileTransactionCard
+                key={tx.referenceNumber}
+                transaction={tx}
+                index={i}
+              />
+            ))
+          )}
+        </div>
+      ) : (
+        <div className="w-full overflow-x-auto">
+          <table className="w-full border-collapse text-sm  ">
+            <thead>
+              <tr className='first:bg-gray-100' >
+                {tableHeaders.map((h) => (
+                  <th
+                    key={h}
+                    className="px-3 py-2.5 border-b border-gray-100 text-start text-xs font-medium text-gray-500 whitespace-nowrap"
+                  >
+                    {h}
+                  </th>
+                ))}
               </tr>
-            ) : (
-              paginatedData.map((tx, i) => (
-                <TransactionRow
-                  key={tx.referenceNumber}
-                  transaction={tx}
-                  index={i}
-                />
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+
+            <tbody>
+              {paginatedData.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="text-center py-10 text-gray-400"
+                  >
+                    <i
+                      className="ti ti-receipt-off text-2xl block mb-2"
+                      aria-hidden="true"
+                    />
+                    <p>{t('receivables.noTransactions')}</p>
+                  </td>
+                </tr>
+              ) : (
+                paginatedData.map((tx, i) => (
+                  <TransactionRow
+                    key={tx.referenceNumber}
+                    transaction={tx}
+                    index={i}
+                  />
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Pagination */}
       <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">

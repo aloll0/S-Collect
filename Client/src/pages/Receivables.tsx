@@ -16,7 +16,7 @@ const Receivables = () => {
       </div>
       <div className="sidebar-page-container">
         <ReceivablesGrid />
-        <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6">
+        <div className="rounded-2xl border border-gray-100 lg:bg-white  lg:p-6">
           <ReceivablesTable />
         </div>
       </div>

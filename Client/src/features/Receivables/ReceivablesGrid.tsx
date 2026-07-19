@@ -106,7 +106,7 @@ const ReceivablesGrid = () => {
                     {item.value}
                   </span>
                   {item.suffix && (
-                    <span className="text-xs lg:text-sm text-gray-400 mb-1">
+                    <span className="text-xs lg:text-sm text-gray-400 mb-1 mx-1.5">
                       {item.suffix}
                     </span>
                   )}
