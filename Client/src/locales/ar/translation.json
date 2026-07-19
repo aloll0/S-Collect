@@ -12,7 +12,8 @@
       "main": "الرئيسية",
       "products": "المنتجات",
       "management": "الإدارة",
-      "account": "الحساب"
+      "account": "الحساب",
+      "receivables": "المستحقات"
     },
     "items": {
       "dashboard": "لوحة التحكم",
@@ -20,7 +21,8 @@
       "addProduct": "إضافة منتج",
       "inventory": "المخزون",
       "incomingOrders": "الطلبات الواردة",
-      "settings": "الإعدادات",
+      "settings": "ملف المتجر",
+      "accountSettings": "إعدادات الحساب",
       "orders": "الطلبات",
       "logout": "تسجيل الخروج",
       "cancel": "إلغاء",
@@ -352,6 +354,8 @@
     "title": "الإعدادات",
     "storeProfile": "ملف المتجر",
     "accountSettings": "إعدادات الحساب",
+    "bankAccount": "الحساب البنكي",
+    "shipping": "الشحن",
     "storePreview": "معاينة المتجر",
     "storeName": "اسم المتجر",
     "storeNamePlaceholder": "أدخل اسم المتجر",
@@ -403,6 +407,8 @@
     "toast": {
       "storeProfileSaved": "تم تحديث ملف المتجر بنجاح.",
       "accountSettingsSaved": "تم تحديث إعدادات الحساب بنجاح.",
+      "bankAccountSaved": "تم تحديث الحساب البنكي بنجاح.",
+      "shippingSaved": "تم تحديث إعدادات الشحن بنجاح.",
       "details": "تم حفظ التغييرات وستظهر في المتجر خلال دقيقتين.",
       "close": "إغلاق"
     },
@@ -449,6 +455,7 @@
     "productName": "اسم المنتج",
     "category": "الفئة",
     "price": "السعر",
+    "rating": "التقييم",
     "inventory": "المخزون",
     "status": "الحالة",
     "procedures": "الإجراءات",
@@ -525,5 +532,68 @@
       }
     }
   },
+  "productDetails": {
+    "title": "تفاصيل المنتج",
+    "breadcrumb": "تفاصيل المنتج",
+    "productInfo": {
+      "editProduct": "تعديل المنتج",
+      "category": "الفئة:",
+      "brand": "العلامة التجارية:",
+      "sku": "رمز المنتج:",
+      "cost": "التكلفة:",
+      "inventory": "المخزون",
+      "inStock": "متوفر",
+      "outOfStock": "نفد المخزون",
+      "units": "وحدة",
+      "averageRating": "متوسط التقييم",
+      "totalReviews": "إجمالي المراجعات",
+      "reviewsCount": "{{count}} مراجعة"
+    },
+    "rating": {
+      "basedOn": "بناءً على {{count}} مراجعة",
+      "star": "نجمة",
+      "stars": "نجوم"
+    },
+    "reviews": {
+      "filters": {
+        "all": "كل المراجعات",
+        "5": "5 نجوم",
+        "4": "4 نجوم",
+        "3": "3 نجوم",
+        "2": "2 نجوم",
+        "1": "نجمة واحدة",
+        "photos": "بصور",
+        "newest": "الأحدث",
+        "highest": "أعلى تقييم",
+        "lowest": "أدنى تقييم"
+      },
+      "deleteReview": "حذف المراجعة",
+      "reviewPhoto": "صورة مراجعة {{author}} {{index}}",
+      "previousPage": "الصفحة السابقة",
+      "nextPage": "الصفحة التالية",
+      "showingRange": "عرض {{start}}–{{end}} من {{total}} مراجعة"
+    }
+  },
+
+  "receivables": {
+    "title": "المستحقات",
+    "description": "تتبع الأرباح والعمولات وسجل الدفع.",
+    "date": "التاريخ",
+    "referenceNumber": "رقم المرجع",
+    "amount": "المبلغ",
+    "status": "الحالة",
+    "all": "الكل",
+    "allDates": "كل التواريخ",
+    "showing": "عرض {{start}}–{{end}} من {{total}} معاملة",
+    "noTransactions": "لا توجد معاملات",
+    "statuses": {
+      "paid": "مدفوع",
+      "processing": "قيد المعالجة",
+      "pending": "قيد الانتظار",
+      "adjusted": "معدّل",
+      "failed": "فشل"
+    }
+  },
+
   "Add Product": "إضافة منتج"
 }

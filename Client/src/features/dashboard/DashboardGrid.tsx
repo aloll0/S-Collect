@@ -1,28 +1,11 @@
 import { TrendingUp, Box, PackagePlus, Package } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'motion/react';
-import type { Variants } from 'motion/react';
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { type: 'spring', stiffness: 100, damping: 15 },
-  },
-};
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 const DashboardGrid = () => {
   const { t } = useTranslation();
+  const { isMobile, isTablet } = useBreakpoint();
 
   interface DashboardMetric {
     title: string;
@@ -33,15 +16,11 @@ const DashboardGrid = () => {
       primary: string;
       light?: string;
     };
-    trend?: {
-      percentage: string;
-      isPositive: boolean;
-    };
   }
 
   const dashboardMetrics: DashboardMetric[] = [
     {
-      title: t('dashboardMetrics.totalSales'),
+      title: `Gross Merchandise Value (GMV)`,
       value: '124,392',
       unit: t('dashboardMetrics.unit.sar'),
       icon: TrendingUp,
@@ -49,43 +28,40 @@ const DashboardGrid = () => {
         primary: 'var(--green)',
         light: 'var(--green-light)',
       },
-      trend: {
-        percentage: '12.5%',
-        isPositive: true,
-      },
     },
     {
-      title: t('dashboardMetrics.numberOfOrders'),
-      value: '1,842',
-      unit: t('dashboardMetrics.unit.order'),
+      title: "Commission Rate",
+      value: '12%',
+      unit: t('dashboardMetrics.unit.sar'),
       icon: Box,
       colorTheme: {
         primary: 'var(--yellow)',
         light: 'var(--green-light)',
       },
-      trend: {
-        percentage: '12.5%',
-        isPositive: true,
-      },
     },
     {
-      title: t('dashboardMetrics.newOrders'),
-      value: '684',
-      unit: t('dashboardMetrics.unit.order'),
+      title: "Commission Amount",
+      value: '41,184',
+      unit: t('dashboardMetrics.unit.sar'),
       icon: PackagePlus,
       colorTheme: {
         primary: 'var(--yellow)',
         light: 'var(--red-light)',
       },
-      trend: {
-        percentage: '12.5%',
-        isPositive: false,
+    },
+    {
+      title: "Net Earnings",
+      value: '128',
+      unit: t('dashboardMetrics.unit.sar'),
+      icon: Package,
+      colorTheme: {
+        primary: 'var(--blue, #2563eb)',
       },
     },
     {
-      title: t('dashboardMetrics.activeProducts'),
-      value: '128',
-      unit: t('dashboardMetrics.unit.product'),
+      title: "Pending Payout",
+      value: '185,500',
+      unit: t('dashboardMetrics.unit.sar'),
       icon: Package,
       colorTheme: {
         primary: 'var(--blue, #2563eb)',
@@ -94,18 +70,39 @@ const DashboardGrid = () => {
   ];
 
   return (
-    <motion.div
-      className="mb-10"
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
-    >
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
-        {dashboardMetrics.map((metric) => (
-          <motion.div
+    <div className="mb-10 ">
+      {/* Injected CSS for smooth first appearance */}
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          opacity: 0;
+          /* Using a smooth cubic-bezier for a modern "ease-out" feel */
+          animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
+
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4 xl:gap-6">
+        {dashboardMetrics.map((metric, index) => (
+          <div
             key={metric.title}
-            variants={itemVariants}
-            className="bg-white border border-gray-100 rounded-xl p-3 lg:p-5 shadow-sm max-sm:h-[120px] lg:h-[155px] flex flex-col lg:justify-between justify-evenly"
+            // Added the animation class
+            className={`bg-white border border-gray-100 rounded-xl p-3 lg:p-5 shadow-sm h-[120px] md:h-[135px] lg:h-[155px] flex flex-col justify-between  animate-fade-in-up  ${(isMobile || isTablet) &&
+              index === dashboardMetrics.length - 1 &&
+              dashboardMetrics.length > 4
+              ? "col-span-2"
+              : ""
+              } `}
+            // Stagger the animation delay for each card (0ms, 100ms, 200ms...)
+            style={{ animationDelay: `${index * 100}ms` }}
           >
             {/* Header */}
             <div className="flex items-center gap-2">
@@ -128,24 +125,11 @@ const DashboardGrid = () => {
                   </span>
                 </div>
               </div>
-
-              {metric.trend && (
-                <div
-                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium ${
-                    metric.trend.isPositive
-                      ? 'bg-green-50 text-green-600'
-                      : 'bg-red-50 text-red-600'
-                  }`}
-                >
-                  <span>{metric.trend.isPositive ? '↗' : '↘'}</span>
-                  {metric.trend.percentage}
-                </div>
-              )}
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 };
 

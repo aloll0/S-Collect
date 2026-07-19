@@ -94,6 +94,7 @@ export default function ProductTable() {
     t('managementTable.productName'),
     t('managementTable.category'),
     t('managementTable.price'),
+    t('managementTable.rating'),
     t('managementTable.inventory'),
     t('managementTable.status'),
     t('managementTable.procedures'),
@@ -127,7 +128,7 @@ export default function ProductTable() {
       </div>
 
       <div className="w-full overflow-x-auto">
-        <table className="w-full border-collapse text-sm">
+        <table className="w-full border-collapse text-sm bg-gray-100">
           <thead>
             <tr>
               {/* Replaced text-left with text-start for RTL support */}
@@ -154,7 +155,7 @@ export default function ProductTable() {
           <tbody>
             {paginatedProducts.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center py-10 text-gray-400">
+                <td colSpan={8} className="text-center py-10 text-gray-400">
                   <i
                     className="ti ti-package-off text-2xl block mb-2"
                     aria-hidden="true"

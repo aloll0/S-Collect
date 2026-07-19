@@ -199,6 +199,8 @@ html,
     --blue-light: #3a82f681; /* Token: Light Blue   */
     --orange: #f97316; /* Token: Orange       */
     --orange-light: #fff7ed; /* Token: Light Orange */
+    --purple: #9333ea; /* Token: Purple       */
+    --purple-light: #faf5ff; /* Token: Light Purple */
 
     /* Chart palette */
     --chart-1: #218c21; /* matches --green */
@@ -475,6 +477,10 @@ html,
 /* ============================================================
    OPTIONAL: Custom utility classes for less common tokens
    ============================================================ */
+
+@utility sidebar-page-container {
+  @apply px-4 lg:px-8 xl:px-14;
+}
 
 @utility icon-stroke {
   stroke-width: var(--icon-stroke-width);
