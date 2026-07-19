@@ -29,10 +29,8 @@ const Management = () => {
   const { isMobile } = useBreakpoint();
 
   return (
-    <> 
-      <div
-        className="flex items-center justify-between mb-10 bg-gray-50 px-4 lg:px-8 xl:px-14"
-      >
+    <>
+      <div className="sidebar-page-container flex items-center justify-between mb-10 bg-gray-50">
         <h1 className="text-h4 py-5">{t('managementTable.title')}</h1>
         {isMobile ? (
           <Link
@@ -53,7 +51,7 @@ const Management = () => {
         )}
       </div>
       <motion.div
-        className="flex-1 overflow-y-auto px-4 lg:px-8 xl:px-14 pt-0"
+        className="sidebar-page-container flex-1 overflow-y-auto pt-0"
         variants={containerVariants}
         initial="hidden"
         animate="show"

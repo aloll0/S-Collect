@@ -476,6 +476,10 @@ html,
    OPTIONAL: Custom utility classes for less common tokens
    ============================================================ */
 
+@utility sidebar-page-container {
+  @apply px-4 lg:px-8 xl:px-14;
+}
+
 @utility icon-stroke {
   stroke-width: var(--icon-stroke-width);
 }
