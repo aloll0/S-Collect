@@ -1,26 +1,27 @@
 'use client';
 
-import { type ReactNode, useCallback, useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AccountSettingsForm } from './settings/AccountSettingsForm';
-import { SuccessToast } from './settings/shared';
-import { cn } from './settings/utils';
-import { StoreProfileForm } from './settings/StoreProfileForm';
+import BankSettings, {
+  type BankAccountFormValues,
+} from '../features/settings/BankSettings';
+import ShippingSettingsForm, {
+  type ShippingSettingsValues,
+} from '../features/settings/Shippingsettingsform';
+import { SuccessToast } from '../features/settings/shared';
+import { cn } from '../features/settings/utils';
+import { StoreProfileForm } from '../features/settings/StoreProfileForm';
 import { ChevronsRight } from 'lucide-react';
-import type {
-  AccountSettingsData,
-  PasswordData,
-  StoreProfileData,
-} from './settings/types';
+import type { StoreProfileData } from '../features/settings/types';
+
+type SettingsTab = 'store-details' | 'bank-account' | 'shipping';
 
 interface SettingsPageProps {
   initialStoreProfile?: Partial<StoreProfileData>;
-  initialAccountSettings?: Partial<AccountSettingsData>;
   onStoreProfileSave?: (data: StoreProfileData) => Promise<void>;
-  onAccountSettingsSave?: (
-    data: AccountSettingsData & PasswordData
-  ) => Promise<void>;
+  onBankAccountSave?: (data: BankAccountFormValues) => void;
+  onShippingSave?: (data: ShippingSettingsValues) => void;
 }
 
 const defaultStoreProfile: StoreProfileData = {
@@ -30,13 +31,6 @@ const defaultStoreProfile: StoreProfileData = {
   phoneNumber: '',
   storeLogoUrl: null,
   storeLogoFileName: null,
-};
-
-const defaultAccountSettings: AccountSettingsData = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  phoneNumber: '',
 };
 
 function TabBtn({
@@ -66,40 +60,25 @@ function TabBtn({
 
 export default function SettingsPage({
   initialStoreProfile,
-  initialAccountSettings,
   onStoreProfileSave = async () => undefined,
-  onAccountSettingsSave = async () => undefined,
+  onBankAccountSave,
+  onShippingSave,
 }: SettingsPageProps) {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<'store' | 'account'>('store');
+  const [tab, setTab] = useState<SettingsTab>('store-details');
   const [toast, setToast] = useState<string | null>(null);
 
   const storeData = useMemo(
     () => ({ ...defaultStoreProfile, ...initialStoreProfile }),
     [initialStoreProfile]
   );
-  const [accountData, setAccountData] = useState<AccountSettingsData>(() => ({
-    ...defaultAccountSettings,
-    ...initialAccountSettings,
-  }));
-
-  const handleAccountSettingsSave = useCallback(
-    async (data: AccountSettingsData & PasswordData) => {
-      await onAccountSettingsSave(data);
-      setAccountData({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-      });
-    },
-    [onAccountSettingsSave]
-  );
 
   const breadcrumb =
-    tab === 'store'
+    tab === 'store-details'
       ? t('settings.storeProfile')
-      : t('settings.accountSettings');
+      : tab === 'bank-account'
+        ? t('settings.bankAccount')
+        : t('settings.shipping');
 
   return (
     <div className="settings-page-enter min-h-screen bg-gray-100">
@@ -123,29 +102,53 @@ export default function SettingsPage({
           className="flex mb-4 md:mb-6 justify-center py-1.5 px-2 w-full md:w-fit bg-[#E9E9E9] rounded-lg transition-all duration-300 ease-out "
           role="tablist"
         >
-          <TabBtn active={tab === 'store'} onClick={() => setTab('store')}>
+          <TabBtn
+            active={tab === 'store-details'}
+            onClick={() => setTab('store-details')}
+          >
             {t('settings.storeProfile')}
           </TabBtn>
-          <TabBtn active={tab === 'account'} onClick={() => setTab('account')}>
-            {t('settings.accountSettings')}
+          <TabBtn
+            active={tab === 'bank-account'}
+            onClick={() => setTab('bank-account')}
+          >
+            {t('settings.bankAccount')}
+          </TabBtn>
+          <TabBtn
+            active={tab === 'shipping'}
+            onClick={() => setTab('shipping')}
+          >
+            {t('settings.shipping')}
           </TabBtn>
         </div>
 
-        {tab === 'store' ? (
-          <StoreProfileForm
-            key="store"
-            initialData={storeData}
-            onSave={onStoreProfileSave}
-            onSuccess={() => setToast(t('settings.toast.storeProfileSaved'))}
-          />
-        ) : (
-          <AccountSettingsForm
-            key="account"
-            initialData={accountData}
-            onSave={handleAccountSettingsSave}
-            onSuccess={() => setToast(t('settings.toast.accountSettingsSaved'))}
-          />
-        )}
+        <div key={tab} className="settings-surface-enter">
+          {tab === 'store-details' && (
+            <StoreProfileForm
+              initialData={storeData}
+              onSave={onStoreProfileSave}
+              onSuccess={() => setToast(t('settings.toast.storeProfileSaved'))}
+            />
+          )}
+
+          {tab === 'bank-account' && (
+            <BankSettings
+              onSave={(values) => {
+                onBankAccountSave?.(values);
+                setToast(t('settings.toast.bankAccountSaved'));
+              }}
+            />
+          )}
+
+          {tab === 'shipping' && (
+            <ShippingSettingsForm
+              onSave={(values) => {
+                onShippingSave?.(values);
+                setToast(t('settings.toast.shippingSaved'));
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

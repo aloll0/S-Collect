@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export interface RatingCount {
   stars: 1 | 2 | 3 | 4 | 5;
@@ -6,28 +7,29 @@ export interface RatingCount {
 }
 
 export interface ProductRatingProps {
-  averageRating: number;
-  totalReviews: number;
-  counts: RatingCount[];
+  averageRating?: number;
+  totalReviews?: number;
+  counts?: RatingCount[];
 }
 
 export default function ProductRating({
-  averageRating,
-  totalReviews,
-  counts,
+  averageRating = 0,
+  totalReviews = 0,
+  counts = [],
 }: ProductRatingProps) {
+  const { t } = useTranslation();
   const maxCount = Math.max(...counts.map((c) => c.count), 1);
   const sorted = [...counts].sort((a, b) => b.stars - a.stars);
 
   return (
-    <div className="w-full max-w-3xl rounded-2xl border border-gray-200 bg-white p-6">
-      <div className="flex items-center gap-10">
+    <div className="w-full rounded-2xl border border-gray-200 bg-white p-4 lg:p-8">
+      <div className="flex items-center flex-col lg:flex-row gap-10">
         {/* Summary */}
-        <div className="flex shrink-0 flex-col items-center">
-          <span className="text-4xl font-bold text-gray-900">
+        <div className="flex shrink-0 flex-col items-center w-[25%]">
+          <h2 className="text-[64px] font-bold text-gray-900 pb-2">
             {averageRating.toFixed(1)}
-          </span>
-          <div className="mt-1 flex gap-0.5">
+          </h2>
+          <div className=" flex gap-0.5">
             {Array.from({ length: 5 }).map((_, i) => (
               <Star
                 key={i}
@@ -41,16 +43,16 @@ export default function ProductRating({
             ))}
           </div>
           <span className="mt-1 whitespace-nowrap text-xs text-gray-400">
-            Based on {totalReviews} Reviews
+            {t("productDetails.rating.basedOn", { count: totalReviews })}
           </span>
         </div>
 
         {/* Bars */}
-        <div className="flex-1 space-y-2.5">
+        <div className="flex-1 space-y-2.5 max-sm:w-full">
           {sorted.map(({ stars, count }) => (
             <div key={stars} className="flex items-center gap-3 text-sm">
               <span className="w-14 shrink-0 text-gray-500">
-                {stars} Star{stars > 1 ? "s" : ""}
+                {stars} {stars > 1 ? t("productDetails.rating.stars") : t("productDetails.rating.star")}
               </span>
               <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100">
                 <div

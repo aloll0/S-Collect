@@ -21,7 +21,7 @@
       "addProduct": "Add Product",
       "inventory": "Inventory",
       "incomingOrders": "Incoming Orders",
-      "settings": "Settings",
+      "settings": "Store Profile",
       "logout": "Logout",
       "cancel": "Cancel",
       "signOut": "Sign Out",
@@ -351,6 +351,8 @@
     "title": "Settings",
     "storeProfile": "Store Profile",
     "accountSettings": "Account Settings",
+    "bankAccount": "Bank Account",
+    "shipping": "Shipping",
     "storePreview": "Store Preview",
     "storeName": "Store Name",
     "storeNamePlaceholder": "Enter store name",
@@ -402,6 +404,8 @@
     "toast": {
       "storeProfileSaved": "Store Profile updated successfully.",
       "accountSettingsSaved": "Account Settings updated successfully.",
+      "bankAccountSaved": "Bank Account updated successfully.",
+      "shippingSaved": "Shipping Settings updated successfully.",
       "details": "Changes have been saved and will be reflected in the marketplace within 2 minutes.",
       "close": "Close"
     },
@@ -525,6 +529,49 @@
         "date": "Jun 13, 2025",
         "customer": "Fahad Al-Harbi"
       }
+    }
+  },
+
+  "productDetails": {
+    "title": "Product Details",
+    "breadcrumb": "Product Details",
+    "productInfo": {
+      "editProduct": "Edit product",
+      "category": "Category:",
+      "brand": "Brand:",
+      "sku": "SKU:",
+      "cost": "Cost:",
+      "inventory": "Inventory",
+      "inStock": "In Stock",
+      "outOfStock": "Out of Stock",
+      "units": "units",
+      "averageRating": "Average Rating",
+      "totalReviews": "Total Reviews",
+      "reviewsCount": "{{count}} Reviews"
+    },
+    "rating": {
+      "basedOn": "Based on {{count}} Reviews",
+      "star": "Star",
+      "stars": "Stars"
+    },
+    "reviews": {
+      "filters": {
+        "all": "All Reviews",
+        "5": "5 Stars",
+        "4": "4 Stars",
+        "3": "3 Stars",
+        "2": "2 Stars",
+        "1": "1 Star",
+        "photos": "With Photos",
+        "newest": "Newest",
+        "highest": "Highest Rating",
+        "lowest": "Lowest Rating"
+      },
+      "deleteReview": "Delete review",
+      "reviewPhoto": "{{author}} review photo {{index}}",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "showingRange": "Showing {{start}}–{{end}} of {{total}} reviews"
     }
   },
 
