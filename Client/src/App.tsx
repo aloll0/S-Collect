@@ -3,6 +3,7 @@ import AppLayout from './pages/AppLayout.js';
 import Dashboard from './pages/Dashboard.js';
 import Inventory from './pages/Inventory';
 import Settings from './pages/Settings.js';
+import AccountSettings from './pages/AccountSettings.js';
 import Management from './pages/Mangement.js';
 import AddProduct from './pages/AddProduct.js';
 import { Toaster } from 'react-hot-toast';
@@ -33,6 +34,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/account-settings" element={<AccountSettings />} />
           <Route path="/management" element={<Management />} />
           <Route path="/add-product" element={<AddProduct />} />
           <Route path="/product-details" element={<ProductDetails />} />

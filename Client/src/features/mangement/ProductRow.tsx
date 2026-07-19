@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { SquarePen, Trash, Check } from 'lucide-react';
+import { SquarePen, Trash, Check, Star } from 'lucide-react';
 import Toggle from './Toggle';
 import StatusBadge from './StatusBadge';
 import { showDeleteConfirmation } from './deleteConfirmation';
@@ -65,11 +65,10 @@ export default function ProductRow({
 
   return (
     <tr
-      className={`transition-all ${!product.enabled ? 'opacity-50' : ''} ${
-        selected
-          ? 'bg-gray-50 hover:bg-gray-50 shadow-[inset_3px_0_0_0_#111827]'
-          : 'hover:bg-gray-50'
-      }`}
+      className={`transition-all bg-white ${!product.enabled ? 'opacity-50' : ''} ${selected
+        ? 'hover:bg-gray-50 shadow-[inset_3px_0_0_0_#111827]'
+        : 'hover:bg-gray-50'
+        }`}
     >
       <td className="px-3 py-3 border-b border-gray-100 text-start">
         <label className="inline-flex items-center justify-center w-4 h-4 cursor-pointer">
@@ -101,20 +100,33 @@ export default function ProductRow({
               aria-hidden="true"
             />
           </div>
-          <span className="font-medium">{product.name}</span>
+          <span className="font-semibold text-gray-900">{product.name}</span>
         </div>
       </td>
 
-      <td className="px-3 py-3 border-b border-gray-100 text-gray-500">
+      <td className="px-3 py-3 border-b border-gray-100 font-semibold text-gray-500">
         {t(`managementTable.categories.${product.category}`)}
       </td>
 
-      <td className="px-3 py-3 border-b border-gray-100 font-medium">
+      <td className="px-3 py-3 border-b border-gray-100 font-semibold text-gray-900">
         {product.price} {t('dashboardMetrics.unit.sar')}
       </td>
 
       <td className="px-3 py-3 border-b border-gray-100">
+        <div className="flex items-center gap-1">
+          <Star size={14} className="fill-amber-400 text-amber-400" />
+          <span className="font-semibold text-gray-900">
+            {product.rating != null ? product.rating.toFixed(1) : '—'}
+          </span>
+          <span className="font-semibold text-gray-900 text-xs">
+            {product.ratingCount != null ? `(${product.ratingCount})` : ''}
+          </span>
+        </div>
+      </td>
+
+      <td className="px-3 py-3 border-b border-gray-100">
         <StatusBadge status={product.status} />
+
       </td>
 
       <td className="px-3 py-3 border-b border-gray-100">

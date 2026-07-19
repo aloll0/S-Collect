@@ -1,11 +1,11 @@
 import {
   Boxes,
   PackageOpen,
-  Settings,
   X,
   ChartNoAxesCombined,
   CirclePlus,
   Handbag,
+  SquareUserRoundIcon,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import type { ReactNode } from 'react';
@@ -97,11 +97,10 @@ const LanguageDropdown = () => {
                 handleLanguageChange(lang.code);
                 close();
               }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors hover:bg-gray-700 ${
-                lang.code === i18n.language
+              className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors hover:bg-gray-700 ${lang.code === i18n.language
                   ? 'text-white font-medium bg-gray-700/50'
                   : 'text-gray-400'
-              }`}
+                }`}
             >
               <span className="text-base">{lang.short}</span>
               <span>{lang.label}</span>
@@ -133,12 +132,11 @@ const NavItem = ({
         onClick={onClick}
         className={({ isActive }) =>
           `group flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 ease-in-out relative overflow-hidden text-label-md
-          ${
-            isActive
-              ? 'bg-gray-800 text-gray-50 font-medium'
-              : danger
-                ? 'text-red-500 hover:bg-red-500/10 hover:text-red-500'
-                : 'text-gray-400 hover:bg-gray-800/40 hover:text-gray-100'
+          ${isActive
+            ? 'bg-gray-800 text-gray-50 font-medium'
+            : danger
+              ? 'text-red-500 hover:bg-red-500/10 hover:text-red-500'
+              : 'text-gray-400 hover:bg-gray-800/40 hover:text-gray-100'
           }`
         }
       >
@@ -217,9 +215,14 @@ const NAV_SECTIONS: NavSectionProps[] = [
     titleKey: 'sidebar.sections.account',
     items: [
       {
-        icon: <Settings size={18} />,
+        icon: <Handbag size={18} />,
         labelKey: 'sidebar.items.settings',
         to: '/settings',
+      },
+      {
+        icon: <SquareUserRoundIcon size={18} />,
+        labelKey: 'sidebar.items.accountSettings',
+        to: '/account-settings',
       },
     ],
   },
@@ -325,9 +328,8 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   return (
     <>
       <aside
-        className={`hidden sidebar:flex w-64 h-dvh bg-(--gray-950) flex-col sticky top-0 z-70 ${
-          isArabic ? 'right-0' : 'left-0'
-        }`}
+        className={`hidden sidebar:flex w-64 h-dvh bg-(--gray-950) flex-col sticky top-0 z-70 ${isArabic ? 'right-0' : 'left-0'
+          }`}
       >
         {SidebarContent}
       </aside>
@@ -347,9 +349,8 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
             <motion.aside
               key="sidebar-mobile"
-              className={`w-64 h-dvh bg-(--gray-950) flex flex-col fixed top-0 z-70 sidebar:hidden ${
-                isArabic ? 'right-0' : 'left-0'
-              }`}
+              className={`w-64 h-dvh bg-(--gray-950) flex flex-col fixed top-0 z-70 sidebar:hidden ${isArabic ? 'right-0' : 'left-0'
+                }`}
               variants={sidebarVariants}
               initial="closed"
               animate="open"

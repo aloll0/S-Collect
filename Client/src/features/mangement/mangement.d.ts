@@ -6,6 +6,8 @@ export interface Product {
   name: string;
   category: string;
   price: number;
+  rating: number;
+  ratingCount: number;
   status: ProductStatus;
   enabled: boolean;
   icon: string;
