@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import Orders from './pages/Orders.js';
 import ProductDetails from './pages/ProductDetails.js';
+import Receivables from './pages/Receivables.js';
 
 function App() {
   const { i18n } = useTranslation();
@@ -38,6 +39,7 @@ function App() {
           <Route path="/management" element={<Management />} />
           <Route path="/add-product" element={<AddProduct />} />
           <Route path="/product-details" element={<ProductDetails />} />
+          <Route path="/receivables" element={<Receivables />} />
           <Route path="/incoming-orders" element={<Orders />} />
           <Route path="*" element={<NotFound />} />
         </Route>

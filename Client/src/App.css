@@ -199,6 +199,8 @@ html,
     --blue-light: #3a82f681; /* Token: Light Blue   */
     --orange: #f97316; /* Token: Orange       */
     --orange-light: #fff7ed; /* Token: Light Orange */
+    --purple: #9333ea; /* Token: Purple       */
+    --purple-light: #faf5ff; /* Token: Light Purple */
 
     /* Chart palette */
     --chart-1: #218c21; /* matches --green */

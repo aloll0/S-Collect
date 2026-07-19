@@ -98,8 +98,8 @@ const LanguageDropdown = () => {
                 close();
               }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors hover:bg-gray-700 ${lang.code === i18n.language
-                  ? 'text-white font-medium bg-gray-700/50'
-                  : 'text-gray-400'
+                ? 'text-white font-medium bg-gray-700/50'
+                : 'text-gray-400'
                 }`}
             >
               <span className="text-base">{lang.short}</span>
@@ -208,6 +208,11 @@ const NAV_SECTIONS: NavSectionProps[] = [
         icon: <Handbag size={18} />,
         labelKey: 'sidebar.items.incomingOrders',
         to: '/incoming-orders',
+      },
+      {
+        icon: <Handbag size={18} />,
+        labelKey: 'sidebar.sections.receivables',
+        to: '/receivables',
       },
     ],
   },
