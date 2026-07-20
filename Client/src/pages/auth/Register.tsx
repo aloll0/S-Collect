@@ -3,9 +3,12 @@ import { type InputHTMLAttributes, type Ref } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
 import { useAuthStore } from '../../store/authStore';
 import { motion } from 'framer-motion';
+import { resendOtp } from '../../services/auth';
+import { useRegister } from '../../hooks/useRegister';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -575,16 +578,13 @@ const STEP_FIELDS: Record<number, (keyof RegisterFormData)[]> = {
 };
 
 const Register = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === 'ar';
 
   const {
     step,
-    submitted,
-    registerLoading,
-    registerError,
     nextStep,
     previousStep,
-    submitRegister,
     resetRegister,
   } = useAuthStore();
 
@@ -603,6 +603,15 @@ const Register = () => {
     },
   });
 
+  const {
+    register: executeRegister,
+    isPending,
+    submitted,
+    error,
+  } = useRegister(methods.setError);
+
+  const registerError = error?.message;
+
   useEffect(() => {
     return () => {
       resetRegister();
@@ -618,17 +627,8 @@ const Register = () => {
       return;
     }
 
-    await methods.handleSubmit(async (values) => {
-      await submitRegister({
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        password: values.password,
-        phoneNumber: values.phone,
-        storeName: values.storeName,
-        storeDescription: values.description,
-        commercialRegisterNumber: values.website,
-      });
+    methods.handleSubmit((values) => {
+      executeRegister(values);
     })();
   };
 
@@ -641,8 +641,14 @@ const Register = () => {
           {submitted ? (
             <EmailSent
               email={methods.getValues('email')}
-              onResend={() => {
-                /* resend logic */
+              onResend={async () => {
+                try {
+                  await resendOtp(methods.getValues('email'));
+                  toast.success(isRtl ? 'تم إعادة إرسال رمز التحقق بنجاح' : 'Verification code resent successfully');
+                } catch (err: any) {
+                  const msg = err?.response?.data?.message || err.message || (isRtl ? 'فشل إعادة إرسال رمز التحقق' : 'Failed to resend verification code');
+                  toast.error(msg);
+                }
               }}
             />
           ) : (
@@ -677,10 +683,10 @@ const Register = () => {
                 )}
                 <button
                   onClick={handleContinue}
-                  disabled={registerLoading}
+                  disabled={isPending}
                   className="flex-[2] py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 >
-                  {registerLoading
+                  {isPending
                     ? t('register.creatingAccount')
                     : step === 2
                       ? t('register.createAccount')
