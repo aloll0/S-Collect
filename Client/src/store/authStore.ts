@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { login } from '../services/auth';
 
 export type LoginState = 'default' | 'expired' | 'locked';
 export type LoginResult = LoginState | 'change-password' | 'success';
@@ -57,18 +58,25 @@ export const useAuthStore = create<AuthStore>((set) => ({
   setLoginError: (loginError) => set({ loginError }),
   toggleLoginPassword: () =>
     set((state) => ({ showLoginPassword: !state.showLoginPassword })),
-  submitLogin: async (email, _password) => {
+  submitLogin: async (email, password) => {
     set({ loginError: '', loginLoading: true });
-    await new Promise((resolve) => setTimeout(resolve, 700));
-    set({ loginLoading: false });
-
-    const result = MOCK_LOGIN_RESULTS[email.trim().toLowerCase()] ?? 'success';
-
-    if (result === 'locked' || result === 'expired') {
-      set({ loginState: result });
+    try {
+      const data = await login(email, password);
+      // Assuming the API returns an object with a `status` field indicating login result
+      const result = data?.status ?? 'success';
+      if (result === 'locked' || result === 'expired') {
+        set({ loginState: result });
+      } else {
+        set({ loginState: 'default' });
+      }
+      return result as LoginResult;
+    } catch (error: any) {
+      const message = error?.response?.data?.message || error.message || 'Login failed';
+      set({ loginError: message, loginState: 'default' });
+      return 'default' as LoginResult;
+    } finally {
+      set({ loginLoading: false });
     }
-
-    return result;
   },
 
   step: 0,

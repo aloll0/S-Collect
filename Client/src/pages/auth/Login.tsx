@@ -50,8 +50,8 @@ const Login = ({ onGoToRegister }: LoginProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [remainingTime, setRemainingTime] = useState<number>(14 * 60); // 14 دقيقة بالثواني
-
+  const [remainingTime, setRemainingTime] = useState<number>(14 * 60); 
+  
   const initialState: LoginState =
     searchParams.get('state') === 'locked'
       ? 'locked'
