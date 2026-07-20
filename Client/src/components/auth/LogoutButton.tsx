@@ -4,22 +4,30 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import LogoutModal from './LogoutModal';
 import { useTranslation } from 'react-i18next';
+import { logout } from '../../services/auth';
 
 const LogoutButton = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setLoading(true);
-
-    setTimeout(() => {
+    try {
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken) {
+        await logout(refreshToken);
+      }
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
       localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
       toast.success('Logged out successfully');
-      navigate('login', { replace: true });
+      navigate('/login', { replace: true });
       setOpen(false);
       setLoading(false);
-    }, 1000);
+    }
   };
   const { t } = useTranslation();
   return (
