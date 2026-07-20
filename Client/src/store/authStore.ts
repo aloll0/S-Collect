@@ -23,13 +23,6 @@ export interface PasswordInfo {
   confirmPassword: string;
 }
 
-const MOCK_LOGIN_RESULTS: Record<string, LoginResult> = {
-  'locked-out@company.com': 'locked',
-  'vendor@active-store.com': 'expired',
-  'temporary@company.com': 'change-password',
-  'vendor@company.com': 'success',
-};
-
 interface AuthStore {
   loginLoading: boolean;
   loginError: string;
