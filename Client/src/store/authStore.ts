@@ -55,6 +55,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({ loginError: '', loginLoading: true });
     try {
       const data = await login(email, password);
+      
+      // Store token if it exists in response
+      const token = data?.token || data?.accessToken || data?.data?.token || data?.data?.accessToken;
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+
       // Assuming the API returns an object with a `status` field indicating login result
       const result = data?.status ?? 'success';
       if (result === 'locked' || result === 'expired') {

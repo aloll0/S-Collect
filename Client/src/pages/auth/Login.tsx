@@ -123,7 +123,8 @@ const Login = ({ onGoToRegister }: LoginProps) => {
 
     const result = await submitLogin(data.email, data.password);
 
-    if (result === 'locked' || result === 'expired') {
+    if (result === 'success') {
+      navigate('/');
       return;
     }
 
@@ -131,8 +132,6 @@ const Login = ({ onGoToRegister }: LoginProps) => {
       navigate('/forget-pass');
       return;
     }
-
-    navigate('/');
   };
 
   const icon = isLocked ? (
