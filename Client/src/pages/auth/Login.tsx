@@ -246,7 +246,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                 <div className="flex justify-start">
                   <button
                     type="button"
-                    onClick={() => navigate('/forget-pass')}
+                    onClick={() => navigate('/forget-pass?mode=forgot')}
                     className="text-label-sm text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
                   >
                     {t('login.forgotPassword')}

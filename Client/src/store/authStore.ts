@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { login } from '../services/auth';
+import { login, applyVendorOnboarding, type OnboardingApplyParams } from '../services/auth';
 
 export type LoginState = 'default' | 'expired' | 'locked';
 export type LoginResult = LoginState | 'change-password' | 'success';
@@ -36,9 +36,10 @@ interface AuthStore {
   step: number;
   submitted: boolean;
   registerLoading: boolean;
+  registerError: string;
   nextStep: () => void;
   previousStep: () => void;
-  submitRegister: () => Promise<void>;
+  submitRegister: (params: OnboardingApplyParams) => Promise<boolean>;
   resetRegister: () => void;
 }
 
@@ -61,9 +62,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
       }
 
       // Store token if it exists in response
-      const token = data?.token || data?.accessToken || data?.data?.token || data?.data?.accessToken;
+      const token = data?.accessToken || data?.token || data?.data?.accessToken || data?.data?.token;
+      const refreshToken = data?.refreshToken || data?.data?.refreshToken;
       if (token) {
         localStorage.setItem('token', token);
+      }
+      if (refreshToken) {
+        localStorage.setItem('refreshToken', refreshToken);
       }
 
       // Assuming the API returns an object with a `status` field indicating login result
@@ -86,17 +91,31 @@ export const useAuthStore = create<AuthStore>((set) => ({
   step: 0,
   submitted: false,
   registerLoading: false,
+  registerError: '',
   nextStep: () => set((state) => ({ step: Math.min(state.step + 1, 2) })),
   previousStep: () => set((state) => ({ step: Math.max(state.step - 1, 0) })),
-  submitRegister: async () => {
-    set({ registerLoading: true });
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    set({ registerLoading: false, submitted: true });
+  submitRegister: async (params) => {
+    set({ registerLoading: true, registerError: '' });
+    try {
+      const data = await applyVendorOnboarding(params);
+      
+      if (data && data.success === false) {
+        throw new Error(data.message || 'Registration failed');
+      }
+      
+      set({ registerLoading: false, submitted: true });
+      return true;
+    } catch (error: any) {
+      const message = error?.response?.data?.message || error.message || 'Registration failed';
+      set({ registerError: message, registerLoading: false });
+      return false;
+    }
   },
   resetRegister: () =>
     set({
       step: 0,
       submitted: false,
       registerLoading: false,
+      registerError: '',
     }),
 }));

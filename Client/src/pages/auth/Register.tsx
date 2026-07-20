@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { type InputHTMLAttributes, type Ref } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -581,9 +581,11 @@ const Register = () => {
     step,
     submitted,
     registerLoading,
+    registerError,
     nextStep,
     previousStep,
     submitRegister,
+    resetRegister,
   } = useAuthStore();
 
   const methods = useForm<RegisterFormData>({
@@ -601,6 +603,12 @@ const Register = () => {
     },
   });
 
+  useEffect(() => {
+    return () => {
+      resetRegister();
+    };
+  }, [resetRegister]);
+
   const handleContinue = async () => {
     const isValid = await methods.trigger(STEP_FIELDS[step]);
     if (!isValid) return;
@@ -610,8 +618,17 @@ const Register = () => {
       return;
     }
 
-    await methods.handleSubmit(async () => {
-      await submitRegister();
+    await methods.handleSubmit(async (values) => {
+      await submitRegister({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        password: values.password,
+        phoneNumber: values.phone,
+        storeName: values.storeName,
+        storeDescription: values.description,
+        commercialRegisterNumber: values.website,
+      });
     })();
   };
 
@@ -642,11 +659,17 @@ const Register = () => {
                 </div>
               </FormProvider>
 
+              {registerError && (
+                <div className="bg-red-light border border-red rounded-lg px-3.5 py-2.5 text-red text-body-sm mt-4 animate-fade-in-up">
+                  {registerError}
+                </div>
+              )}
+
               {/* Navigation buttons */}
               <div className="flex gap-3 mt-7 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                 {step > 0 && (
                   <button
-                    onClick={previousStep}
+                     onClick={previousStep}
                     className="flex-1 py-3 bg-gray-50 text-gray-700 border border-gray-300 rounded-lg text-label-md font-semibold hover:bg-gray-100 transition-colors cursor-pointer"
                   >
                     {t('register.back')}
