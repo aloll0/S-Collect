@@ -56,6 +56,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
     try {
       const data = await login(email, password);
       
+      if (data && data.success === false) {
+        throw new Error(data.message || 'Login failed');
+      }
+
       // Store token if it exists in response
       const token = data?.token || data?.accessToken || data?.data?.token || data?.data?.accessToken;
       if (token) {
