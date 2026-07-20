@@ -39,18 +39,21 @@ export const useRegister = (setError: any) => {
         return data;
       } catch (error: any) {
         const responseData = error?.response?.data;
-        if (responseData?.errors) {
-          const errObj = responseData.errors;
+        const errObj = responseData?.errors || responseData;
+        if (errObj && typeof errObj === 'object' && !Array.isArray(errObj)) {
           let mainMsg = '';
+          let hasMappedField = false;
           Object.keys(errObj).forEach((key) => {
+            if (key === 'message' || key === 'success' || key === 'status' || key === 'statusCode') return;
+
             let fieldName: keyof RegisterFormData | undefined;
             if (key === 'firstName') fieldName = 'firstName';
             else if (key === 'lastName') fieldName = 'lastName';
             else if (key === 'email') fieldName = 'email';
-            else if (key === 'phoneNumber') fieldName = 'phone';
+            else if (key === 'phoneNumber' || key === 'phone') fieldName = 'phone';
             else if (key === 'storeName') fieldName = 'storeName';
-            else if (key === 'storeDescription') fieldName = 'description';
-            else if (key === 'commercialRegisterNumber') fieldName = 'website';
+            else if (key === 'storeDescription' || key === 'description') fieldName = 'description';
+            else if (key === 'commercialRegisterNumber' || key === 'website') fieldName = 'website';
             else if (key === 'password') fieldName = 'password';
 
             const messages = Array.isArray(errObj[key])
@@ -63,18 +66,21 @@ export const useRegister = (setError: any) => {
                 type: 'server',
                 message: messageStr,
               });
+              hasMappedField = true;
             } else {
               mainMsg += `${key}: ${messageStr}\n`;
             }
           });
 
-          throw new Error(
-            mainMsg ||
-              responseData.message ||
-              (isRtl
-                ? 'فشلت عملية التسجيل. يرجى التحقق من الحقول المطلوبة.'
-                : 'Registration failed. Please check the fields.')
-          );
+          if (hasMappedField || mainMsg) {
+            throw new Error(
+              mainMsg ||
+                responseData?.message ||
+                (isRtl
+                  ? 'فشلت عملية التسجيل. يرجى التحقق من الحقول المطلوبة.'
+                  : 'Registration failed. Please check the fields.')
+            );
+          }
         }
 
         const message =
