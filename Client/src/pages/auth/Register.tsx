@@ -3,13 +3,10 @@ import { type InputHTMLAttributes, type Ref } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
 import { useAuthStore } from '../../store/authStore';
 import { motion } from 'framer-motion';
-import { resendOtp } from '../../services/auth';
 import { useRegister } from '../../hooks/useRegister';
-import { useVerifyPhone } from '../../hooks/useVerifyPhone';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -518,212 +515,91 @@ const Step3 = () => {
 
 // ─── Email Sent Screen ────────────────────────────────────────────────────────
 
-const PhoneVerification = ({
+const ApplicationSubmitted = ({
   email,
-  onResend,
+  vendorId,
 }: {
   email: string;
-  onResend: () => Promise<void>;
+  vendorId?: string;
 }) => {
   const { i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
   const navigate = useNavigate();
 
-  const [otp, setOtp] = useState<string[]>(Array(6).fill(''));
-  const [timeLeft, setTimeLeft] = useState(60);
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  const { verify, isPending, error, reset } = useVerifyPhone();
-
-  // Timer countdown
-  useEffect(() => {
-    if (timeLeft <= 0) return;
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [timeLeft]);
-
-  const handleChange = (element: HTMLInputElement, index: number) => {
-    const value = element.value.replace(/[^0-9]/g, '');
-    if (!value) return;
-
-    const newOtp = [...otp];
-    newOtp[index] = value.substring(value.length - 1);
-    setOtp(newOtp);
-
-    // Focus next input
-    if (element.nextElementSibling && index < 5) {
-      (element.nextElementSibling as HTMLInputElement).focus();
-    }
+  const handleCheckEmail = () => {
+    window.open('https://mail.google.com', '_blank');
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-    if (e.key === 'Backspace') {
-      const newOtp = [...otp];
-      newOtp[index] = '';
-      setOtp(newOtp);
-
-      // Focus previous input
-      if (e.currentTarget.previousElementSibling) {
-        (e.currentTarget.previousElementSibling as HTMLInputElement).focus();
-      }
-    }
-  };
-
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '').substring(0, 6);
-    if (pastedData.length === 0) return;
-
-    const newOtp = [...otp];
-    for (let i = 0; i < pastedData.length; i++) {
-      newOtp[i] = pastedData[i];
-    }
-    setOtp(newOtp);
-
-    // Focus the last filled input or the 6th input
-    const targetIndex = Math.min(pastedData.length, 5);
-    const inputs = e.currentTarget.parentElement?.getElementsByTagName('input');
-    if (inputs && inputs[targetIndex]) {
-      (inputs[targetIndex] as HTMLInputElement).focus();
-    }
-  };
-
-  const handleVerify = async () => {
-    const code = otp.join('');
-    if (code.length < 6) {
-      toast.error(isRtl ? 'يرجى إدخال رمز التحقق كاملاً' : 'Please enter the full verification code');
-      return;
-    }
-
-    try {
-      await verify({ email, code });
-      setIsSuccess(true);
-      toast.success(isRtl ? 'تم تفعيل الحساب بنجاح!' : 'Account activated successfully!');
-    } catch (err: any) {
-      // Handled by built-in error
-    }
-  };
-
-  const handleResendClick = async () => {
-    if (timeLeft > 0) return;
-    try {
-      await onResend();
-      setTimeLeft(60);
-      reset(); // Clear any verification errors
-    } catch (err) {
-      // Error toast already shown by onResend
-    }
-  };
-
-  if (isSuccess) {
-    return (
-      <div className="text-center py-8 animate-fade-in-up">
-        <div className="w-16 h-16 rounded-full bg-green-light border-2 border-green/20 inline-flex items-center justify-center mb-6 text-green-600">
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-          >
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        </div>
-
-        <h2 className="text-h5 font-bold text-gray-900 mb-3">
-          {isRtl ? 'تم التحقق بنجاح!' : 'Verification Successful!'}
-        </h2>
-        <p className="text-body-md text-gray-500 leading-relaxed mb-8">
-          {isRtl
-            ? 'تم تفعيل رقم جوالك بنجاح. يمكنك الآن تسجيل الدخول إلى حسابك.'
-            : 'Your phone number has been verified successfully. You can now log in to your account.'}
-        </p>
-
-        <button
-          onClick={() => navigate('/login')}
-          className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 transition-colors cursor-pointer"
-        >
-          {isRtl ? 'الذهاب لتسجيل الدخول' : 'Go to Login'}
-        </button>
-      </div>
-    );
-  }
+  const displayVendorId = vendorId || "NEX-2910-VM";
 
   return (
-    <div className="text-center py-5 animate-fade-in-up">
-      <div className="w-16 h-16 rounded-full bg-blue-50 border border-blue-200 inline-flex items-center justify-center mb-5 text-blue-600">
+    <div className="text-center py-6 animate-fade-in-up flex flex-col items-center">
+      {/* Circle Check Icon */}
+      <div className="w-16 h-16 rounded-full bg-[#ecfdf3] border border-[#d3f9d8] inline-flex items-center justify-center mb-6 text-[#12b76a]">
         <svg
           width="28"
           height="28"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+          <polyline points="20 6 9 17 4 12" />
         </svg>
       </div>
 
-      <h2 className="text-h6 text-gray-900 font-bold mb-2">
-        {isRtl ? 'تأكيد رقم الجوال' : 'Verify Phone Number'}
+      {/* Title */}
+      <h2 className="text-h6 lg:text-h5 font-bold text-gray-900 mb-2">
+        {isRtl ? 'تم تقديم الطلب بنجاح' : 'Application Submitted Successfully'}
       </h2>
-      <p className="text-body-md text-gray-500 leading-relaxed mb-1">
-        {isRtl
-          ? 'لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى'
-          : 'We have sent a 6-digit verification code to'}
-      </p>
-      <p className="text-body-md text-gray-900 font-semibold mb-6">{email}</p>
 
-      {/* OTP inputs */}
-      <div className="flex justify-center gap-2 mb-6" dir="ltr">
-        {otp.map((data, index) => (
-          <input
-            key={index}
-            type="text"
-            maxLength={1}
-            value={data}
-            onChange={(e) => handleChange(e.target, index)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
-            onPaste={index === 0 ? handlePaste : undefined}
-            className="w-12 h-12 border border-gray-300 rounded-lg text-center text-lg font-bold text-gray-900 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none transition-all"
-          />
-        ))}
+      {/* Subtitle */}
+      <p className="text-label-sm font-semibold text-[#c28e2b] mb-6">
+        {isRtl ? 'طلبك قيد المراجعة حالياً' : 'Your request is pending for review'}
+      </p>
+
+      {/* Description */}
+      <p className="text-body-md text-gray-500 leading-relaxed mb-8 max-w-sm">
+        {isRtl
+          ? `لقد أرسلنا رسالة تأكيد إلى بريدك الإلكتروني المسجل: ${email}. سيقوم فريقنا بمراجعة طلبك والرد عليك خلال 2-3 أيام عمل.`
+          : `We've sent a confirmation email to your registered address: ${email}. Our team will review your application and get back to you within 2-3 business days.`}
+      </p>
+
+      {/* Action Buttons */}
+      <div className="w-full flex flex-col gap-3">
+        <button
+          onClick={handleCheckEmail}
+          className="w-full py-3 bg-[#0c0c0d] hover:bg-[#1a1a1c] text-white rounded-lg text-label-md font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
+          </svg>
+          {isRtl ? 'التحقق من البريد الإلكتروني' : 'Check Email'}
+        </button>
+
+        <button
+          onClick={() => navigate('/login')}
+          className="w-full py-3 bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 rounded-lg text-label-md font-semibold transition-colors flex items-center justify-center cursor-pointer shadow-sm"
+        >
+          {isRtl ? 'العودة لتسجيل الدخول' : 'Back to login'}
+        </button>
       </div>
 
-      {error?.message && (
-        <div className="bg-red-light border border-red rounded-lg px-3.5 py-2.5 text-red text-body-sm mb-6 text-center">
-          {error.message}
-        </div>
-      )}
-
-      <button
-        onClick={handleVerify}
-        disabled={isPending || otp.join('').length < 6}
-        className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer mb-6"
-      >
-        {isPending ? (isRtl ? 'جاري التحقق...' : 'Verifying...') : (isRtl ? 'تأكيد الرمز' : 'Verify Code')}
-      </button>
-
-      <div className="bg-gray-100 border border-gray-200 rounded-lg px-4 py-3.5 text-body-sm text-gray-500 text-center">
-        <span>
-          {isRtl ? 'لم يصلك الرمز بعد؟' : "Didn't receive the code?"}{' '}
-        </span>
-        <button
-          onClick={handleResendClick}
-          disabled={timeLeft > 0}
-          className="text-gray-900 font-semibold hover:underline disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          {timeLeft > 0
-            ? isRtl
-              ? `إعادة الإرسال خلال ${timeLeft} ثانية`
-              : `Resend in ${timeLeft}s`
-            : isRtl
-              ? 'إعادة إرسال الرمز'
-              : 'Resend Code'}
-        </button>
+      {/* Reference ID Footer */}
+      <div className="w-full bg-[#f8f9fa] border border-gray-100 py-3 mt-8 rounded-lg text-body-sm text-gray-500 font-medium">
+        {isRtl ? `الرقم المرجعي: ${displayVendorId}` : `Reference ID: ${displayVendorId}`}
       </div>
     </div>
   );
@@ -738,8 +614,7 @@ const STEP_FIELDS: Record<number, (keyof RegisterFormData)[]> = {
 };
 
 const Register = () => {
-  const { t, i18n } = useTranslation();
-  const isRtl = i18n.language === 'ar';
+  const { t } = useTranslation();
 
   const {
     step,
@@ -768,6 +643,7 @@ const Register = () => {
     isPending,
     submitted,
     error,
+    registrationData,
   } = useRegister(methods.setError);
 
   const registerError = error?.message;
@@ -799,18 +675,9 @@ const Register = () => {
       <div className="flex-1 bg-gray-50 flex items-center justify-center px-4 md:px-10 py-12 overflow-y-auto flex justify-center items-start">
         <div className="w-full w-auto md:max-w-[480px] mt-6 lg:mt-48">
           {submitted ? (
-            <PhoneVerification
+            <ApplicationSubmitted
               email={methods.getValues('email')}
-              onResend={async () => {
-                try {
-                  await resendOtp(methods.getValues('email'));
-                  toast.success(isRtl ? 'تم إعادة إرسال رمز التحقق بنجاح' : 'Verification code resent successfully');
-                } catch (err: any) {
-                  const msg = err?.response?.data?.message || err.message || (isRtl ? 'فشل إعادة إرسال رمز التحقق' : 'Failed to resend verification code');
-                  toast.error(msg);
-                  throw err;
-                }
-              }}
+              vendorId={registrationData?.data?.vendorId || registrationData?.vendorId}
             />
           ) : (
             <>
