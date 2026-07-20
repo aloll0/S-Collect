@@ -147,5 +147,6 @@ export const useRegister = (setError: any) => {
     error: registerMutation.error,
     setSubmitted,
     reset: registerMutation.reset,
+    registrationData: registerMutation.data,
   };
 };
