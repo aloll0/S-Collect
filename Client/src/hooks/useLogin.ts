@@ -21,8 +21,10 @@ export const useLogin = () => {
         }
         return response;
       } catch (error: any) {
+        const responseData = error?.response?.data;
+        const apiError = responseData?.error || responseData;
         const message =
-          error?.response?.data?.message || error.message || 'Login failed';
+          apiError?.message || error.message || 'Login failed';
         throw new Error(message);
       }
     },
