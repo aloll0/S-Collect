@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
 import {
   AlertTriangle,
   Clock3,
@@ -12,7 +11,7 @@ import {
 } from 'lucide-react';
 import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
 import { type LoginState, useAuthStore } from '../../store/authStore';
-import { login } from '../../services/auth';
+import { useLogin } from '../../hooks/useLogin';
 
 const EyeIcon = ({ open }: { open: boolean }) => (
   <svg
@@ -75,45 +74,8 @@ const Login = ({ onGoToRegister }: LoginProps) => {
     toggleLoginPassword,
   } = useAuthStore();
 
-  const [loginError, setLoginError] = useState('');
-
-  const loginMutation = useMutation({
-    mutationFn: async (data: LoginFormValues) => {
-      setLoginError('');
-      const response = await login(data.email, data.password);
-      if (response && response.success === false) {
-        throw new Error(response.message || 'Login failed');
-      }
-      return response;
-    },
-    onSuccess: (data) => {
-      const token = data?.accessToken || data?.token || data?.data?.accessToken || data?.data?.token;
-      const refreshToken = data?.refreshToken || data?.data?.refreshToken;
-      if (token) {
-        localStorage.setItem('token', token);
-      }
-      if (refreshToken) {
-        localStorage.setItem('refreshToken', refreshToken);
-      }
-
-      const result = data?.status ?? 'success';
-      if (result === 'locked' || result === 'expired') {
-        initializeLogin(result);
-      } else {
-        initializeLogin('default');
-      }
-
-      if (result === 'change-password') {
-        navigate('/forget-pass');
-      } else if (result === 'success' || !data?.status) {
-        navigate('/');
-      }
-    },
-    onError: (error: any) => {
-      const message = error?.response?.data?.message || error.message || 'Login failed';
-      setLoginError(message);
-    }
-  });
+  const { login: executeLogin, isPending, error, reset } = useLogin();
+  const loginError = error?.message;
 
   const isLocked = loginState === 'locked';
   const isExpired = loginState === 'expired';
@@ -157,7 +119,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
 
   const onSubmit = (data: LoginFormValues) => {
     if (isLocked) return;
-    loginMutation.mutate(data);
+    executeLogin(data);
   };
 
   const icon = isLocked ? (
@@ -180,7 +142,7 @@ const Login = ({ onGoToRegister }: LoginProps) => {
 
   const resetState = () => {
     if (loginState !== 'default') initializeLogin('default');
-    if (loginError) setLoginError('');
+    if (error) reset();
   };
 
   return (
@@ -282,12 +244,12 @@ const Login = ({ onGoToRegister }: LoginProps) => {
 
               <button
                 type="submit"
-                disabled={loginMutation.isPending || isLocked}
+                disabled={isPending || isLocked}
                 className="w-full py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-700 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 {isLocked
                   ? t('login.tryAgain')
-                  : loginMutation.isPending
+                  : isPending
                     ? t('login.signingIn')
                     : t('login.signIn')}
               </button>
