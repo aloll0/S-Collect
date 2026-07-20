@@ -3,9 +3,12 @@ import { type InputHTMLAttributes, type Ref } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
 import { useAuthStore } from '../../store/authStore';
 import { motion } from 'framer-motion';
+import { applyVendorOnboarding, resendOtp } from '../../services/auth';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -575,18 +578,18 @@ const STEP_FIELDS: Record<number, (keyof RegisterFormData)[]> = {
 };
 
 const Register = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === 'ar';
 
   const {
     step,
-    submitted,
-    registerLoading,
-    registerError,
     nextStep,
     previousStep,
-    submitRegister,
     resetRegister,
   } = useAuthStore();
+
+  const [submitted, setSubmitted] = useState(false);
+  const [registerError, setRegisterError] = useState('');
 
   const methods = useForm<RegisterFormData>({
     defaultValues: {
@@ -609,17 +612,10 @@ const Register = () => {
     };
   }, [resetRegister]);
 
-  const handleContinue = async () => {
-    const isValid = await methods.trigger(STEP_FIELDS[step]);
-    if (!isValid) return;
-
-    if (step < 2) {
-      nextStep();
-      return;
-    }
-
-    await methods.handleSubmit(async (values) => {
-      await submitRegister({
+  const registerMutation = useMutation({
+    mutationFn: async (values: RegisterFormData) => {
+      setRegisterError('');
+      const data = await applyVendorOnboarding({
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
@@ -629,6 +625,62 @@ const Register = () => {
         storeDescription: values.description,
         commercialRegisterNumber: values.website,
       });
+      return data;
+    },
+    onSuccess: () => {
+      setSubmitted(true);
+      toast.success(isRtl ? 'تم تقديم طلبك بنجاح!' : 'Your application has been submitted successfully!');
+    },
+    onError: (error: any) => {
+      const responseData = error?.response?.data;
+      if (responseData?.errors) {
+        // If it's a map of validation errors (field-specific errors)
+        const errObj = responseData.errors;
+        let mainMsg = '';
+        Object.keys(errObj).forEach((key) => {
+          // Normalize API field name to form field name
+          let fieldName: keyof RegisterFormData | undefined;
+          if (key === 'firstName') fieldName = 'firstName';
+          else if (key === 'lastName') fieldName = 'lastName';
+          else if (key === 'email') fieldName = 'email';
+          else if (key === 'phoneNumber') fieldName = 'phone';
+          else if (key === 'storeName') fieldName = 'storeName';
+          else if (key === 'storeDescription') fieldName = 'description';
+          else if (key === 'commercialRegisterNumber') fieldName = 'website';
+          else if (key === 'password') fieldName = 'password';
+
+          const messages = Array.isArray(errObj[key]) ? errObj[key] : [errObj[key]];
+          const messageStr = messages.join(', ');
+
+          if (fieldName) {
+            methods.setError(fieldName, {
+              type: 'server',
+              message: messageStr,
+            });
+          } else {
+            mainMsg += `${key}: ${messageStr}\n`;
+          }
+        });
+
+        setRegisterError(mainMsg || responseData.message || (isRtl ? 'فشلت عملية التسجيل. يرجى التحقق من الحقول المطلوبة.' : 'Registration failed. Please check the fields.'));
+      } else {
+        const message = responseData?.message || error.message || (isRtl ? 'فشلت عملية التسجيل. يرجى المحاولة مرة أخرى.' : 'Registration failed. Please try again.');
+        setRegisterError(message);
+      }
+    },
+  });
+
+  const handleContinue = async () => {
+    const isValid = await methods.trigger(STEP_FIELDS[step]);
+    if (!isValid) return;
+
+    if (step < 2) {
+      nextStep();
+      return;
+    }
+
+    methods.handleSubmit((values) => {
+      registerMutation.mutate(values);
     })();
   };
 
@@ -641,8 +693,14 @@ const Register = () => {
           {submitted ? (
             <EmailSent
               email={methods.getValues('email')}
-              onResend={() => {
-                /* resend logic */
+              onResend={async () => {
+                try {
+                  await resendOtp(methods.getValues('email'));
+                  toast.success(isRtl ? 'تم إعادة إرسال رمز التحقق بنجاح' : 'Verification code resent successfully');
+                } catch (err: any) {
+                  const msg = err?.response?.data?.message || err.message || (isRtl ? 'فشل إعادة إرسال رمز التحقق' : 'Failed to resend verification code');
+                  toast.error(msg);
+                }
               }}
             />
           ) : (
@@ -677,10 +735,10 @@ const Register = () => {
                 )}
                 <button
                   onClick={handleContinue}
-                  disabled={registerLoading}
+                  disabled={registerMutation.isPending}
                   className="flex-[2] py-3 bg-gray-900 text-gray-50 rounded-lg text-label-md font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 >
-                  {registerLoading
+                  {registerMutation.isPending
                     ? t('register.creatingAccount')
                     : step === 2
                       ? t('register.createAccount')
