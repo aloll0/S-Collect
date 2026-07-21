@@ -95,7 +95,7 @@ const IncomingOrdersDesktop = () => {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 sm:p-6 ">
+    <div className="flex-1 overflow-y-auto py-6 sidebar-page-container">
       {trackingModal && (
         <TrackingModal
           onSave={(num) => applyStatusChange(trackingModal, 'Shipped', num)}
@@ -109,7 +109,7 @@ const IncomingOrdersDesktop = () => {
         </h1>
       </div>
 
-      <div className=" rounded-2xl border border-gray-100 p-4 sm:p-6">
+      <div className=" rounded-2xl border border-gray-100 ">
         <OrderFilters
           activeTab={activeTab}
           onTabChange={handleTabChange}
