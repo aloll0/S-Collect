@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createProductFull } from '../../services/products';
+import { createProductFull, setProductThumbnail } from '../../services/products';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +9,22 @@ export const useCreateProduct = () => {
   const isRtl = i18n.language === 'ar';
 
   return useMutation({
-    mutationFn: (formData: FormData) => createProductFull(formData),
+    mutationFn: async (formData: FormData) => {
+      const response = await createProductFull(formData);
+      
+      const productId = response?.id;
+      const firstImageId = response?.images?.[0]?.id;
+      if (productId && firstImageId) {
+        try {
+          console.log(`Setting first image (${firstImageId}) as thumbnail for product (${productId})...`);
+          await setProductThumbnail(productId, firstImageId);
+        } catch (thumbError) {
+          console.error('Failed to set thumbnail automatically:', thumbError);
+        }
+      }
+      
+      return response;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast.success(
