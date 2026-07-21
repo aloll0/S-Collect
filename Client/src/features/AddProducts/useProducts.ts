@@ -5,7 +5,6 @@ export const useProducts = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: getAllProducts,
-    refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: 1,
   });
