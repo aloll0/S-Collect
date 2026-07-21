@@ -80,7 +80,20 @@ export const applyVendorOnboarding = async (params: OnboardingApplyParams) => {
   return data;
 };
 
-export const getVendorOnboardingStatus = async () => {
+export interface VendorStatusResponse {
+  status: 'PENDING_APPROVAL' | 'ACTIVE' | 'APPROVED' | 'REJECTED' | 'DEACTIVATED' | string;
+  rejectionReason?: any;
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: string;
+  storeName?: string;
+  storeDescription?: string;
+  commercialRegisterNumber?: string;
+}
+
+export const getVendorOnboardingStatus = async (): Promise<VendorStatusResponse> => {
   const { data } = await api.get("/vendor/onboarding/status");
   return data;
-};
+};

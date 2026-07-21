@@ -198,7 +198,7 @@ export function StoreProfileForm({
     control,
     formState: { errors },
   } = useForm<StoreProfileData>({
-    defaultValues: initialData,
+    values: initialData,
   });
 
   const storeName = watch('storeName');
@@ -414,12 +414,12 @@ export function StoreProfileForm({
       <div className="settings-surface-enter settings-stagger-3 flex justify-center md:justify-end">
         <button
           type="submit"
-          disabled={isPending}
+          disabled={hasErrors || isPending}
           className={cn(
-            'py-3 px-4 rounded-lg text-sm font-semibold text-white transition-all duration-200 w-full md:w-fit  ease-out active:scale-95',
+            'py-3 px-4 rounded-lg text-sm font-semibold text-white transition-all duration-200 w-full md:w-fit ease-out active:scale-95 cursor-pointer',
             hasErrors || isPending
               ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-gray-950 '
+              : 'bg-gray-950 hover:bg-gray-800'
           )}
         >
           {isPending ? t('settings.saving') : t('settings.saveChanges')}

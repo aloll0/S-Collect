@@ -16,8 +16,19 @@ export interface ShippingSettingsFormProps {
   defaultValues?: Partial<ShippingSettingsValues>;
   currency?: string;
   isConfigured?: boolean;
-  onSave?: (values: ShippingSettingsValues) => void;
+  isPending?: boolean;
+  onSave?: (values: ShippingSettingsValues) => void | Promise<void>;
 }
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const regionIdToZoneCode = (id: string): string => {
+  return id.toUpperCase().replace(/-/g, '_');
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const zoneCodeToRegionId = (code: string): string => {
+  return code.toLowerCase().replace(/_/g, '-');
+};
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SAUDI_REGIONS: Region[] = [
@@ -41,6 +52,7 @@ export default function ShippingSettingsForm({
   defaultValues,
   currency = "SAR",
   isConfigured = false,
+  isPending = false,
   onSave,
 }: ShippingSettingsFormProps) {
   const values: ShippingSettingsValues = {
@@ -53,7 +65,7 @@ export default function ShippingSettingsForm({
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<ShippingSettingsValues>({
-    defaultValues: values,
+    values: values,
     mode: "onBlur",
   });
 
@@ -64,7 +76,7 @@ export default function ShippingSettingsForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full max-w-[720px] rounded-2xl border border-gray-200 bg-white p-6"
+      className="w-full max-w-[720px] rounded-lg md:rounded-2xl border border-gray-200 bg-white p-3 md:p-6"
     >
       <h2 className="text-xl font-semibold text-gray-900">
         Shipping Settings
@@ -87,7 +99,7 @@ export default function ShippingSettingsForm({
       )}
 
       {/* Flat rate */}
-      <div className="mt-6">
+      <div className="mt-3 md:mt-6">
         <label htmlFor="flatRate" className="text-sm font-semibold text-gray-900">
           Flat Rate <span className="text-red-500">*</span>
         </label>
@@ -103,13 +115,14 @@ export default function ShippingSettingsForm({
             type="number"
             step="0.01"
             min="0"
+            disabled={isPending}
             placeholder="0.00"
             {...register("flatRate", {
               required: true,
               valueAsNumber: true,
               min: 0,
             })}
-            className="w-full px-3 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none"
+            className="w-full px-3 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none disabled:bg-gray-100"
           />
         </div>
         <p className="mt-1.5 text-xs text-gray-400">
@@ -119,7 +132,7 @@ export default function ShippingSettingsForm({
       </div>
 
       {/* Regional shipping */}
-      <div className="mt-6">
+      <div className="mt-3 md:mt-6 ">
         <p className="text-sm font-semibold text-gray-900">
           Regional Shipping
         </p>
@@ -139,12 +152,13 @@ export default function ShippingSettingsForm({
                   type="number"
                   step="0.01"
                   min="0"
+                  disabled={isPending}
                   placeholder="0.00"
                   {...register(`regionalRates.${region.id}` as const, {
                     valueAsNumber: true,
                     min: 0,
                   })}
-                  className="w-20 px-2 py-1.5 text-right text-xs placeholder:text-gray-300 focus:outline-none"
+                  className="w-20 px-2 py-1.5 text-right text-xs placeholder:text-gray-300 focus:outline-none disabled:bg-gray-100"
                 />
               </div>
             </div>
@@ -153,7 +167,7 @@ export default function ShippingSettingsForm({
       </div>
 
       {/* Info banner */}
-      <div className="mt-6 flex gap-2.5 rounded-xl border border-indigo-200 bg-indigo-50 p-3.5">
+      <div className="mt-3 md:mt-6 flex gap-2.5 rounded-xl border border-indigo-200 bg-indigo-50 p-3.5">
         <Info size={16} className="mt-0.5 shrink-0 text-indigo-500" />
         <p className="text-sm text-indigo-700">
           Regions without a custom shipping price automatically use the
@@ -162,16 +176,16 @@ export default function ShippingSettingsForm({
       </div>
 
       {/* Actions */}
-      <div className="mt-6 flex justify-end">
+      <div className="mt-3 md:mt-6 flex justify-end">
         <button
           type="submit"
-          disabled={!isValid}
-          className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors ${isValid
+          disabled={!isValid || isPending}
+          className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors ${isValid && !isPending
             ? "bg-gray-900 text-white hover:bg-gray-800"
             : "cursor-not-allowed bg-gray-100 text-gray-400"
             }`}
         >
-          Save Shipping Settings
+          {isPending ? "Saving..." : "Save Shipping Settings"}
         </button>
       </div>
     </form>
