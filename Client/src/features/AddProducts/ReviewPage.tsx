@@ -11,6 +11,7 @@ interface ReviewPageProps {
   quantity: number;
   onPrevious: () => void;
   onPublish: () => void;
+  isPublishing?: boolean;
 }
 
 const ReviewPage = ({
@@ -21,6 +22,7 @@ const ReviewPage = ({
   quantity,
   onPrevious,
   onPublish,
+  isPublishing,
 }: ReviewPageProps) => (
   <div className="flex-1 overflow-y-auto  px-4 py-6 lg:p-14">
     <div className="mb-6 md:mb-8 md:ml-4">
@@ -43,7 +45,7 @@ const ReviewPage = ({
           colors={colors}
           quantity={quantity}
         />
-        <StepSummary onPrevious={onPrevious} onPublish={onPublish} />
+        <StepSummary onPrevious={onPrevious} onPublish={onPublish} isPublishing={isPublishing} />
       </div>
     </div>
   </div>

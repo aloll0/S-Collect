@@ -3,6 +3,8 @@ import { useFormContext } from 'react-hook-form';
 import { CircleCheckBig } from 'lucide-react';
 import type { ProductFormData } from '../types';
 import { useMobileAddProductStore } from './mobileAddProductStore';
+import { mapFormToMultipartFormData } from '../utils';
+import { useCreateProduct } from '../useCreateProduct';
 
 const STEPS = [
   { key: 'basicInfo', label: 'Basic Info' },
@@ -16,9 +18,29 @@ const MobileReviewStep = () => {
   const { t } = useTranslation();
   const { watch } = useFormContext<ProductFormData>();
   const formData = watch();
+  const { mutate: createProduct } = useCreateProduct();
 
-  const { categories, quantity, previousStep, publish } =
+  const { categories, quantity, sizes, colors, previousStep } =
     useMobileAddProductStore();
+
+  const handlePublish = () => {
+    useMobileAddProductStore.setState({ isLoading: true });
+    const multipartData = mapFormToMultipartFormData({
+      ...formData,
+      sizes,
+      colors,
+      quantity,
+    });
+
+    createProduct(multipartData, {
+      onSuccess: () => {
+        useMobileAddProductStore.setState({ isLoading: false, isSuccess: true });
+      },
+      onError: () => {
+        useMobileAddProductStore.setState({ isLoading: false });
+      },
+    });
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -153,7 +175,7 @@ const MobileReviewStep = () => {
         </button>
         <button
           type="button"
-          onClick={publish}
+          onClick={handlePublish}
           className="flex-1 rounded-xl bg-gray-900 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 active:scale-[0.98]"
         >
           {t('addProduct.publish', 'Publish')}

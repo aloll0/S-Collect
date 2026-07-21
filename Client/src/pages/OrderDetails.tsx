@@ -337,8 +337,8 @@ export const OrderDetails = ({
                   onClick={() => setSelectedStatus(s)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
                     selectedStatus === s
-                      ? 'bg-gray-900 text-white border-gray-900'
-                      : 'border-gray-200 text-gray-500 hover:bg-gray-50'
+                      ? 'bg-gray-900 text-white border-gray-900 last:flex-1 transition-colors duration-200'
+                      : 'border-gray-200 text-gray-500 hover:bg-gray-50 last:flex-1 transition-colors duration-200'
                   }`}
                 >
                   {t(`ordersPage.${s.toLowerCase()}`)}
