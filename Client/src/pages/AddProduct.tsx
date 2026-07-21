@@ -11,8 +11,11 @@ import TagInput from '../features/AddProducts/TagInput';
 import PricingFields from '../features/AddProducts/PricingFields';
 import SuccessPopup from '../features/AddProducts/SuccessPopup';
 import MobileAddProduct from '../features/AddProducts/mobile/MobileAddProduct';
+import { mapFormToMultipartFormData } from '../features/AddProducts/utils';
 import type { ProductFormData } from '../features/AddProducts/types';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useCategories } from '../hooks/useCategories';
+import { useCreateProduct } from '../features/AddProducts/useCreateProduct';
 import { motion } from 'motion/react';
 import type { Variants } from 'motion/react';
 
@@ -34,18 +37,15 @@ const itemVariants: Variants = {
 };
 
 const AddProduct = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === 'ar';
   const navigate = useNavigate();
   const { isMobile } = useBreakpoint();
+  const { categories: categoriesList } = useCategories();
+  const { mutate: createProduct, isPending } = useCreateProduct();
 
-  const [enabled, setEnabled] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
   const [showReview, setShowReview] = useState(false);
-  const [quantity, setQuantity] = useState(0);
-
-  const [categories, setCategories] = useState<string[]>([]);
-  const [sizes, setSizes] = useState<string[]>([]);
-  const [colors, setColors] = useState<string[]>([]);
 
   const methods = useForm<ProductFormData>({
     defaultValues: {
@@ -55,20 +55,43 @@ const AddProduct = () => {
       basePrice: '',
       comparePrice: '',
       sku: '',
+      images: [],
+      categoryId: '',
+      enabled: true,
+      quantity: 0,
+      categories: [],
+      sizes: [],
+      colors: [],
     },
   });
 
-  const makeAdder =
-    (setter: React.Dispatch<React.SetStateAction<string[]>>) =>
-    (value: string) =>
-      setter((prev) => [...prev, value]);
+  const enabled = methods.watch('enabled') ?? true;
+  const quantity = methods.watch('quantity') ?? 0;
+  const sizes = methods.watch('sizes') ?? [];
+  const colors = methods.watch('colors') ?? [];
 
-  const makeRemover =
-    (setter: React.Dispatch<React.SetStateAction<string[]>>, list: string[]) =>
-    (index: number) =>
-      setter(list.filter((_, i) => i !== index));
+  // Derive categories dynamically from the selected categoryId
+  const categoryId = methods.watch('categoryId') ?? '';
+  const selectedCategory = Array.isArray(categoriesList) ? categoriesList.find((c) => c.id === categoryId) : undefined;
+  const categories = selectedCategory ? [isArabic ? selectedCategory.nameAr : selectedCategory.name] : [];
 
-  const onSubmit = () => {
+  const makeAdder = (fieldName: 'categories' | 'sizes' | 'colors') => (value: string) => {
+    const prev = methods.getValues(fieldName) || [];
+    methods.setValue(fieldName, [...prev, value]);
+  };
+
+  const makeRemover = (fieldName: 'categories' | 'sizes' | 'colors') => (index: number) => {
+    const prev = methods.getValues(fieldName) || [];
+    methods.setValue(fieldName, prev.filter((_, i) => i !== index));
+  };
+
+  const onSubmit = (data: ProductFormData) => {
+    console.log('Form data submitted for review:', data);
+    const multipartData = mapFormToMultipartFormData(data);
+    console.log('Prepared multipart/form-data:');
+    console.log('- name:', multipartData.get('name'));
+    console.log('- nameAr:', multipartData.get('nameAr'));
+    console.log('- categoryId:', multipartData.get('categoryId'));
     setShowReview(true);
   };
 
@@ -85,37 +108,44 @@ const AddProduct = () => {
         colors={colors}
         quantity={quantity}
         onPrevious={() => setShowReview(false)}
-        onPublish={() => {
-          setShowReview(false);
-          setIsSuccess(true);
-          navigate('/');
+        onPublish={async () => {
+          const data = methods.getValues();
+          const multipartData = mapFormToMultipartFormData(data);
+          createProduct(multipartData, {
+            onSuccess: () => {
+              setShowReview(false);
+              setIsSuccess(true);
+              navigate('/');
+            },
+          });
         }}
+        isPublishing={isPending}
       />
     );
   }
 
   return (
-    <> 
-      <div
-        className="px-4 lg:px-14 py-3 bg-white"
-      >
-        <h1 className="text-h4 font-bold">{t('addProduct.title')}</h1>
-      </div>
-      <motion.div
-        className="flex-1 overflow-y-auto px-4  lg:px-14"
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-      >
-        <div className="rounded-2xl  shadow-sm py-4 md:shadow-none">
-          <div className="grid grid-cols-1 gap-8 xl:grid-cols-[1fr_400px] xl:gap-10">
-            {/* Left */}
-            <motion.div variants={itemVariants}>
-              <h5 className="mb-6 font-semibold">
-                {t('addProduct.productInformation')}
-              </h5>
+    <FormProvider {...methods}>
+      <> 
+        <div
+          className="px-4 lg:px-14 py-3 bg-white"
+        >
+          <h1 className="text-h4 font-bold">{t('addProduct.title')}</h1>
+        </div>
+        <motion.div
+          className="flex-1 overflow-y-auto px-4  lg:px-14"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
+          <div className="rounded-2xl  shadow-sm py-4 md:shadow-none">
+            <div className="grid grid-cols-1 gap-8 xl:grid-cols-[1fr_400px] xl:gap-10">
+              {/* Left */}
+              <motion.div variants={itemVariants}>
+                <h5 className="mb-6 font-semibold">
+                  {t('addProduct.productInformation')}
+                </h5>
 
-              <FormProvider {...methods}>
                 <form
                   id="add-product-form"
                   onSubmit={methods.handleSubmit(onSubmit)}
@@ -123,26 +153,14 @@ const AddProduct = () => {
                 >
                   <BasicInfoFields />
 
-                  <QuantityInput value={quantity} onChange={setQuantity} />
-
-                  <TagInput
-                    label={t('addProduct.categories')}
-                    required
-                    items={categories}
-                    onAdd={makeAdder(setCategories)}
-                    onRemove={makeRemover(setCategories, categories)}
-                    placeholder={t('addProduct.enterCategory')}
-                    addLabel={t('addProduct.addCategory')}
-                    addBtnLabel={t('addProduct.add')}
-                    cancelBtnLabel={t('addProduct.cancel')}
-                  />
+                  <QuantityInput value={quantity} onChange={(val) => methods.setValue('quantity', val)} />
 
                   <TagInput
                     label={t('addProduct.sizes')}
                     required
                     items={sizes}
-                    onAdd={makeAdder(setSizes)}
-                    onRemove={makeRemover(setSizes, sizes)}
+                    onAdd={makeAdder('sizes')}
+                    onRemove={makeRemover('sizes')}
                     placeholder={t('addProduct.enterSize')}
                     addLabel={t('addProduct.addSize')}
                     addBtnLabel={t('addProduct.add')}
@@ -153,8 +171,8 @@ const AddProduct = () => {
                     label={t('addProduct.colors')}
                     required
                     items={colors}
-                    onAdd={makeAdder(setColors)}
-                    onRemove={makeRemover(setColors, colors)}
+                    onAdd={makeAdder('colors')}
+                    onRemove={makeRemover('colors')}
                     placeholder={t('addProduct.enterColor')}
                     addLabel={t('addProduct.addColor')}
                     addBtnLabel={t('addProduct.add')}
@@ -163,38 +181,38 @@ const AddProduct = () => {
 
                   <PricingFields />
                 </form>
-              </FormProvider>
-            </motion.div>
+              </motion.div>
 
-            {/* Right */}
-            <motion.div variants={itemVariants}>
-              <ProductMedia />
-              <div className="mt-8">
-                <ProductStatus enabled={enabled} setEnabled={setEnabled} />
-              </div>
+              {/* Right */}
+              <motion.div variants={itemVariants}>
+                <ProductMedia />
+                <div className="mt-8">
+                  <ProductStatus enabled={enabled} setEnabled={(val) => methods.setValue('enabled', val)} />
+                </div>
+              </motion.div>
+            </div>
+
+            <motion.div
+              variants={itemVariants}
+              className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-end sm:gap-4"
+            >
+              <button className="rounded-xl border border-red-500 px-6 py-3 text-red-500 transition hover:bg-red-50 cursor-pointer">
+                {t('addProduct.cancel')}
+              </button>
+              <button
+                type="submit"
+                form="add-product-form"
+                className="rounded-xl bg-gray-950 px-6 py-3 text-white transition hover:bg-gray-800 cursor-pointer"
+              >
+                {t('addProduct.continue')}
+              </button>
             </motion.div>
           </div>
 
-          <motion.div
-            variants={itemVariants}
-            className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-end sm:gap-4"
-          >
-            <button className="rounded-xl border border-red-500 px-6 py-3 text-red-500 transition hover:bg-red-50 cursor-pointer">
-              {t('addProduct.cancel')}
-            </button>
-            <button
-              type="submit"
-              form="add-product-form"
-              className="rounded-xl bg-gray-950 px-6 py-3 text-white transition hover:bg-gray-800 cursor-pointer"
-            >
-              {t('addProduct.continue')}
-            </button>
-          </motion.div>
-        </div>
-
-        {isSuccess && <SuccessPopup onClose={() => setIsSuccess(false)} />}
-      </motion.div>
-    </>
+          {isSuccess && <SuccessPopup onClose={() => setIsSuccess(false)} />}
+        </motion.div>
+      </>
+    </FormProvider>
   );
 };
 

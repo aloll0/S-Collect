@@ -13,9 +13,10 @@ const STEPS = [
 interface StepSummaryProps {
   onPrevious: () => void;
   onPublish: () => void;
+  isPublishing?: boolean;
 }
 
-const StepSummary = ({ onPrevious, onPublish }: StepSummaryProps) => {
+const StepSummary = ({ onPrevious, onPublish, isPublishing }: StepSummaryProps) => {
   const { t } = useTranslation();
 
   return (
@@ -35,15 +36,24 @@ const StepSummary = ({ onPrevious, onPublish }: StepSummaryProps) => {
       <div className="mt-6 flex gap-3">
         <button
           onClick={onPrevious}
-          className="rounded-xl border border-gray-300 px-6 py-3 text-sm font-medium transition hover:bg-gray-50 cursor-pointer w-full"
+          disabled={isPublishing}
+          className="rounded-xl border border-gray-300 px-6 py-3 text-sm font-medium transition hover:bg-gray-50 cursor-pointer w-full disabled:opacity-50"
         >
           {t('addProduct.previous')}
         </button>
         <button
           onClick={onPublish}
-          className="rounded-xl bg-gray-950 px-6 py-3 text-sm font-medium text-white transition hover:bg-gray-800 cursor-pointer w-full"
+          disabled={isPublishing}
+          className="rounded-xl bg-gray-950 px-6 py-3 text-sm font-medium text-white transition hover:bg-gray-800 cursor-pointer w-full flex items-center justify-center gap-2 disabled:opacity-75"
         >
-          {t('addProduct.publish')}
+          {isPublishing ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+              {t('addProduct.publishing', 'Publishing...')}
+            </>
+          ) : (
+            t('addProduct.publish')
+          )}
         </button>
       </div>
     </div>

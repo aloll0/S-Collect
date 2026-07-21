@@ -10,11 +10,8 @@ const MobileBasicInfoStep = () => {
   const { trigger } = useFormContext<ProductFormData>();
 
   const {
-    categories,
     sizes,
     colors,
-    addCategory,
-    removeCategory,
     addSize,
     removeSize,
     addColor,
@@ -23,26 +20,13 @@ const MobileBasicInfoStep = () => {
   } = useMobileAddProductStore();
 
   const handleContinue = async () => {
-    const valid = await trigger(['nameAr', 'nameEn', 'description']);
+    const valid = await trigger(['nameAr', 'nameEn', 'description', 'categoryId']);
     if (valid) nextStep();
   };
 
   return (
     <div className="flex flex-col gap-5">
       <BasicInfoFields />
-
-      {/* Categories */}
-      <TagInput
-        label={t('addProduct.categories')}
-        required
-        items={categories}
-        onAdd={addCategory}
-        onRemove={removeCategory}
-        placeholder={t('addProduct.enterCategory')}
-        addLabel={t('addProduct.addCategory')}
-        addBtnLabel={t('addProduct.add')}
-        cancelBtnLabel={t('addProduct.cancel')}
-      />
 
       {/* Sizes */}
       <TagInput

@@ -28,6 +28,7 @@ const MobileAddProduct = () => {
       comparePrice: '',
       sku: '',
       images: [],
+      categoryId: '',
     },
   });
 

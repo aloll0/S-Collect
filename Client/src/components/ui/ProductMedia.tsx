@@ -1,25 +1,42 @@
-import { useState, type ChangeEvent } from 'react';
+import { type ChangeEvent, useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useFormContext } from 'react-hook-form';
+import type { ProductFormData } from '../../features/AddProducts/types';
 
-interface ImageFile {
+interface PreviewImage {
+  id: string;
   file: File;
   preview: string;
 }
 
 const ProductMedia = () => {
   const { t } = useTranslation();
-  const [images, setImages] = useState<ImageFile[]>([]);
+  const { setValue, watch } = useFormContext<ProductFormData>();
+  const files = watch('images') || [];
+  const [previews, setPreviews] = useState<PreviewImage[]>([]);
 
-  const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+  const filesKey = files.map((f) => `${f.name}-${f.size}`).join(',');
 
-    const previews: ImageFile[] = files.map((file) => ({
+  useEffect(() => {
+    const newPreviews = files.map((file) => ({
+      id: crypto.randomUUID(),
       file,
       preview: URL.createObjectURL(file),
     }));
 
-    setImages((prev) => [...prev, ...previews]);
+    setPreviews(newPreviews);
+
+    return () => {
+      newPreviews.forEach((image) => URL.revokeObjectURL(image.preview));
+    };
+  }, [filesKey]);
+
+  const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const uploadedFiles = Array.from(e.target.files || []);
+    setValue('images', [...files, ...uploadedFiles], {
+      shouldValidate: true,
+    });
   };
 
   return (
@@ -36,9 +53,9 @@ const ProductMedia = () => {
       />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {images.map((image, index) => (
+        {previews.map((image) => (
           <img
-            key={index}
+            key={image.id}
             src={image.preview}
             alt=""
             className="h-28 w-full rounded-xl object-cover sm:h-24"
