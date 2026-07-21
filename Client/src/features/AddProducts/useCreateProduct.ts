@@ -10,10 +10,15 @@ export const useCreateProduct = () => {
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await createProductFull(formData);
+      const rawResponse = await createProductFull(formData);
       
-      const productId = response?.id;
-      const firstImageId = response?.images?.[0]?.id;
+      // Unwrap if the response is in a { success: boolean, data: T } envelope
+      const unwrapped = rawResponse && typeof rawResponse === 'object' && 'success' in rawResponse && 'data' in rawResponse
+        ? rawResponse.data
+        : rawResponse;
+
+      const productId = unwrapped?.id;
+      const firstImageId = unwrapped?.images?.[0]?.id;
       if (productId && firstImageId) {
         try {
           console.log(`Setting first image (${firstImageId}) as thumbnail for product (${productId})...`);
@@ -23,7 +28,7 @@ export const useCreateProduct = () => {
         }
       }
       
-      return response;
+      return unwrapped;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });

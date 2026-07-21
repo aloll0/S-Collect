@@ -1,22 +1,44 @@
+import { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSubOrders, getSubOrderById, updateSubOrder } from '../../services/orders';
 import type { SubOrderStatus, UpdateSubOrderDto } from './types/subOrder';
 import toast from 'react-hot-toast';
 
 // ────────────────────────────────────────────────────────────────────────────
-// List
+// List (with automatic next-page prefetching)
 // ────────────────────────────────────────────────────────────────────────────
 export const useSubOrders = (params?: {
   pageNum?: number;
   pageSize?: number;
   status?: SubOrderStatus;
 }) => {
-  return useQuery({
+  const queryClient = useQueryClient();
+  
+  const query = useQuery({
     queryKey: ['sub-orders', params],
     queryFn: () => getSubOrders(params),
     staleTime: 30_000,
     retry: 1,
   });
+
+  const currentPage = params?.pageNum ?? 1;
+  const totalPages = query.data?.pagination?.totalPages ?? 0;
+
+  useEffect(() => {
+    if (currentPage < totalPages) {
+      const nextParams = {
+        ...params,
+        pageNum: currentPage + 1,
+      };
+      queryClient.prefetchQuery({
+        queryKey: ['sub-orders', nextParams],
+        queryFn: () => getSubOrders(nextParams),
+        staleTime: 30_000,
+      });
+    }
+  }, [currentPage, totalPages, params, queryClient]);
+
+  return query;
 };
 
 // ────────────────────────────────────────────────────────────────────────────
