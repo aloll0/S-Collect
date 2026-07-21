@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from 'lucide-react';
 import type { SubOrderStatus } from '../Orders/types/subOrder';
+import { NEXT_STATUS } from '../Orders/types/subOrder';
 
 interface Props {
   currentStatus: SubOrderStatus;
@@ -18,14 +19,6 @@ const STATUS_LABEL: Record<SubOrderStatus, string> = {
   CANCELLED:  'Cancelled',
 };
 
-const STATUS_PILL: Record<SubOrderStatus, string> = {
-  PENDING:    'border-gray-200 text-gray-600',
-  PROCESSING: 'border-gray-200 text-gray-600',
-  SHIPPED:    'border-gray-200 text-gray-600',
-  DELIVERED:  'border-gray-200 text-gray-600',
-  CANCELLED:  'border-gray-200 text-gray-600',
-};
-
 export const SubOrderStatusUpdate = ({
   currentStatus,
   isPending,
@@ -36,6 +29,7 @@ export const SubOrderStatusUpdate = ({
   const [selectedStatus, setSelectedStatus] = useState<SubOrderStatus | null>(null);
   const [trackingInput, setTrackingInput] = useState('');
 
+  const nextAllowedStatus = NEXT_STATUS[currentStatus];
   const activeSelectedStatus = selectedStatus ?? currentStatus;
 
   const handleUpdate = () => {
@@ -47,20 +41,34 @@ export const SubOrderStatusUpdate = ({
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 text-sm">
       <h6 className="font-semibold text-gray-900 mb-0.5">{t('ordersPage.updateOrderStatus')}</h6>
-      <p className="text-xs text-gray-400 mb-4">{t('ordersPage.updateOrderStatusDesc', 'Status changes are irreversible and cannot be undone.')}</p>
+      <p className="text-xs text-gray-400 mb-4">{t('ordersPage.updateOrderStatusDesc', 'Status changes are irreversible and can only move forward one step at a time.')}</p>
 
       {/* Status pill buttons */}
       <div className="flex flex-wrap gap-2 mb-4">
         {(['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED'] as SubOrderStatus[]).map((s) => {
           const isActive = activeSelectedStatus === s;
+          const isCurrent = currentStatus === s;
+          const isAllowed = s === nextAllowedStatus;
+          const isDisabled = !isCurrent && !isAllowed;
+
           return (
             <button
               key={s}
-              onClick={() => setSelectedStatus(s)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
+              disabled={isDisabled}
+              onClick={() => {
+                if (isAllowed) {
+                  // Toggle selection
+                  setSelectedStatus(selectedStatus === s ? null : s);
+                }
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                 isActive
                   ? 'bg-gray-900 text-white border-gray-900'
-                  : `${STATUS_PILL[s]} hover:bg-gray-50`
+                  : isCurrent
+                  ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                  : isDisabled
+                  ? 'opacity-40 border-gray-100 text-gray-300 cursor-not-allowed'
+                  : 'border-gray-200 text-gray-600 hover:bg-gray-50 cursor-pointer'
               }`}
             >
               {STATUS_LABEL[s]}
