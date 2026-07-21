@@ -3,15 +3,16 @@ import { useTranslation } from 'react-i18next';
 
 interface SuccessPopupProps {
   onClose: () => void;
+  thumbnailUrl?: string;
 }
 
-const SuccessPopup = ({ onClose }: SuccessPopupProps) => {
+const SuccessPopup = ({ onClose, thumbnailUrl }: SuccessPopupProps) => {
   const { t } = useTranslation();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="w-full max-w-100 rounded-2xl bg-white p-6 text-center shadow-xl sm:p-8">
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-green-600 text-white">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-600 text-white">
           <svg
             className="h-8 w-8"
             fill="none"
@@ -26,6 +27,16 @@ const SuccessPopup = ({ onClose }: SuccessPopupProps) => {
             />
           </svg>
         </div>
+
+        {thumbnailUrl && (
+          <div className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-xl border border-gray-100 shadow-md">
+            <img
+              src={thumbnailUrl}
+              alt="Product Thumbnail"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        )}
 
         <h3 className="text-2xl font-bold">
           {t('addProduct.productAddedSuccessfully')}

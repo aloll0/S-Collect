@@ -53,16 +53,17 @@ export const MobileLoadingPopup = () => {
 // Success popup
 interface MobileSuccessPopupProps {
   onClose: () => void;
+  thumbnailUrl?: string;
 }
 
-export const MobileSuccessPopup = ({ onClose }: MobileSuccessPopupProps) => {
+export const MobileSuccessPopup = ({ onClose, thumbnailUrl }: MobileSuccessPopupProps) => {
   const { t } = useTranslation();
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 pb-0">
       <div className="w-full rounded-t-3xl bg-white px-6 py-8 text-center shadow-xl">
         {/* Success icon */}
-        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white">
           <svg
             className="h-8 w-8"
             fill="none"
@@ -77,6 +78,16 @@ export const MobileSuccessPopup = ({ onClose }: MobileSuccessPopupProps) => {
             />
           </svg>
         </div>
+
+        {thumbnailUrl && (
+          <div className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-xl border border-gray-100 shadow-sm">
+            <img
+              src={thumbnailUrl}
+              alt="Product Thumbnail"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        )}
 
         <h3 className="text-lg font-bold text-gray-900">
           {t('addProduct.mobile.productAddedSuccessfully')}

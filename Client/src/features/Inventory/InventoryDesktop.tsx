@@ -24,7 +24,7 @@ const InventoryDesktop = () => {
   } = useInventory();
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 bg-gray-100">
+    <div className="flex-1 overflow-y-auto py-6 bg-gray-100 sidebar-page-container">
       <InventoryHeader />
       <InventoryToolbar
         search={search}

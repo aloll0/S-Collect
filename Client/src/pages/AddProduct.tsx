@@ -46,6 +46,7 @@ const AddProduct = () => {
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [showReview, setShowReview] = useState(false);
+  const [createdThumbnail, setCreatedThumbnail] = useState<string | undefined>(undefined);
 
   const methods = useForm<ProductFormData>({
     defaultValues: {
@@ -112,10 +113,18 @@ const AddProduct = () => {
           const data = methods.getValues();
           const multipartData = mapFormToMultipartFormData(data);
           createProduct(multipartData, {
-            onSuccess: () => {
+            onSuccess: (response: any) => {
+              const thumbnail = response?.images?.find((img: any) => img.isThumbnail)?.url || response?.images?.[0]?.url || response?.thumbnailUrl;
+              if (thumbnail) {
+                setCreatedThumbnail(thumbnail);
+              } else {
+                const firstImageFile = data.images?.[0];
+                if (firstImageFile) {
+                  setCreatedThumbnail(URL.createObjectURL(firstImageFile));
+                }
+              }
               setShowReview(false);
               setIsSuccess(true);
-              navigate('/');
             },
           });
         }}
@@ -209,7 +218,15 @@ const AddProduct = () => {
             </motion.div>
           </div>
 
-          {isSuccess && <SuccessPopup onClose={() => setIsSuccess(false)} />}
+          {isSuccess && (
+            <SuccessPopup
+              onClose={() => {
+                setIsSuccess(false);
+                navigate('/');
+              }}
+              thumbnailUrl={createdThumbnail}
+            />
+          )}
         </motion.div>
       </>
     </FormProvider>
