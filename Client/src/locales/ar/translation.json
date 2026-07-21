@@ -23,6 +23,7 @@
       "incomingOrders": "الطلبات الواردة",
       "settings": "ملف المتجر",
       "accountSettings": "إعدادات الحساب",
+      "returns": "طلبات الإرجاع",
       "orders": "الطلبات",
       "logout": "تسجيل الخروج",
       "cancel": "إلغاء",
@@ -424,6 +425,49 @@
       "newPasswordWeak": "يجب أن تحتوي على 8 أحرف على الأقل، وحرف كبير واحد، ورقم واحد.",
       "passwordMismatch": "كلمتا المرور غير متطابقتين.",
       "storeDescriptionMaxLength": "يجب ألا يتجاوز الوصف 500 حرف."
+    },
+    "bank": {
+      "title": "الحساب البنكي",
+      "description": "يُستخدم فقط لمدفوعات البائع. هذه المعلومات مرئية فقط للمسؤولين ولن تظهر للعملاء.",
+      "securityInfo": "تفاصيل الحساب البنكي مشفرة ومخزنة بأمان. يمكن للمسؤولين المصرح لهم فقط عرض هذه المعلومات.",
+      "bankName": "اسم البنك",
+      "bankNamePlaceholder": "أدخل اسم البنك",
+      "bankNameHint": "أدخل اسم البنك الرسمي.",
+      "iban": "رقم الآيبان (IBAN)",
+      "ibanPlaceholder": "SA0000000000000000000000",
+      "ibanRequired": "رقم الآيبان مطلوب.",
+      "ibanInvalid": "يرجى إدخال رقم آيبان سعودي صحيح.",
+      "accountHolderName": "اسم صاحب الحساب",
+      "accountHolderPlaceholder": "أدخل اسم صاحب الحساب",
+      "accountHolderHint": "أدخل الاسم كما هو مسجل في البنك تماماً.",
+      "resetChanges": "إعادة التعيين",
+      "save": "حفظ الحساب البنكي"
+    },
+    "shippingForm": {
+      "title": "إعدادات الشحن",
+      "description": "قم بإعداد أسعار الشحن في جميع أنحاء المملكة العربية السعودية.",
+      "warning": "لا يمكن لمتجرك استلام طلبات جديدة حتى يتم ضبط إعدادات الشحن.",
+      "flatRate": "السعر الثابت",
+      "flatRateHint": "يتم تطبيق هذا السعر تلقائياً على أي منطقة ليس لها سعر شحن مخصص.",
+      "regionalShipping": "الشحن الإقليمي",
+      "infoBanner": "المناطق التي ليس لها سعر شحن مخصص تستخدم السعر الثابت الافتراضي تلقائياً.",
+      "save": "حفظ إعدادات الشحن",
+      "saving": "جارٍ الحفظ...",
+      "regions": {
+        "riyadh": "الرياض",
+        "makkah": "مكة المكرمة",
+        "madinah": "المدينة المنورة",
+        "eastern-province": "المنطقة الشرقية",
+        "qassim": "القصيم",
+        "asir": "عسير",
+        "tabuk": "تبوك",
+        "hail": "حائل",
+        "northern-borders": "الحدود الشمالية",
+        "jazan": "جازان",
+        "najran": "نجران",
+        "al-bahah": "الباحة",
+        "al-jouf": "الجوف"
+      }
     }
   },
   "inventoryPage": {
@@ -595,5 +639,49 @@
     }
   },
 
-  "Add Product": "إضافة منتج"
+  "Add Product": "إضافة منتج",
+
+  "returnsPage": {
+    "title": "طلبات الإرجاع",
+    "breadcrumb": "تفاصيل طلب الإرجاع",
+    "searchPlaceholder": "البحث برقم الطلب أو اسم العميل...",
+    "allStatuses": "كل الحالات",
+    "last30Days": "آخر 30 يومًا",
+    "returnId": "رقم الإرجاع",
+    "customer": "العميل",
+    "product": "المنتج",
+    "reason": "السبب",
+    "requestedDate": "تاريخ الطلب",
+    "status": "الحالة",
+    "action": "الإجراء",
+    "review": "مراجعة",
+    "showing": "عرض {{start}} - {{end}} من {{total}} طلب إرجاع",
+    "returnSummary": "ملخص الإرجاع",
+    "orderId": "رقم الطلب الأصلي",
+    "productInformation": "معلومات المنتج",
+    "returnReason": "سبب الإرجاع",
+    "uploadedImages": "الصور المرفقة من العميل (حالة المنتج)",
+    "internalNotes": "ملاحظات داخلية (مرئية لك فقط)",
+    "notesPlaceholder": "أضف ملاحظات حول طلب الإرجاع هذا...",
+    "customerInformation": "معلومات العميل",
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "shippingAddress": "عنوان الشحن",
+    "returnTimeline": "سجل الإرجاع",
+    "rejectReturn": "رفض الإرجاع",
+    "approveReturn": "الموافقة على الإرجاع",
+    "approveModalTitle": "الموافقة على طلب الإرجاع",
+    "approveModalMessage": "هل أنت تأكد من موافقتك على طلب الإرجاع هذا؟ بمجرد الموافقة، ستتغير حالة الإرجاع إلى 'مقبول' وسيتم تحويل الطلب إلى الأدمن لمعالجة الاسترداد المالية.",
+    "rejectModalTitle": "رفض طلب الإرجاع",
+    "rejectModalMessage": "يرجى تحديد سبب رفض طلب الإرجاع هذا.",
+    "rejectReasonPlaceholder": "أدخل سبب الرفض...",
+    "cancel": "إلغاء",
+    "statuses": {
+      "pendingReview": "قيد المراجعة",
+      "approved": "مقبول",
+      "rejected": "مرفوض",
+      "awaitingItem": "بانتظار الشحنة",
+      "completed": "مكتمل"
+    }
+  }
 }

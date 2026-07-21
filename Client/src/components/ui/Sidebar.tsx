@@ -6,6 +6,7 @@ import {
   CirclePlus,
   Handbag,
   SquareUserRoundIcon,
+  RotateCcw,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import type { ReactNode } from 'react';
@@ -213,6 +214,11 @@ const NAV_SECTIONS: NavSectionProps[] = [
         icon: <Handbag size={18} />,
         labelKey: 'sidebar.sections.receivables',
         to: '/receivables',
+      },
+      {
+        icon: <RotateCcw size={18} />,
+        labelKey: 'sidebar.items.returns',
+        to: '/returns',
       },
     ],
   },

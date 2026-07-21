@@ -4,6 +4,7 @@ import {
   type FieldError,
 } from "react-hook-form";
 import { Info } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export interface BankAccountFormValues {
   bankName: string;
@@ -77,6 +78,7 @@ export default function BankAccountForm({
   defaultValues,
   onSave,
 }: BankAccountFormProps) {
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -91,7 +93,6 @@ export default function BankAccountForm({
     mode: "onBlur",
   });
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const ibanValue = watch("iban") ?? "";
 
   const onSubmit = (data: BankAccountFormValues) => {
@@ -104,12 +105,11 @@ export default function BankAccountForm({
       className="w-full max-w-2xl rounded-2xl border border-gray-200 bg-white p-6"
     >
       <h2 className="text-xl font-semibold text-gray-900">
-        Bank Account
+        {t("settings.bank.title")}
       </h2>
 
       <p className="mt-1.5 text-sm text-gray-500">
-        Used only for vendor payouts. This information is visible
-        only to Admin users and never shown to customers.
+        {t("settings.bank.description")}
       </p>
 
       <div className="mt-3 md:mt-4 flex gap-3 rounded-xl bg-indigo-50 p-4">
@@ -119,17 +119,16 @@ export default function BankAccountForm({
         />
 
         <p className="text-sm leading-relaxed text-indigo-700">
-          Bank account details are encrypted and stored securely.
-          Only authorized Admin users can view this information.
+          {t("settings.bank.securityInfo")}
         </p>
       </div>
 
       <div className="mt-3 md:mt-5">
         <InputField
           id="bankName"
-          label="Bank Name"
-          placeholder="Enter your bank name"
-          hint="Enter the official bank name."
+          label={t("settings.bank.bankName")}
+          placeholder={t("settings.bank.bankNamePlaceholder")}
+          hint={t("settings.bank.bankNameHint")}
           registration={register("bankName")}
         />
       </div>
@@ -139,18 +138,18 @@ export default function BankAccountForm({
           htmlFor="iban"
           className="text-sm font-semibold text-gray-900"
         >
-          IBAN <span className="text-red-500">*</span>
+          {t("settings.bank.iban")} <span className="text-red-500">*</span>
         </label>
 
         <input
           id="iban"
-          placeholder="SA0000000000000000000000"
+          placeholder={t("settings.bank.ibanPlaceholder")}
           maxLength={IBAN_MAX_LENGTH}
           {...register("iban", {
-            required: "IBAN is required.",
+            required: t("settings.bank.ibanRequired"),
             pattern: {
               value: /^SA\d{22}$/,
-              message: "Please enter a valid Saudi IBAN.",
+              message: t("settings.bank.ibanInvalid"),
             },
             setValueAs: (value: string) =>
               value?.toUpperCase() || "",
@@ -178,9 +177,9 @@ export default function BankAccountForm({
       <div className="mt-3 md:mt-5">
         <InputField
           id="accountHolderName"
-          label="Account Holder Name"
-          placeholder="Enter account holder name"
-          hint="Enter the name exactly as registered with your bank."
+          label={t("settings.bank.accountHolderName")}
+          placeholder={t("settings.bank.accountHolderPlaceholder")}
+          hint={t("settings.bank.accountHolderHint")}
           registration={register("accountHolderName")}
         />
       </div>
@@ -190,20 +189,20 @@ export default function BankAccountForm({
           type="button"
           onClick={() => reset()}
           disabled={!isDirty}
-          className="rounded-xl border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-800 hover:bg-gray-50 disabled:opacity-50"
+          className="rounded-xl border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-800 hover:bg-gray-50 disabled:opacity-50 cursor-pointer"
         >
-          Reset Changes
+          {t("settings.bank.resetChanges")}
         </button>
 
         <button
           type="submit"
           disabled={!isDirty || !isValid}
-          className={`rounded-xl px-3 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold transition-colors ${isDirty && isValid
+          className={`rounded-xl px-3 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold transition-colors cursor-pointer ${isDirty && isValid
             ? "bg-gray-900 text-white hover:bg-gray-800"
             : "cursor-not-allowed bg-gray-100 text-gray-400"
             }`}
         >
-          Save Bank Account
+          {t("settings.bank.save")}
         </button>
       </div>
     </form>

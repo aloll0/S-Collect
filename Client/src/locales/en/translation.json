@@ -24,6 +24,8 @@
       "incomingOrders": "Incoming Orders",
       "settings": "Store Profile",
       "accountSettings": "Account Settings",
+      "returns": "Return ",
+      "orders": "Orders",
       "logout": "Logout",
       "cancel": "Cancel",
       "signOut": "Sign Out",
@@ -423,6 +425,49 @@
       "newPasswordWeak": "Must contain at least 8 characters, one uppercase letter, and one number.",
       "passwordMismatch": "Passwords do not match.",
       "storeDescriptionMaxLength": "Description must not exceed 500 characters."
+    },
+    "bank": {
+      "title": "Bank Account",
+      "description": "Used only for vendor payouts. This information is visible only to Admin users and never shown to customers.",
+      "securityInfo": "Bank account details are encrypted and stored securely. Only authorized Admin users can view this information.",
+      "bankName": "Bank Name",
+      "bankNamePlaceholder": "Enter your bank name",
+      "bankNameHint": "Enter the official bank name.",
+      "iban": "IBAN",
+      "ibanPlaceholder": "SA0000000000000000000000",
+      "ibanRequired": "IBAN is required.",
+      "ibanInvalid": "Please enter a valid Saudi IBAN.",
+      "accountHolderName": "Account Holder Name",
+      "accountHolderPlaceholder": "Enter account holder name",
+      "accountHolderHint": "Enter the name exactly as registered with your bank.",
+      "resetChanges": "Reset Changes",
+      "save": "Save Bank Account"
+    },
+    "shippingForm": {
+      "title": "Shipping Settings",
+      "description": "Configure your shipping prices across Saudi Arabia.",
+      "warning": "Your store cannot receive new orders until shipping settings are configured.",
+      "flatRate": "Flat Rate",
+      "flatRateHint": "This rate is automatically applied to any region without a custom shipping price.",
+      "regionalShipping": "Regional Shipping",
+      "infoBanner": "Regions without a custom shipping price automatically use the Default Flat Rate.",
+      "save": "Save Shipping Settings",
+      "saving": "Saving...",
+      "regions": {
+        "riyadh": "Riyadh",
+        "makkah": "Makkah",
+        "madinah": "Madinah",
+        "eastern-province": "Eastern Province",
+        "qassim": "Qassim",
+        "asir": "Asir",
+        "tabuk": "Tabuk",
+        "hail": "Hail",
+        "northern-borders": "Northern Borders",
+        "jazan": "Jazan",
+        "najran": "Najran",
+        "al-bahah": "Al Bahah",
+        "al-jouf": "Al Jouf"
+      }
     }
   },
   "inventoryPage": {
@@ -598,5 +643,49 @@
     }
   },
 
-  "Add Product": "Add Product"
+  "Add Product": "Add Product",
+
+  "returnsPage": {
+    "title": "Return Requests",
+    "breadcrumb": "Return Request Details",
+    "searchPlaceholder": "Search by ID or Customer...",
+    "allStatuses": "All Statuses",
+    "last30Days": "Last 30 Days",
+    "returnId": "Return ID",
+    "customer": "Customer",
+    "product": "Product",
+    "reason": "Reason",
+    "requestedDate": "Requested Date",
+    "status": "Status",
+    "action": "Action",
+    "review": "Review",
+    "showing": "Showing {{start}} - {{end}} of {{total}} return requests",
+    "returnSummary": "Return Summary",
+    "orderId": "Order ID",
+    "productInformation": "Product Information",
+    "returnReason": "Return Reason",
+    "uploadedImages": "Customer Uploaded Images (Product Condition)",
+    "internalNotes": "Internal Notes (Only visible to you)",
+    "notesPlaceholder": "Add notes about this return request...",
+    "customerInformation": "Customer Information",
+    "email": "Email",
+    "phone": "Phone",
+    "shippingAddress": "Shipping Address",
+    "returnTimeline": "Return Timeline",
+    "rejectReturn": "Reject Return",
+    "approveReturn": "Approve Return",
+    "approveModalTitle": "Approve Return Request",
+    "approveModalMessage": "Are you sure you want to approve this return request? Once approved, the return status will change to Approved and the request will be forwarded to the admin for refund processing.",
+    "rejectModalTitle": "Reject Return Request",
+    "rejectModalMessage": "Please provide a reason for rejecting this return request.",
+    "rejectReasonPlaceholder": "Enter rejection reason...",
+    "cancel": "Cancel",
+    "statuses": {
+      "pendingReview": "Pending Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "awaitingItem": "Awaiting Item",
+      "completed": "Completed"
+    }
+  }
 }

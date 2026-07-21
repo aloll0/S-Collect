@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { AlertTriangle, Info } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export interface ShippingSettingsValues {
   flatRate: number;
@@ -55,6 +56,8 @@ export default function ShippingSettingsForm({
   isPending = false,
   onSave,
 }: ShippingSettingsFormProps) {
+  const { t } = useTranslation();
+
   const values: ShippingSettingsValues = {
     flatRate: defaultValues?.flatRate ?? 0,
     regionalRates: defaultValues?.regionalRates ?? {},
@@ -79,10 +82,10 @@ export default function ShippingSettingsForm({
       className="w-full max-w-[720px] rounded-lg md:rounded-2xl border border-gray-200 bg-white p-3 md:p-6"
     >
       <h2 className="text-xl font-semibold text-gray-900">
-        Shipping Settings
+        {t("settings.shippingForm.title")}
       </h2>
       <p className="mt-1.5 text-sm text-gray-500">
-        Configure your shipping prices across Saudi Arabia.
+        {t("settings.shippingForm.description")}
       </p>
 
       {!isConfigured && (
@@ -92,8 +95,7 @@ export default function ShippingSettingsForm({
             className="mt-0.5 shrink-0 text-amber-500"
           />
           <p className="text-sm text-amber-700">
-            Your store cannot receive new orders until shipping settings are
-            configured.
+            {t("settings.shippingForm.warning")}
           </p>
         </div>
       )}
@@ -101,7 +103,7 @@ export default function ShippingSettingsForm({
       {/* Flat rate */}
       <div className="mt-3 md:mt-6">
         <label htmlFor="flatRate" className="text-sm font-semibold text-gray-900">
-          Flat Rate <span className="text-red-500">*</span>
+          {t("settings.shippingForm.flatRate")} <span className="text-red-500">*</span>
         </label>
         <div
           className={`mt-2 flex items-center overflow-hidden rounded-xl border ${errors.flatRate ? "border-red-400" : "border-gray-200"
@@ -126,15 +128,14 @@ export default function ShippingSettingsForm({
           />
         </div>
         <p className="mt-1.5 text-xs text-gray-400">
-          This rate is automatically applied to any region without a custom
-          shipping price.
+          {t("settings.shippingForm.flatRateHint")}
         </p>
       </div>
 
       {/* Regional shipping */}
-      <div className="mt-3 md:mt-6 ">
+      <div className="mt-3 md:mt-6">
         <p className="text-sm font-semibold text-gray-900">
-          Regional Shipping
+          {t("settings.shippingForm.regionalShipping")}
         </p>
         <div className="mt-2 overflow-hidden rounded-xl border border-gray-200">
           {regions.map((region, i) => (
@@ -143,7 +144,9 @@ export default function ShippingSettingsForm({
               className={`flex items-center justify-between px-4 py-2.5 ${i % 2 === 1 ? "bg-gray-50" : "bg-white"
                 } ${i !== 0 ? "border-t border-gray-100" : ""}`}
             >
-              <span className="text-sm text-gray-700">{region.label}</span>
+              <span className="text-sm text-gray-700">
+                {t(`settings.shippingForm.regions.${region.id}`, { defaultValue: region.label })}
+              </span>
               <div className="flex items-center overflow-hidden rounded-lg border border-gray-200 bg-white">
                 <span className="border-r border-gray-200 px-2 py-1.5 text-xs text-gray-400">
                   {currency}
@@ -170,8 +173,7 @@ export default function ShippingSettingsForm({
       <div className="mt-3 md:mt-6 flex gap-2.5 rounded-xl border border-indigo-200 bg-indigo-50 p-3.5">
         <Info size={16} className="mt-0.5 shrink-0 text-indigo-500" />
         <p className="text-sm text-indigo-700">
-          Regions without a custom shipping price automatically use the
-          Default Flat Rate.
+          {t("settings.shippingForm.infoBanner")}
         </p>
       </div>
 
@@ -180,12 +182,12 @@ export default function ShippingSettingsForm({
         <button
           type="submit"
           disabled={!isValid || isPending}
-          className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors ${isValid && !isPending
+          className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors cursor-pointer ${isValid && !isPending
             ? "bg-gray-900 text-white hover:bg-gray-800"
             : "cursor-not-allowed bg-gray-100 text-gray-400"
             }`}
         >
-          {isPending ? "Saving..." : "Save Shipping Settings"}
+          {isPending ? t("settings.shippingForm.saving") : t("settings.shippingForm.save")}
         </button>
       </div>
     </form>
