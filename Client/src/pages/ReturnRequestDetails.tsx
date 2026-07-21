@@ -7,6 +7,8 @@ import { MOCK_RETURNS, type ReturnItem } from '../data/mockReturns';
 import { StatusBadge } from './ReturnRequests';
 import ApproveReturnModal from '../components/returns/ApproveReturnModal';
 import RejectReturnModal from '../components/returns/RejectReturnModal';
+import { getVendorSubOrderDetails, updateVendorSubOrderStatus } from '../services/returns';
+import toast from 'react-hot-toast';
 
 export default function ReturnRequestDetailsPage() {
   const { t } = useTranslation();
@@ -20,19 +22,82 @@ export default function ReturnRequestDetailsPage() {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [internalNote, setInternalNote] = useState('');
 
-  // Smooth scroll to top when opening details
+  // Smooth scroll to top & attempt API load when opening details
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [id]);
 
-  const handleApprove = () => {
+    let isMounted = true;
+    async function loadSubOrder() {
+      const rawId = decodedId.replace('#RET-', '');
+      if (rawId && rawId.length >= 8) {
+        try {
+          const sub = await getVendorSubOrderDetails(rawId);
+          if (isMounted && sub) {
+            const firstProduct = sub.items[0] || {};
+            setItem({
+              id: `#RET-${sub.id.slice(0, 8).toUpperCase()}`,
+              orderId: `#ORD-${sub.orderId.slice(0, 8).toUpperCase()}`,
+              customerName: 'Customer',
+              productTitle: firstProduct.productName || 'Order Product',
+              productSku: firstProduct.productId || 'SKU-001',
+              productVariant: firstProduct.variantLabel || 'Default',
+              productQty: firstProduct.quantity || 1,
+              productPrice: `SAR ${(firstProduct.lineTotal || 0).toFixed(2)}`,
+              productImage: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=150',
+              reason: sub.statusOverrideReason || "Item doesn't fit",
+              requestedDate: new Date(sub.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+              status: sub.status === 'DELIVERED' ? 'COMPLETED' : sub.status === 'CANCELLED' ? 'REJECTED' : 'PENDING_REVIEW',
+            });
+          }
+        } catch (_err) {
+          // Keep mock item on error
+        }
+      }
+    }
+    loadSubOrder();
+    return () => {
+      isMounted = false;
+    };
+  }, [decodedId, id]);
+
+  const handleApprove = async () => {
+    // 1. Optimistic UI update (Instant execution)
+    const prevStatus = item.status;
     setItem((prev) => ({ ...prev, status: 'APPROVED' }));
     setShowApproveModal(false);
+    toast.success('Return Request Approved successfully');
+
+    // 2. Background Network Sync
+    try {
+      const rawId = item.id.replace('#RET-', '');
+      if (rawId.length >= 8) {
+        await updateVendorSubOrderStatus(rawId, { status: 'DELIVERED' });
+      }
+    } catch (_e) {
+      // If network fails, revert state
+      setItem((prev) => ({ ...prev, status: prevStatus }));
+      toast.error('Failed to sync status with server');
+    }
   };
 
-  const handleReject = (_reason: string) => {
+  const handleReject = async (reason: string) => {
+    // 1. Optimistic UI update (Instant execution)
+    const prevStatus = item.status;
     setItem((prev) => ({ ...prev, status: 'REJECTED' }));
     setShowRejectModal(false);
+    toast.success(`Return Request Rejected: ${reason || 'Decision recorded'}`);
+
+    // 2. Background Network Sync
+    try {
+      const rawId = item.id.replace('#RET-', '');
+      if (rawId.length >= 8) {
+        await updateVendorSubOrderStatus(rawId, { status: 'CANCELLED' });
+      }
+    } catch (_e) {
+      // If network fails, revert state
+      setItem((prev) => ({ ...prev, status: prevStatus }));
+      toast.error('Failed to sync status with server');
+    }
   };
 
   return (
