@@ -24,11 +24,12 @@ export const OrderFilters = ({
   ];
 
   const FILTER_TABS = [
-    { key: 'allOrders', label: t('ordersPage.allOrders') },
-    { key: 'Pending', label: t('ordersPage.pending') },
-    { key: 'Processing', label: t('ordersPage.processing') },
-    { key: 'Shipped', label: t('ordersPage.shipped') },
-    { key: 'Delivered', label: t('ordersPage.delivered') },
+    { key: 'allOrders',  label: t('ordersPage.allOrders') },
+    { key: 'PENDING',    label: t('ordersPage.pending') },
+    { key: 'PROCESSING', label: t('ordersPage.processing') },
+    { key: 'SHIPPED',    label: t('ordersPage.shipped') },
+    { key: 'DELIVERED',  label: t('ordersPage.delivered') },
+    { key: 'CANCELLED',  label: t('ordersPage.cancelled', 'Cancelled') },
   ];
 
   const currentSort = sortNewest ? 'newest' : 'oldest';
