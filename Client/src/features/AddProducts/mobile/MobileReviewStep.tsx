@@ -33,8 +33,20 @@ const MobileReviewStep = () => {
     });
 
     createProduct(multipartData, {
-      onSuccess: () => {
-        useMobileAddProductStore.setState({ isLoading: false, isSuccess: true });
+      onSuccess: (response: any) => {
+        const thumbnail = response?.images?.find((img: any) => img.isThumbnail)?.url || response?.images?.[0]?.url || response?.thumbnailUrl;
+        let finalThumbnail = thumbnail;
+        if (!finalThumbnail) {
+          const firstImageFile = formData.images?.[0];
+          if (firstImageFile) {
+            finalThumbnail = URL.createObjectURL(firstImageFile);
+          }
+        }
+        useMobileAddProductStore.setState({
+          isLoading: false,
+          isSuccess: true,
+          createdThumbnailUrl: finalThumbnail,
+        });
       },
       onError: () => {
         useMobileAddProductStore.setState({ isLoading: false });

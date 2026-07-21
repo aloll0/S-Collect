@@ -16,7 +16,7 @@ const MobileAddProduct = () => {
   const navigate = useNavigate();
   const isArabic = i18n.language === 'ar';
 
-  const { step, isLoading, isSuccess, previousStep, reset } =
+  const { step, isLoading, isSuccess, createdThumbnailUrl, previousStep, reset } =
     useMobileAddProductStore();
 
   const methods = useForm<ProductFormData>({
@@ -103,7 +103,7 @@ const MobileAddProduct = () => {
 
         {/* Popups */}
         {isLoading && <MobileLoadingPopup />}
-        {isSuccess && <MobileSuccessPopup onClose={handleDone} />}
+        {isSuccess && <MobileSuccessPopup onClose={handleDone} thumbnailUrl={createdThumbnailUrl} />}
       </div>
     </FormProvider>
   );

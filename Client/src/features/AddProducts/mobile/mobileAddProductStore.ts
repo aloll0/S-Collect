@@ -12,6 +12,7 @@ interface MobileAddProductStore {
   step: number;
   isLoading: boolean;
   isSuccess: boolean;
+  createdThumbnailUrl?: string;
 
   categories: string[];
   sizes: string[];
@@ -46,6 +47,7 @@ const initialState = {
   step: 1,
   isLoading: false,
   isSuccess: false,
+  createdThumbnailUrl: undefined as string | undefined,
   categories: [] as string[],
   sizes: [] as string[],
   colors: [] as string[],
