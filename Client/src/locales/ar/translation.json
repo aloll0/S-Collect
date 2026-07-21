@@ -23,6 +23,7 @@
       "incomingOrders": "الطلبات الواردة",
       "settings": "ملف المتجر",
       "accountSettings": "إعدادات الحساب",
+      "returns": "طلبات الإرجاع",
       "orders": "الطلبات",
       "logout": "تسجيل الخروج",
       "cancel": "إلغاء",
@@ -638,5 +639,49 @@
     }
   },
 
-  "Add Product": "إضافة منتج"
+  "Add Product": "إضافة منتج",
+
+  "returnsPage": {
+    "title": "طلبات الإرجاع",
+    "breadcrumb": "تفاصيل طلب الإرجاع",
+    "searchPlaceholder": "البحث برقم الطلب أو اسم العميل...",
+    "allStatuses": "كل الحالات",
+    "last30Days": "آخر 30 يومًا",
+    "returnId": "رقم الإرجاع",
+    "customer": "العميل",
+    "product": "المنتج",
+    "reason": "السبب",
+    "requestedDate": "تاريخ الطلب",
+    "status": "الحالة",
+    "action": "الإجراء",
+    "review": "مراجعة",
+    "showing": "عرض {{start}} - {{end}} من {{total}} طلب إرجاع",
+    "returnSummary": "ملخص الإرجاع",
+    "orderId": "رقم الطلب الأصلي",
+    "productInformation": "معلومات المنتج",
+    "returnReason": "سبب الإرجاع",
+    "uploadedImages": "الصور المرفقة من العميل (حالة المنتج)",
+    "internalNotes": "ملاحظات داخلية (مرئية لك فقط)",
+    "notesPlaceholder": "أضف ملاحظات حول طلب الإرجاع هذا...",
+    "customerInformation": "معلومات العميل",
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "shippingAddress": "عنوان الشحن",
+    "returnTimeline": "سجل الإرجاع",
+    "rejectReturn": "رفض الإرجاع",
+    "approveReturn": "الموافقة على الإرجاع",
+    "approveModalTitle": "الموافقة على طلب الإرجاع",
+    "approveModalMessage": "هل أنت تأكد من موافقتك على طلب الإرجاع هذا؟ بمجرد الموافقة، ستتغير حالة الإرجاع إلى 'مقبول' وسيتم تحويل الطلب إلى الأدمن لمعالجة الاسترداد المالية.",
+    "rejectModalTitle": "رفض طلب الإرجاع",
+    "rejectModalMessage": "يرجى تحديد سبب رفض طلب الإرجاع هذا.",
+    "rejectReasonPlaceholder": "أدخل سبب الرفض...",
+    "cancel": "إلغاء",
+    "statuses": {
+      "pendingReview": "قيد المراجعة",
+      "approved": "مقبول",
+      "rejected": "مرفوض",
+      "awaitingItem": "بانتظار الشحنة",
+      "completed": "مكتمل"
+    }
+  }
 }

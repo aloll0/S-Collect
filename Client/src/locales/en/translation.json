@@ -24,6 +24,8 @@
       "incomingOrders": "Incoming Orders",
       "settings": "Store Profile",
       "accountSettings": "Account Settings",
+      "returns": "Return ",
+      "orders": "Orders",
       "logout": "Logout",
       "cancel": "Cancel",
       "signOut": "Sign Out",
@@ -641,5 +643,49 @@
     }
   },
 
-  "Add Product": "Add Product"
+  "Add Product": "Add Product",
+
+  "returnsPage": {
+    "title": "Return Requests",
+    "breadcrumb": "Return Request Details",
+    "searchPlaceholder": "Search by ID or Customer...",
+    "allStatuses": "All Statuses",
+    "last30Days": "Last 30 Days",
+    "returnId": "Return ID",
+    "customer": "Customer",
+    "product": "Product",
+    "reason": "Reason",
+    "requestedDate": "Requested Date",
+    "status": "Status",
+    "action": "Action",
+    "review": "Review",
+    "showing": "Showing {{start}} - {{end}} of {{total}} return requests",
+    "returnSummary": "Return Summary",
+    "orderId": "Order ID",
+    "productInformation": "Product Information",
+    "returnReason": "Return Reason",
+    "uploadedImages": "Customer Uploaded Images (Product Condition)",
+    "internalNotes": "Internal Notes (Only visible to you)",
+    "notesPlaceholder": "Add notes about this return request...",
+    "customerInformation": "Customer Information",
+    "email": "Email",
+    "phone": "Phone",
+    "shippingAddress": "Shipping Address",
+    "returnTimeline": "Return Timeline",
+    "rejectReturn": "Reject Return",
+    "approveReturn": "Approve Return",
+    "approveModalTitle": "Approve Return Request",
+    "approveModalMessage": "Are you sure you want to approve this return request? Once approved, the return status will change to Approved and the request will be forwarded to the admin for refund processing.",
+    "rejectModalTitle": "Reject Return Request",
+    "rejectModalMessage": "Please provide a reason for rejecting this return request.",
+    "rejectReasonPlaceholder": "Enter rejection reason...",
+    "cancel": "Cancel",
+    "statuses": {
+      "pendingReview": "Pending Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "awaitingItem": "Awaiting Item",
+      "completed": "Completed"
+    }
+  }
 }
