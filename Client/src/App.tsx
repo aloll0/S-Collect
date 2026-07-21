@@ -15,6 +15,7 @@ import './App.css';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import Orders from './pages/Orders.js';
+import SubOrderDetails from './pages/SubOrderDetails.js';
 import ProductDetails from './pages/ProductDetails.js';
 import Receivables from './pages/Receivables.js';
 
@@ -41,6 +42,7 @@ function App() {
           <Route path="/product-details" element={<ProductDetails />} />
           <Route path="/receivables" element={<Receivables />} />
           <Route path="/incoming-orders" element={<Orders />} />
+          <Route path="/incoming-orders/:id" element={<SubOrderDetails />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
