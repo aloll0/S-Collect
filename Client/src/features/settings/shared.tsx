@@ -4,6 +4,7 @@ import {
   type ReactNode,
   type Ref,
   type TextareaHTMLAttributes,
+  useEffect,
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -215,11 +216,21 @@ export function PasswordStrengthBar({
 export function SuccessToast({
   message,
   onClose,
+  duration = 3500,
 }: {
   message: string;
   onClose: () => void;
+  duration?: number;
 }) {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, duration);
+    return () => clearTimeout(timer);
+  }, [onClose, duration]);
+
   return (
     <div className="settings-toast-enter fixed top-4 right-4 z-50 w-[280px] bg-white border border-green-200 rounded-lg shadow-md p-3 flex items-start gap-2">
       <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center shrink-0 mt-0.5">
@@ -236,7 +247,7 @@ export function SuccessToast({
       <button
         type="button"
         aria-label={t('settings.toast.close')}
-        className="shrink-0 text-gray-400 hover:text-gray-600"
+        className="shrink-0 text-gray-400 hover:text-gray-600 cursor-pointer"
         onClick={onClose}
       >
         <X size={13} />

@@ -112,7 +112,7 @@ export default function BankAccountForm({
         only to Admin users and never shown to customers.
       </p>
 
-      <div className="mt-4 flex gap-3 rounded-xl bg-indigo-50 p-4">
+      <div className="mt-3 md:mt-4 flex gap-3 rounded-xl bg-indigo-50 p-4">
         <Info
           size={18}
           className="mt-0.5 shrink-0 text-indigo-500"
@@ -124,7 +124,7 @@ export default function BankAccountForm({
         </p>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-3 md:mt-5">
         <InputField
           id="bankName"
           label="Bank Name"
@@ -134,7 +134,7 @@ export default function BankAccountForm({
         />
       </div>
 
-      <div className="mt-5">
+      <div className="mt-3 md:mt-5">
         <label
           htmlFor="iban"
           className="text-sm font-semibold text-gray-900"
@@ -175,7 +175,7 @@ export default function BankAccountForm({
         </div>
       </div>
 
-      <div className="mt-5">
+      <div className="mt-3 md:mt-5">
         <InputField
           id="accountHolderName"
           label="Account Holder Name"
@@ -185,7 +185,7 @@ export default function BankAccountForm({
         />
       </div>
 
-      <div className="mt-8 flex justify-end gap-3">
+      <div className="mt-4 md:mt-8 flex justify-center md:justify-end gap-3">
         <button
           type="button"
           onClick={() => reset()}
@@ -198,9 +198,9 @@ export default function BankAccountForm({
         <button
           type="submit"
           disabled={!isDirty || !isValid}
-          className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors ${isDirty && isValid
-              ? "bg-gray-900 text-white hover:bg-gray-800"
-              : "cursor-not-allowed bg-gray-100 text-gray-400"
+          className={`rounded-xl px-3 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold transition-colors ${isDirty && isValid
+            ? "bg-gray-900 text-white hover:bg-gray-800"
+            : "cursor-not-allowed bg-gray-100 text-gray-400"
             }`}
         >
           Save Bank Account
