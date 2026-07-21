@@ -423,6 +423,49 @@
       "newPasswordWeak": "Must contain at least 8 characters, one uppercase letter, and one number.",
       "passwordMismatch": "Passwords do not match.",
       "storeDescriptionMaxLength": "Description must not exceed 500 characters."
+    },
+    "bank": {
+      "title": "Bank Account",
+      "description": "Used only for vendor payouts. This information is visible only to Admin users and never shown to customers.",
+      "securityInfo": "Bank account details are encrypted and stored securely. Only authorized Admin users can view this information.",
+      "bankName": "Bank Name",
+      "bankNamePlaceholder": "Enter your bank name",
+      "bankNameHint": "Enter the official bank name.",
+      "iban": "IBAN",
+      "ibanPlaceholder": "SA0000000000000000000000",
+      "ibanRequired": "IBAN is required.",
+      "ibanInvalid": "Please enter a valid Saudi IBAN.",
+      "accountHolderName": "Account Holder Name",
+      "accountHolderPlaceholder": "Enter account holder name",
+      "accountHolderHint": "Enter the name exactly as registered with your bank.",
+      "resetChanges": "Reset Changes",
+      "save": "Save Bank Account"
+    },
+    "shippingForm": {
+      "title": "Shipping Settings",
+      "description": "Configure your shipping prices across Saudi Arabia.",
+      "warning": "Your store cannot receive new orders until shipping settings are configured.",
+      "flatRate": "Flat Rate",
+      "flatRateHint": "This rate is automatically applied to any region without a custom shipping price.",
+      "regionalShipping": "Regional Shipping",
+      "infoBanner": "Regions without a custom shipping price automatically use the Default Flat Rate.",
+      "save": "Save Shipping Settings",
+      "saving": "Saving...",
+      "regions": {
+        "riyadh": "Riyadh",
+        "makkah": "Makkah",
+        "madinah": "Madinah",
+        "eastern-province": "Eastern Province",
+        "qassim": "Qassim",
+        "asir": "Asir",
+        "tabuk": "Tabuk",
+        "hail": "Hail",
+        "northern-borders": "Northern Borders",
+        "jazan": "Jazan",
+        "najran": "Najran",
+        "al-bahah": "Al Bahah",
+        "al-jouf": "Al Jouf"
+      }
     }
   },
   "inventoryPage": {
