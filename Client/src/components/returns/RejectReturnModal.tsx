@@ -1,6 +1,6 @@
 import { AlertTriangle } from 'lucide-react';
 import { useState } from 'react';
-import type { ReturnItem } from '../../data/mockReturns';
+import type { ReturnItem } from '../../features/Returns/types';
 import { useTranslation } from 'react-i18next';
 
 interface RejectReturnModalProps {

@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react';
-import type { ReturnItem } from '../../data/mockReturns';
+import type { ReturnItem } from '../../features/Returns/types';
 import { useTranslation } from 'react-i18next';
 
 interface ApproveReturnModalProps {
