@@ -33,7 +33,7 @@ export function useReturnRequests() {
       const firstProduct = (sub.items[0] || {}) as any;
       const dateObj = new Date(sub.createdAt);
       const formattedDate = isNaN(dateObj.getTime())
-        ? 'Jun 17, 2024'
+        ? 'Jun 17, 2027'
         : dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
       const statusMap: Record<string, ReturnItem['status']> = {

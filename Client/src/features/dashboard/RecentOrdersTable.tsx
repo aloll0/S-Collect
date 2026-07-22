@@ -45,18 +45,6 @@ const RecentOrdersTable = () => {
 
   return (
     <>
-      {/* Scoped animation styles matching existing design system */}
-      <style>{`
-        @keyframes tableFadeInUp {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .tbl-animate-in {
-          opacity: 0;
-          animation: tableFadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-      `}</style>
-
       {isMobile ? (
         /* ── Mobile: card list ── */
         <div>
