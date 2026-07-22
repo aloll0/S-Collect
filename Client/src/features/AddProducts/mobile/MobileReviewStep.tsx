@@ -5,6 +5,7 @@ import type { ProductFormData } from '../types';
 import { useMobileAddProductStore } from './mobileAddProductStore';
 import { mapFormToMultipartFormData } from '../utils';
 import { useCreateProduct } from '../useCreateProduct';
+import { useUpdateProduct } from '../useUpdateProduct';
 
 const STEPS = [
   { key: 'basicInfo', label: 'Basic Info' },
@@ -14,11 +15,17 @@ const STEPS = [
   { key: 'review', label: 'Review' },
 ];
 
-const MobileReviewStep = () => {
+interface MobileReviewStepProps {
+  productId?: string;
+}
+
+const MobileReviewStep = ({ productId }: MobileReviewStepProps) => {
   const { t } = useTranslation();
   const { watch } = useFormContext<ProductFormData>();
   const formData = watch();
   const { mutate: createProduct } = useCreateProduct();
+  const { mutate: updateProduct } = useUpdateProduct();
+  const isEdit = !!productId;
 
   const { categories, quantity, sizes, colors, previousStep } =
     useMobileAddProductStore();
@@ -32,26 +39,34 @@ const MobileReviewStep = () => {
       quantity,
     });
 
-    createProduct(multipartData, {
-      onSuccess: (response: any) => {
-        const thumbnail = response?.images?.find((img: any) => img.isThumbnail)?.url || response?.images?.[0]?.url || response?.thumbnailUrl;
-        let finalThumbnail = thumbnail;
-        if (!finalThumbnail) {
-          const firstImageFile = formData.images?.[0];
-          if (firstImageFile) {
-            finalThumbnail = URL.createObjectURL(firstImageFile);
-          }
+    const onSuccess = (response: any) => {
+      const thumbnail = response?.images?.find((img: any) => img.isThumbnail)?.url || response?.images?.[0]?.url || response?.thumbnailUrl;
+      let finalThumbnail = thumbnail;
+      if (!finalThumbnail) {
+        const firstImageFile = formData.images?.[0];
+        if (firstImageFile) {
+          finalThumbnail = URL.createObjectURL(firstImageFile);
         }
-        useMobileAddProductStore.setState({
-          isLoading: false,
-          isSuccess: true,
-          createdThumbnailUrl: finalThumbnail,
-        });
-      },
-      onError: () => {
-        useMobileAddProductStore.setState({ isLoading: false });
-      },
-    });
+      }
+      useMobileAddProductStore.setState({
+        isLoading: false,
+        isSuccess: true,
+        createdThumbnailUrl: finalThumbnail,
+      });
+    };
+
+    const onError = () => {
+      useMobileAddProductStore.setState({ isLoading: false });
+    };
+
+    if (isEdit && productId) {
+      updateProduct(
+        { productId, formData: multipartData },
+        { onSuccess, onError }
+      );
+    } else {
+      createProduct(multipartData, { onSuccess, onError });
+    }
   };
 
   return (
@@ -190,7 +205,7 @@ const MobileReviewStep = () => {
           onClick={handlePublish}
           className="flex-1 rounded-xl bg-gray-900 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 active:scale-[0.98]"
         >
-          {t('addProduct.publish', 'Publish')}
+          {isEdit ? t('addProduct.save', 'Save Changes') : t('addProduct.publish', 'Publish')}
         </button>
       </div>
     </div>

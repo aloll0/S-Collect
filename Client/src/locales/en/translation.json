@@ -205,6 +205,7 @@
   },
   "addProduct": {
     "title": "Add Product",
+    "editTitle": "Edit Product",
     "subtitle": "Add a new product to your inventory",
 
     "productInformation": "Product Information",
@@ -259,6 +260,8 @@
 
     "productAddedSuccessfully": "Product Added Successfully",
     "productAddedMessage": "Your product has been added successfully.",
+    "productUpdatedSuccessfully": "Product Updated Successfully",
+    "productUpdatedMessage": "Your product has been updated successfully.",
     "done": "Done",
     "errors": {
       "nameArRequired": "Product name in Arabic is required",
@@ -281,6 +284,7 @@
       "visibility": "Visibility",
       "adding": "Adding...",
       "addingProduct": "Adding Product",
+      "editProduct": "Edit Product",
       "pleaseWait": "Please wait while we add your product.",
       "productAddedSuccessfully": "Product Added Successfully",
       "productAddedMessage": "Your product has been added successfully.",

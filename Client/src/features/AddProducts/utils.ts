@@ -1,8 +1,85 @@
 import type { ProductFormData } from './types';
 
-export const mapFormToMultipartFormData = (formData: ProductFormData): FormData => {
+export const urlToFile = async (
+  url: string,
+  filename: string
+): Promise<File> => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return new File([blob], filename, { type: blob.type || 'image/jpeg' });
+};
+
+export const mapProductToFormData = async (
+  product: any
+): Promise<ProductFormData> => {
+  // Unwrap if the response is in a { success: boolean, data: T } envelope
+  const raw =
+    product &&
+    typeof product === 'object' &&
+    'success' in product &&
+    'data' in product
+      ? product.data
+      : product;
+
+  const sizes: string[] = [];
+  const colors: string[] = [];
+
+  if (Array.isArray(raw.options)) {
+    for (const option of raw.options) {
+      const optionName = (option.name || '').toLowerCase();
+      if (optionName === 'size' || optionName === 'المقاس') {
+        option.values?.forEach((v: any) =>
+          sizes.push(v.value || v.valueAr || '')
+        );
+      } else if (optionName === 'color' || optionName === 'اللون') {
+        option.values?.forEach((v: any) =>
+          colors.push(v.value || v.valueAr || '')
+        );
+      }
+    }
+  }
+
+  const firstVariant = raw.variants?.[0];
+
+  let quantity = 0;
+  if (Array.isArray(raw.variants)) {
+    quantity = raw.variants.reduce(
+      (sum: number, v: any) => sum + (v.stock ?? 0),
+      0
+    );
+  }
+
+  const imageUrls: string[] = (raw.images || [])
+    .map((img: any) => img.url)
+    .filter(Boolean);
+  const images: File[] = await Promise.all(
+    imageUrls.map((url: string, i: number) =>
+      urlToFile(url, `existing-image-${i}.jpg`)
+    )
+  );
+
+  return {
+    nameAr: raw.nameAr || raw.name || '',
+    nameEn: raw.name || raw.nameEn || '',
+    description: raw.description || '',
+    basePrice: firstVariant?.price?.toString() ?? '',
+    comparePrice: firstVariant?.compareAtPrice?.toString() ?? '',
+    sku: firstVariant?.sku ?? '',
+    images,
+    categoryId: raw.categoryId || raw.category?.id || '',
+    enabled: raw.enabled ?? true,
+    quantity,
+    categories: [],
+    sizes,
+    colors,
+  };
+};
+
+export const mapFormToMultipartFormData = (
+  formData: ProductFormData
+): FormData => {
   const multipart = new FormData();
-  
+
   // 1. Required basic fields
   multipart.append('name', formData.nameEn || formData.nameAr || '');
   multipart.append('nameAr', formData.nameAr || formData.nameEn || '');
@@ -16,9 +93,9 @@ export const mapFormToMultipartFormData = (formData: ProductFormData): FormData 
   const options = [];
   if (formData.sizes && formData.sizes.length > 0) {
     options.push({
-      id: "option-size-id",
-      name: "Size",
-      nameAr: "المقاس",
+      id: 'option-size-id',
+      name: 'Size',
+      nameAr: 'المقاس',
       values: formData.sizes.map((size, index) => ({
         id: `size-value-${index}`,
         value: size,
@@ -28,9 +105,9 @@ export const mapFormToMultipartFormData = (formData: ProductFormData): FormData 
   }
   if (formData.colors && formData.colors.length > 0) {
     options.push({
-      id: "option-color-id",
-      name: "Color",
-      nameAr: "اللون",
+      id: 'option-color-id',
+      name: 'Color',
+      nameAr: 'اللون',
       values: formData.colors.map((color, index) => ({
         id: `color-value-${index}`,
         value: color,
@@ -42,14 +119,16 @@ export const mapFormToMultipartFormData = (formData: ProductFormData): FormData 
 
   // 4. Variants structure (JSON-encoded array of variants)
   const price = parseFloat(formData.basePrice) || 0;
-  const compareAtPrice = formData.comparePrice ? parseFloat(formData.comparePrice) : 0;
+  const compareAtPrice = formData.comparePrice
+    ? parseFloat(formData.comparePrice)
+    : 0;
   const stock = formData.quantity || 0;
   const sku = formData.sku || '';
 
   const variants = [];
   if (options.length === 0) {
     variants.push({
-      id: "default-variant-id",
+      id: 'default-variant-id',
       sku,
       price,
       compareAtPrice,
@@ -58,8 +137,8 @@ export const mapFormToMultipartFormData = (formData: ProductFormData): FormData 
       optionValues: [],
     });
   } else {
-    const sizeOption = options.find((o) => o.name === "Size");
-    const colorOption = options.find((o) => o.name === "Color");
+    const sizeOption = options.find((o) => o.name === 'Size');
+    const colorOption = options.find((o) => o.name === 'Color');
 
     const sizeValues = sizeOption?.values || [null];
     const colorValues = colorOption?.values || [null];
@@ -98,7 +177,8 @@ export const mapFormToMultipartFormData = (formData: ProductFormData): FormData 
           sku: variantSkuParts.join('-'),
           price,
           compareAtPrice,
-          stock: Math.round(stock / (sizeValues.length * colorValues.length)) || 1,
+          stock:
+            Math.round(stock / (sizeValues.length * colorValues.length)) || 1,
           isActive: true,
           optionValues,
         });
@@ -117,12 +197,17 @@ export const mapFormToMultipartFormData = (formData: ProductFormData): FormData 
   return multipart;
 };
 
-export const compressImage = (file: File, maxWidth = 1000, maxHeight = 1000, quality = 0.7): Promise<File> => {
+export const compressImage = (
+  file: File,
+  maxWidth = 1000,
+  maxHeight = 1000,
+  quality = 0.7
+): Promise<File> => {
   return new Promise((resolve) => {
     if (!file.type.startsWith('image/')) {
       return resolve(file);
     }
-    
+
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (event) => {

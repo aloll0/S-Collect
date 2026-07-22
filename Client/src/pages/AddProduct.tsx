@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ProductMedia from '../components/ui/ProductMedia';
 import ProductStatus from '../components/ui/ProductStatus';
 import ReviewPage from '../features/AddProducts/ReviewPage';
@@ -11,11 +11,13 @@ import TagInput from '../features/AddProducts/TagInput';
 import PricingFields from '../features/AddProducts/PricingFields';
 import SuccessPopup from '../features/AddProducts/SuccessPopup';
 import MobileAddProduct from '../features/AddProducts/mobile/MobileAddProduct';
-import { mapFormToMultipartFormData } from '../features/AddProducts/utils';
+import { mapFormToMultipartFormData, mapProductToFormData } from '../features/AddProducts/utils';
 import type { ProductFormData } from '../features/AddProducts/types';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { useCategories } from '../hooks/useCategories';
 import { useCreateProduct } from '../features/AddProducts/useCreateProduct';
+import { useUpdateProduct } from '../features/AddProducts/useUpdateProduct';
+import { useProduct } from '../features/AddProducts/useProduct';
 import { motion } from 'motion/react';
 import type { Variants } from 'motion/react';
 
@@ -40,9 +42,14 @@ const AddProduct = () => {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === 'ar';
   const navigate = useNavigate();
+  const { productId } = useParams<{ productId: string }>();
+  const isEdit = !!productId;
+
   const { isMobile } = useBreakpoint();
   const { categories: categoriesList } = useCategories();
-  const { mutate: createProduct, isPending } = useCreateProduct();
+  const { mutate: createProduct, isPending: isCreatePending } = useCreateProduct();
+  const { mutate: updateProduct, isPending: isUpdatePending } = useUpdateProduct();
+  const { data: productData, isLoading: isProductLoading } = useProduct(productId);
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [showReview, setShowReview] = useState(false);
@@ -65,6 +72,15 @@ const AddProduct = () => {
       colors: [],
     },
   });
+
+  // Populate form when product data is fetched in edit mode
+  useEffect(() => {
+    if (isEdit && productData) {
+      mapProductToFormData(productData).then((formData) => {
+        methods.reset(formData);
+      });
+    }
+  }, [isEdit, productData, methods]);
 
   const enabled = methods.watch('enabled') ?? true;
   const quantity = methods.watch('quantity') ?? 0;
@@ -96,8 +112,46 @@ const AddProduct = () => {
     setShowReview(true);
   };
 
+  const isPending = isCreatePending || isUpdatePending;
+
+  const handlePublish = async () => {
+    const data = methods.getValues();
+    const multipartData = mapFormToMultipartFormData(data);
+
+    const onSuccess = (response: any) => {
+      const thumbnail = response?.images?.find((img: any) => img.isThumbnail)?.url || response?.images?.[0]?.url || response?.thumbnailUrl;
+      if (thumbnail) {
+        setCreatedThumbnail(thumbnail);
+      } else {
+        const firstImageFile = data.images?.[0];
+        if (firstImageFile) {
+          setCreatedThumbnail(URL.createObjectURL(firstImageFile));
+        }
+      }
+      setShowReview(false);
+      setIsSuccess(true);
+    };
+
+    if (isEdit && productId) {
+      updateProduct(
+        { productId, formData: multipartData },
+        { onSuccess }
+      );
+    } else {
+      createProduct(multipartData, { onSuccess });
+    }
+  };
+
   if (isMobile) {
-    return <MobileAddProduct />;
+    return <MobileAddProduct productId={productId} />;
+  }
+
+  if (isEdit && isProductLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-gray-900" />
+      </div>
+    );
   }
 
   if (showReview) {
@@ -109,37 +163,22 @@ const AddProduct = () => {
         colors={colors}
         quantity={quantity}
         onPrevious={() => setShowReview(false)}
-        onPublish={async () => {
-          const data = methods.getValues();
-          const multipartData = mapFormToMultipartFormData(data);
-          createProduct(multipartData, {
-            onSuccess: (response: any) => {
-              const thumbnail = response?.images?.find((img: any) => img.isThumbnail)?.url || response?.images?.[0]?.url || response?.thumbnailUrl;
-              if (thumbnail) {
-                setCreatedThumbnail(thumbnail);
-              } else {
-                const firstImageFile = data.images?.[0];
-                if (firstImageFile) {
-                  setCreatedThumbnail(URL.createObjectURL(firstImageFile));
-                }
-              }
-              setShowReview(false);
-              setIsSuccess(true);
-            },
-          });
-        }}
+        onPublish={handlePublish}
         isPublishing={isPending}
+        isEdit={isEdit}
       />
     );
   }
 
   return (
     <FormProvider {...methods}>
-      <> 
+      <>
         <div
           className="px-4 lg:px-14 py-3 bg-white"
         >
-          <h1 className="text-h4 font-bold">{t('addProduct.title')}</h1>
+          <h1 className="text-h4 font-bold">
+            {isEdit ? t('addProduct.editTitle', 'Edit Product') : t('addProduct.title')}
+          </h1>
         </div>
         <motion.div
           className="flex-1 overflow-y-auto px-4  lg:px-14"
@@ -225,6 +264,7 @@ const AddProduct = () => {
                 navigate('/');
               }}
               thumbnailUrl={createdThumbnail}
+              isEdit={isEdit}
             />
           )}
         </motion.div>
