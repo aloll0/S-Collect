@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Clock, XCircle, LogOut, RefreshCw } from 'lucide-react';
+import { logout } from '../../services/auth';
 
 interface OnboardingStatusProps {
   status: 'PENDING_APPROVAL' | 'REJECTED' | string;
@@ -12,9 +13,19 @@ const OnboardingStatus = ({ status, rejectionReason, onRetry }: OnboardingStatus
   const { i18n } = useTranslation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken) {
+        await logout(refreshToken);
+      }
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      navigate('/login');
+    }
   };
 
   const isRtl = i18n.language === 'ar';
