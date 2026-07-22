@@ -203,17 +203,9 @@ export default function SettingsPage({
         : t('settings.shipping');
 
   return (
-    <div className="settings-page-enter min-h-screen bg-gray-100">
-      {toast && <SuccessToast message={toast} onClose={() => setToast(null)} />}
-      {errorToast && (
-        <div className="fixed top-4 right-4 z-50 p-4 bg-red-600 text-white rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium">
-          <span>{errorToast}</span>
-          <button onClick={() => setErrorToast(null)} className="ml-2 font-bold cursor-pointer">×</button>
-        </div>
-      )}
-
-      <div className="bg-white border-b border-gray-200 p-4 md:px-8 md:py-3">
-        <h1 className="text-2xl font-semibold text-[#090909]">
+    <>
+      <div className="bg-white border-b border-gray-200 sidebar-page-container-header">
+        <h1 className="heading-page-title">
           {t('settings.title')}
         </h1>
         <nav className="mt-3 text-sm flex items-center gap-1">
@@ -224,6 +216,14 @@ export default function SettingsPage({
           <span className="text-[#737373]">{breadcrumb}</span>
         </nav>
       </div>
+    <div className="settings-page-enter min-h-screen bg-gray-100">
+      {toast && <SuccessToast message={toast} onClose={() => setToast(null)} />}
+      {errorToast && (
+        <div className="fixed top-4 right-4 z-50 p-4 bg-red-600 text-white rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium">
+          <span>{errorToast}</span>
+          <button onClick={() => setErrorToast(null)} className="ml-2 font-bold cursor-pointer">×</button>
+        </div>
+      )}
 
       <div className="settings-surface-enter settings-stagger-1 p-2 md:p-4 md:px-8 md:py-7 max-w-[720px]">
         <div
@@ -291,5 +291,6 @@ export default function SettingsPage({
         </div>
       </div>
     </div>
+    </>
   );
 }
