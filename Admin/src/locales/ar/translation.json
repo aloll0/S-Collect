@@ -30,6 +30,11 @@
       "vendorReports": "تقارير الموردين",
       "commissionRates": "نسب العمولات",
       "payouts": "المدفوعات",
+      "categories": "الفئات",
+      "products": "المنتجات",
+      "reviews": "التقييمات",
+      "buyers": "المشترون",
+      "adminSettings": "الإعدادات",
       "logout": "تسجيل الخروج",
       "cancel": "إلغاء",
       "signOut": "تسجيل الخروج",
@@ -704,5 +709,29 @@
   "payouts": {
     "title": "المدفوعات",
     "description": "متابعة وإدارة مدفوعات الموردين وسجل الدفعات."
+  },
+  "categories": {
+    "title": "الفئات",
+    "description": "إدارة فئات المنتجات عبر السوق."
+  },
+  "productsListing": {
+    "title": "المنتجات",
+    "description": "تصفح وإدارة جميع المنتجات في السوق."
+  },
+  "reviews": {
+    "title": "التقييمات",
+    "description": "مراجعة وإدارة تقييمات العملاء للمنتجات."
+  },
+  "ordersListing": {
+    "title": "الطلبات",
+    "description": "عرض وإدارة جميع طلبات السوق."
+  },
+  "buyers": {
+    "title": "المشترون",
+    "description": "إدارة حسابات المشترون ومعلوماتهم."
+  },
+  "adminSettings": {
+    "title": "الإعدادات",
+    "description": "ضبط حساب الأدمن وتفضيلات التطبيق."
   }
 }
