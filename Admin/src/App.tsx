@@ -67,6 +67,7 @@ function App() {
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/orders" element={<OrdersListing />} />
           <Route path="/buyers" element={<Buyers />} />
+          <Route path="/admin-settings" element={<AdminSettings />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
