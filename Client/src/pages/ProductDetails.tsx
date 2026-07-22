@@ -7,6 +7,8 @@ import ReviewsList, {
   type Review,
   type ReviewFilter,
 } from "../features/AddProducts/productDetails/ReviewsList"
+import { useParams } from "react-router-dom"
+import { useProductDetails } from "../features/AddProducts/productDetails/useProductDetails"
 
 const ratingCounts: RatingCount[] = [
   { stars: 5, count: 128 },
@@ -50,12 +52,29 @@ const reviews: Review[] = [
 ]
 
 const ProductDetails = () => {
+  const {id} = useParams();
+  const { data , error ,isLoading } = useProductDetails(id)
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
+  console.log(data);
+  
   const activeFilter: ReviewFilter = "all"
+  const product = data?.data;
+  const variant = product?.variants[0];
+  const image = product?.images[0];
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
 
   return (
     <>
-      <div className="bg-white border-b border-gray-200 p-4 md:px-8 md:py-3 mb-6">
-        <h1 className="text-2xl font-semibold text-[#090909]">
+      <div className="sidebar-page-container-header  ">
+        <h1 className="heading-page-title font-semibold text-[#090909]">
           Product Details
         </h1>
         <nav className="mt-3 text-sm flex items-center gap-1">
@@ -69,14 +88,14 @@ const ProductDetails = () => {
 
       <div className="sidebar-page-container space-y-8">
         <ProductInfo
-          imageUrl="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
-          name="Wireless Headphones Pro"
+          imageUrl={image?.url ?? ""}
+          name={product?.name ?? ""}
           category="Electronics"
           brand="SoundWave"
           sku="SW-HP-2048"
-          price={299}
-          compareAtPrice={349}
-          cost={180}
+          price={variant?.price}
+          compareAtPrice={variant?.compareAtPrice}
+          cost={variant?.cost}
           currency="SAR"
           inStock={true}
           stockCount={42}
