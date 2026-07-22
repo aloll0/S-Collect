@@ -1,9 +1,11 @@
 import {
   Boxes,
-  PackageOpen,
   X,
   ChartNoAxesCombined,
-  CirclePlus,
+  FileChartColumn,
+  PackageOpen,
+  BadgePercent,
+  CircleDollarSign,
   Handbag,
   SquareUserRoundIcon,
   RotateCcw,
@@ -183,17 +185,27 @@ const NAV_SECTIONS: NavSectionProps[] = [
     ],
   },
   {
-    titleKey: 'sidebar.sections.products',
+    titleKey: 'sidebar.sections.financialReports',
     items: [
       {
         icon: <PackageOpen size={18} />,
-        labelKey: 'sidebar.items.management',
-        to: '/management',
+        labelKey: 'sidebar.items.vendors',
+        to: '/vendors',
       },
       {
-        icon: <CirclePlus size={18} />,
-        labelKey: 'sidebar.items.addProduct',
-        to: '/add-product',
+        icon: <FileChartColumn size={18} />,
+        labelKey: 'sidebar.items.vendorReports',
+        to: '/vendor-reports',
+      },
+      {
+        icon: <BadgePercent size={18} />,
+        labelKey: 'sidebar.items.commissionRates',
+        to: '/commission-rates',
+      },
+      {
+        icon: <CircleDollarSign size={18} />,
+        labelKey: 'sidebar.items.payouts',
+        to: '/payouts',
       },
     ],
   },

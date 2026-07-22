@@ -13,7 +13,8 @@
       "products": "المنتجات",
       "management": "الإدارة",
       "account": "الحساب",
-      "receivables": "المستحقات"
+      "receivables": "المستحقات",
+      "financialReports": "التقارير المالية"
     },
     "items": {
       "dashboard": "لوحة التحكم",
@@ -25,6 +26,10 @@
       "accountSettings": "إعدادات الحساب",
       "returns": "طلبات الإرجاع",
       "orders": "الطلبات",
+      "vendors": "الموردون",
+      "vendorReports": "تقارير الموردين",
+      "commissionRates": "نسب العمولات",
+      "payouts": "المدفوعات",
       "logout": "تسجيل الخروج",
       "cancel": "إلغاء",
       "signOut": "تسجيل الخروج",
@@ -683,5 +688,21 @@
       "awaitingItem": "بانتظار الشحنة",
       "completed": "مكتمل"
     }
+  },
+  "vendors": {
+    "title": "الموردون",
+    "description": "إدارة موردي السوق وحساباتهم."
+  },
+  "vendorReports": {
+    "title": "تقارير الموردين",
+    "description": "عرض تقارير الأداء للموردين الفرديين."
+  },
+  "commissionRates": {
+    "title": "نسب العمولات",
+    "description": "ضبط نسب العمولات المطبقة على مبيعات الموردين."
+  },
+  "payouts": {
+    "title": "المدفوعات",
+    "description": "متابعة وإدارة مدفوعات الموردين وسجل الدفعات."
   }
 }

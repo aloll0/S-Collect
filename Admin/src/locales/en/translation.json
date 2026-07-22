@@ -14,7 +14,8 @@
       "products": "Products",
       "management": "Management",
       "account": "Account",
-      "receivables": "Receivables"
+      "receivables": "Receivables",
+      "financialReports": "Financial Reports"
     },
     "items": {
       "dashboard": "Dashboard",
@@ -26,6 +27,10 @@
       "accountSettings": "Account Settings",
       "returns": "Return Requests",
       "orders": "Orders",
+      "vendors": "Vendors",
+      "vendorReports": "Vendor Reports",
+      "commissionRates": "Commission Rates",
+      "payouts": "Payouts",
       "logout": "Logout",
       "cancel": "Cancel",
       "signOut": "Sign Out",
@@ -687,5 +692,21 @@
       "awaitingItem": "Awaiting Item",
       "completed": "Completed"
     }
+  },
+  "vendors": {
+    "title": "Vendors",
+    "description": "Manage marketplace vendors and their accounts."
+  },
+  "vendorReports": {
+    "title": "Vendor Reports",
+    "description": "View performance reports for individual vendors."
+  },
+  "commissionRates": {
+    "title": "Commission Rates",
+    "description": "Configure commission rates applied to vendor sales."
+  },
+  "payouts": {
+    "title": "Payouts",
+    "description": "Track and manage vendor payouts and payment history."
   }
 }

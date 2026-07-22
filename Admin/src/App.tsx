@@ -21,6 +21,10 @@ import Receivables from './pages/Receivables.js';
 
 import ReturnRequests from './pages/ReturnRequests.js';
 import ReturnRequestDetails from './pages/ReturnRequestDetails.js';
+import Vendors from './pages/Vendors.js';
+import VendorReports from './pages/VendorReports.js';
+import CommissionRates from './pages/CommissionRates.js';
+import Payouts from './pages/Payouts.js';
 
 function App() {
   const { i18n } = useTranslation();
@@ -48,6 +52,10 @@ function App() {
           <Route path="/returns" element={<ReturnRequests />} />
           <Route path="/returns/:id" element={<ReturnRequestDetails />} />
           <Route path="/incoming-orders/:id" element={<SubOrderDetails />} />
+          <Route path="/vendors" element={<Vendors />} />
+          <Route path="/vendor-reports" element={<VendorReports />} />
+          <Route path="/commission-rates" element={<CommissionRates />} />
+          <Route path="/payouts" element={<Payouts />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
