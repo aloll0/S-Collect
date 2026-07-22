@@ -70,11 +70,9 @@ export default function AccountSettingsPage({
   );
 
   return (
-    <div className="settings-page-enter min-h-screen bg-gray-100">
-      {toast && <SuccessToast message={toast} onClose={() => setToast(null)} />}
-
-      <div className="bg-white border-b border-gray-200 p-4 md:px-8 md:py-3">
-        <h1 className="text-2xl font-semibold text-[#090909]">
+    <>
+          <div className="border-b border-gray-200 sidebar-page-container-header">
+        <h1 className="heading-page-title">
           {t('settings.accountSettings')}
         </h1>
         <nav className="mt-3 text-sm flex items-center gap-1">
@@ -87,8 +85,10 @@ export default function AccountSettingsPage({
           </span>
         </nav>
       </div>
+    <div className="settings-page-enter min-h-screen bg-gray-100">
+      {toast && <SuccessToast message={toast} onClose={() => setToast(null)} />}
 
-      <div className="settings-surface-enter settings-stagger-1 p-2 md:p-4 md:px-8 md:py-7 max-w-[720px]">
+      <div className="settings-surface-enter settings-stagger-1 sidebar-page-container max-w-180">
         {loading ? (
           <div className="p-8 flex items-center justify-center bg-white rounded-xl border border-gray-200">
             <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-900 border-t-transparent"></div>
@@ -104,5 +104,6 @@ export default function AccountSettingsPage({
         )}
       </div>
     </div>
+    </>
   );
 }

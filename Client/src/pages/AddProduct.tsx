@@ -137,12 +137,12 @@ const AddProduct = () => {
     <FormProvider {...methods}>
       <> 
         <div
-          className="px-4 lg:px-14 py-3 bg-white"
+          className="sidebar-page-container-header"
         >
-          <h1 className="text-h4 font-bold">{t('addProduct.title')}</h1>
+          <h1 className="heading-page-title">{t('addProduct.title')}</h1>
         </div>
         <motion.div
-          className="flex-1 overflow-y-auto px-4  lg:px-14"
+          className="sidebar-page-container"
           variants={containerVariants}
           initial="hidden"
           animate="show"

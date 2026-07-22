@@ -39,12 +39,12 @@ const QuantityInput = ({ value, onChange }: QuantityInputProps) => {
         <button
           type="button"
           onClick={decrease}
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-300 text-lg font-semibold transition hover:bg-gray-50 active:scale-95"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 text-lg font-semibold transition hover:bg-gray-50 active:scale-95"
         >
           −
         </button>
 
-        <div className="relative w-20 overflow-hidden rounded-xl border border-gray-300 py-2">
+        <div className="relative w-20 overflow-hidden">
           {/* Hidden input to allow typing */}
           <input
             type="number"
@@ -87,7 +87,7 @@ const QuantityInput = ({ value, onChange }: QuantityInputProps) => {
         <button
           type="button"
           onClick={increase}
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-300 text-lg font-semibold transition hover:bg-gray-50 active:scale-95"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 text-lg font-semibold transition hover:bg-gray-50 active:scale-95"
         >
           +
         </button>

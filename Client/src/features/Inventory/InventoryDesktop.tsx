@@ -24,8 +24,9 @@ const InventoryDesktop = () => {
   } = useInventory();
 
   return (
-    <div className="flex-1 overflow-y-auto py-6 bg-gray-100 sidebar-page-container">
+    <>
       <InventoryHeader />
+    <div className="flex-1 overflow-y-auto bg-gray-100 sidebar-page-container">
       <InventoryToolbar
         search={search}
         activeTab={activeTab}
@@ -60,6 +61,7 @@ const InventoryDesktop = () => {
       </div>
       <InventoryFooter onSave={handleSave} />
     </div>
+    </>
   );
 };
 
