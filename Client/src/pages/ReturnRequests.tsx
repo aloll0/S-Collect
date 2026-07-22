@@ -143,15 +143,16 @@ export default function ReturnRequestsPage() {
   }, [totalPages]);
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 min-h-screen">
+    <>
       {/* Title */}
       <motion.h1
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6"
+        className="sidebar-page-container-header heading-page-title"
       >
         {t('returnsPage.title', { defaultValue: 'Return Requests' })}
       </motion.h1>
+    <div className="sidebar-page-container min-h-screen">
 
       {/* Filter Bar */}
       <motion.div
@@ -390,5 +391,6 @@ export default function ReturnRequestsPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

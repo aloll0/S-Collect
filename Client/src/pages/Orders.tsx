@@ -172,10 +172,11 @@ const IncomingOrdersDesktop = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto py-6 sidebar-page-container">
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-h6 sm:text-h5 font-bold">{t('ordersPage.title')}</h1>
+    <>
+    <div className="sidebar-page-container-header heading-page-title font-bold">
+        {t('ordersPage.title')}
       </div>
+    <div className="flex-1 overflow-y-auto py-6 sidebar-page-container">
 
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
         {/* Filters row */}
@@ -213,6 +214,7 @@ const IncomingOrdersDesktop = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
