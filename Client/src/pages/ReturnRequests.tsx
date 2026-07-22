@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'motion/react';
 import { MOCK_RETURNS, type ReturnItem } from '../data/mockReturns';
+import { getVendorSubOrders } from '../services/returns';
 
 const ITEMS_PER_PAGE = 7;
 
@@ -53,13 +54,68 @@ export default function ReturnRequestsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const [allItems, setAllItems] = useState<ReturnItem[]>(MOCK_RETURNS);
+  const [loading, setLoading] = useState<boolean>(true);
+
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Fetch real sub-orders from API with fallback to MOCK_RETURNS
+  useEffect(() => {
+    let isMounted = true;
+    async function loadData() {
+      try {
+        setLoading(true);
+        const data = await getVendorSubOrders({ limit: 50 });
+        if (isMounted && data?.items && data.items.length > 0) {
+          const apiReturns: ReturnItem[] = data.items.map((sub, idx) => {
+            const firstProduct = sub.items[0] || {};
+            const dateObj = new Date(sub.createdAt);
+            const formattedDate = isNaN(dateObj.getTime())
+              ? 'Jun 17, 2024'
+              : dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+            const statusMap: Record<string, ReturnItem['status']> = {
+              PENDING: 'PENDING_REVIEW',
+              PROCESSING: 'PENDING_REVIEW',
+              SHIPPED: 'AWAITING_ITEM',
+              DELIVERED: 'COMPLETED',
+              CANCELLED: 'REJECTED',
+            };
+
+            return {
+              id: `#RET-${sub.id.slice(0, 8).toUpperCase()}`,
+              orderId: `#ORD-${sub.orderId.slice(0, 8).toUpperCase()}`,
+              customerName: `Customer #${idx + 1}`,
+              productTitle: firstProduct.productName || 'Order Product',
+              productSku: firstProduct.productId || 'SKU-001',
+              productVariant: firstProduct.variantLabel || 'Default',
+              productQty: firstProduct.quantity || 1,
+              productPrice: `SAR ${(firstProduct.lineTotal || 0).toFixed(2)}`,
+              productImage: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=150',
+              reason: sub.statusOverrideReason || "Item doesn't fit",
+              requestedDate: formattedDate,
+              status: statusMap[sub.status] || 'PENDING_REVIEW',
+            };
+          });
+          setAllItems(apiReturns);
+        }
+      } catch (_err) {
+        // Fallback to MOCK_RETURNS on error
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // Filter items based on search and status
   const filteredItems = useMemo(() => {
-    return MOCK_RETURNS.filter((item) => {
+    return allItems.filter((item) => {
       const matchSearch =
         item.id.toLowerCase().includes(search.toLowerCase()) ||
         item.customerName.toLowerCase().includes(search.toLowerCase()) ||
@@ -67,7 +123,7 @@ export default function ReturnRequestsPage() {
       const matchStatus = statusFilter === 'ALL' || item.status === statusFilter;
       return matchSearch && matchStatus;
     });
-  }, [search, statusFilter]);
+  }, [allItems, search, statusFilter]);
 
   // Reset to page 1 when filter changes
   useEffect(() => {
@@ -160,111 +216,125 @@ export default function ReturnRequestsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 text-sm">
-            <AnimatePresence mode="wait">
-              {currentItems.length > 0 ? (
-                currentItems.map((item, idx) => (
-                  <motion.tr
-                    key={item.id}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.15, delay: idx * 0.03 }}
-                    className="hover:bg-gray-50/80 transition-colors"
-                  >
-                    <td className="py-4 px-4 font-bold text-amber-600 font-mono text-sm">{item.id}</td>
-                    <td className="py-4 px-4 font-medium text-gray-900">{item.customerName}</td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={item.productImage}
-                          alt={item.productTitle}
-                          className="w-10 h-10 rounded-lg object-cover border border-gray-200 shrink-0"
-                        />
-                        <span className="font-semibold text-gray-900 truncate max-w-[220px]">
-                          {item.productTitle}
-                        </span>
-                      </div>
+            {loading ? (
+              <tr>
+                <td colSpan={7} className="py-12 text-center text-gray-400">
+                  <div className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-gray-900 border-t-transparent"></div>
+                </td>
+              </tr>
+            ) : (
+              <AnimatePresence mode="wait">
+                {currentItems.length > 0 ? (
+                  currentItems.map((item, idx) => (
+                    <motion.tr
+                      key={item.id}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.15, delay: idx * 0.03 }}
+                      className="hover:bg-gray-50/80 transition-colors"
+                    >
+                      <td className="py-4 px-4 font-bold text-amber-600 font-mono text-sm">{item.id}</td>
+                      <td className="py-4 px-4 font-medium text-gray-900">{item.customerName}</td>
+                      <td className="py-4 px-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={item.productImage}
+                            alt={item.productTitle}
+                            className="w-10 h-10 rounded-lg object-cover border border-gray-200 shrink-0"
+                          />
+                          <span className="font-semibold text-gray-900 truncate max-w-[220px]">
+                            {item.productTitle}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-gray-600">{item.reason}</td>
+                      <td className="py-4 px-4 text-gray-500 text-xs sm:text-sm">{item.requestedDate}</td>
+                      <td className="py-4 px-4">
+                        <StatusBadge status={item.status} />
+                      </td>
+                      <td className="py-4 px-4 text-right">
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/returns/${encodeURIComponent(item.id)}`)}
+                          className="font-bold text-gray-900 hover:text-gray-600 underline cursor-pointer transition-colors"
+                        >
+                          {t('returnsPage.review', { defaultValue: 'Review' })}
+                        </button>
+                      </td>
+                    </motion.tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={7} className="py-12 text-center text-gray-400 text-sm">
+                      No return requests found.
                     </td>
-                    <td className="py-4 px-4 text-gray-600">{item.reason}</td>
-                    <td className="py-4 px-4 text-gray-500 text-xs sm:text-sm">{item.requestedDate}</td>
-                    <td className="py-4 px-4">
-                      <StatusBadge status={item.status} />
-                    </td>
-                    <td className="py-4 px-4 text-right">
-                      <button
-                        type="button"
-                        onClick={() => navigate(`/returns/${encodeURIComponent(item.id)}`)}
-                        className="font-bold text-gray-900 hover:text-gray-600 underline cursor-pointer transition-colors"
-                      >
-                        {t('returnsPage.review', { defaultValue: 'Review' })}
-                      </button>
-                    </td>
-                  </motion.tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={7} className="py-12 text-center text-gray-400 text-sm">
-                    No return requests found.
-                  </td>
-                </tr>
-              )}
-            </AnimatePresence>
+                  </tr>
+                )}
+              </AnimatePresence>
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Mobile Card List View (Optimized for Mobile) */}
       <div className="md:hidden space-y-4">
-        <AnimatePresence mode="wait">
-          {currentItems.map((item, idx) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.15, delay: idx * 0.03 }}
-              className="bg-white rounded-2xl border border-gray-200 p-4.5 shadow-xs space-y-3.5"
-            >
-              {/* Top row: ID + Status */}
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-amber-600 font-mono text-base">{item.id}</span>
-                <StatusBadge status={item.status} />
-              </div>
-
-              {/* Middle row: Thumbnail + Title + Customer */}
-              <div className="flex items-start gap-3.5">
-                <img
-                  src={item.productImage}
-                  alt={item.productTitle}
-                  className="w-14 h-14 rounded-xl object-cover border border-gray-200 shrink-0"
-                />
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold text-gray-900 truncate">{item.productTitle}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    Customer: <span className="font-medium text-gray-700">{item.customerName}</span>
-                  </p>
+        {loading ? (
+          <div className="p-8 text-center bg-white rounded-2xl border border-gray-200">
+            <div className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-gray-900 border-t-transparent"></div>
+          </div>
+        ) : (
+          <AnimatePresence mode="wait">
+            {currentItems.map((item, idx) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.15, delay: idx * 0.03 }}
+                className="bg-white rounded-2xl border border-gray-200 p-4.5 shadow-xs space-y-3.5"
+              >
+                {/* Top row: ID + Status */}
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-amber-600 font-mono text-base">{item.id}</span>
+                  <StatusBadge status={item.status} />
                 </div>
-              </div>
 
-              {/* Bottom row: Reason + Date + Review button */}
-              <div className="flex items-center justify-between pt-3 border-t border-gray-100 text-xs">
-                <div>
-                  <p className="text-gray-500">
-                    Reason: <span className="text-gray-800 font-semibold">{item.reason}</span>
-                  </p>
-                  <p className="text-gray-400 text-[11px] mt-0.5">{item.requestedDate}</p>
+                {/* Middle row: Thumbnail + Title + Customer */}
+                <div className="flex items-start gap-3.5">
+                  <img
+                    src={item.productImage}
+                    alt={item.productTitle}
+                    className="w-14 h-14 rounded-xl object-cover border border-gray-200 shrink-0"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-bold text-gray-900 truncate">{item.productTitle}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      Customer: <span className="font-medium text-gray-700">{item.customerName}</span>
+                    </p>
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => navigate(`/returns/${encodeURIComponent(item.id)}`)}
-                  className="py-2 px-4 rounded-xl bg-gray-950 text-white text-xs font-semibold hover:bg-gray-800 transition-all cursor-pointer shadow-xs active:scale-95"
-                >
-                  {t('returnsPage.review', { defaultValue: 'Review' })}
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+
+                {/* Bottom row: Reason + Date + Review button */}
+                <div className="flex items-center justify-between pt-3 border-t border-gray-100 text-xs">
+                  <div>
+                    <p className="text-gray-500">
+                      Reason: <span className="text-gray-800 font-semibold">{item.reason}</span>
+                    </p>
+                    <p className="text-gray-400 text-[11px] mt-0.5">{item.requestedDate}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/returns/${encodeURIComponent(item.id)}`)}
+                    className="py-2 px-4 rounded-xl bg-gray-950 text-white text-xs font-semibold hover:bg-gray-800 transition-all cursor-pointer shadow-xs active:scale-95"
+                  >
+                    {t('returnsPage.review', { defaultValue: 'Review' })}
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        )}
       </div>
 
       {/* Pagination Footer */}
