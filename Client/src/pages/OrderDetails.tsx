@@ -5,7 +5,6 @@ import {
   ChevronsRight,
   Check,
   Truck,
-  Circle,
   CircleCheckBig,
 } from 'lucide-react';
 import { motion } from 'motion/react';
