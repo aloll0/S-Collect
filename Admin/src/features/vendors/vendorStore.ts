@@ -29,6 +29,8 @@ type VendorStore = {
   setPage: (page: number) => void;
   approveVendor: (id: number) => void;
   rejectVendor: (id: number) => void;
+  suspendVendor: (id: number, reason?: string) => void;
+  activateVendor: (id: number) => void;
   bulkApprove: (ids: number[]) => void;
   bulkReject: (ids: number[]) => void;
   toggleVendorActive: (id: number) => void;
@@ -65,6 +67,20 @@ export const useVendorStore = create<VendorStore>((set) => ({
     set((state) => ({
       vendors: state.vendors.map((v) =>
         v.id === id ? { ...v, status: 'suspended' } : v
+      ),
+    })),
+  suspendVendor: (id, reason) =>
+    set((state) => ({
+      vendors: state.vendors.map((v) =>
+        v.id === id
+          ? { ...v, active: false, suspendReason: reason ?? '' }
+          : v
+      ),
+    })),
+  activateVendor: (id) =>
+    set((state) => ({
+      vendors: state.vendors.map((v) =>
+        v.id === id ? { ...v, active: true, suspendReason: undefined } : v
       ),
     })),
   bulkApprove: (ids) =>

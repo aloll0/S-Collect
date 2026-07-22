@@ -96,4 +96,4 @@ export interface VendorStatusResponse {
 export const getVendorOnboardingStatus = async (): Promise<VendorStatusResponse> => {
   const { data } = await api.get("/vendor/onboarding/status");
   return data;
-};
+};

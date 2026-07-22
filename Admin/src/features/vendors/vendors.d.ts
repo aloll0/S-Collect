@@ -16,4 +16,15 @@ export interface Vendor {
   revenue?: number;
   orders?: number;
   active?: boolean;
+  // Extended detail fields
+  phone?: string;
+  location?: string;
+  taxId?: string;
+  joinedDate?: string;
+  products?: number;
+  totalDue?: number;
+  invoices?: number;
+  pendingPayout?: number;
+  description?: string;
+  suspendReason?: string;
 }

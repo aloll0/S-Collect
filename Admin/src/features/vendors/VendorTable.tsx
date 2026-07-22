@@ -1,7 +1,8 @@
 import { useState, type ChangeEvent } from 'react';
-import { ChevronLeft, ChevronRight, X, ChevronDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, ChevronDown, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useVendorStore, useVendorTable, type FilterColumn } from './vendorStore';
+import { useNavigate } from 'react-router-dom';
+import { useVendorStore, useVendorTable } from './vendorStore';
 import VendorCategoryDropdown from './VendorCategoryDropdown';
 import VendorConfirmModal from './VendorConfirmModal';
 import Toggle from '../mangement/Toggle';
@@ -11,27 +12,23 @@ import PortalDropdown from '../../components/ui/PortalDropdown';
 export default function VendorTable() {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
+  const navigate = useNavigate();
 
   const activeTab = useVendorStore((s) => s.activeTab);
   const search = useVendorStore((s) => s.search);
-  const filterColumn = useVendorStore((s) => s.filterColumn);
   const selectedCategory = useVendorStore((s) => s.selectedCategory);
   const activeFilter = useVendorStore((s) => s.activeFilter);
   const setActiveTab = useVendorStore((s) => s.setActiveTab);
   const setSearch = useVendorStore((s) => s.setSearch);
-  const setFilterColumn = useVendorStore((s) => s.setFilterColumn);
   const setSelectedCategory = useVendorStore((s) => s.setSelectedCategory);
   const setActiveFilter = useVendorStore((s) => s.setActiveFilter);
   const setPage = useVendorStore((s) => s.setPage);
-  const approveVendor = useVendorStore((s) => s.approveVendor);
-  const rejectVendor = useVendorStore((s) => s.rejectVendor);
   const bulkApprove = useVendorStore((s) => s.bulkApprove);
   const bulkReject = useVendorStore((s) => s.bulkReject);
   const toggleVendorActive = useVendorStore((s) => s.toggleVendorActive);
   const toggleRow = useVendorStore((s) => s.toggleRow);
   const setSelectedRows = useVendorStore((s) => s.setSelectedRows);
   const clearSelection = useVendorStore((s) => s.clearSelection);
-  const bulkDeactivate = useVendorStore((s) => s.bulkReject); // reuse for now
 
   const {
     paginated,
@@ -51,6 +48,7 @@ export default function VendorTable() {
     isOpen: boolean;
     type: ModalType;
     ids: number[];
+    vendorName?: string;
   }>({ isOpen: false, type: 'approve', ids: [] });
 
   const tabs: { key: VendorTab; label: string; count?: number }[] = [
@@ -58,14 +56,6 @@ export default function VendorTable() {
     { key: 'all', label: t('vendors.tabs.all') },
   ];
 
-  const filterColumns: { key: FilterColumn; label: string }[] = [
-    { key: 'all', label: t('vendors.table.allColumns') },
-    { key: 'businessName', label: t('vendors.table.businessName') },
-    { key: 'owner', label: t('vendors.table.owner') },
-    { key: 'email', label: t('vendors.table.email') },
-    { key: 'submittedDate', label: t('vendors.table.submittedDate') },
-    { key: 'category', label: t('vendors.table.category') },
-  ];
 
   const activeFilters: { key: ActiveFilter; label: string }[] = [
     { key: 'all', label: t('vendors.table.allStatuses') },
@@ -101,9 +91,6 @@ export default function VendorTable() {
   const startItem = totalItems === 0 ? 0 : (page - 1) * itemsPerPage + 1;
   const endItem = Math.min(page * itemsPerPage, totalItems);
 
-  const filterColumnLabel =
-    filterColumns.find((c) => c.key === filterColumn)?.label ??
-    t('vendors.table.filterBy');
 
   const activeFilterLabel =
     activeFilters.find((f) => f.key === activeFilter)?.label ??
@@ -112,15 +99,14 @@ export default function VendorTable() {
   const toggleAll = (e: ChangeEvent<HTMLInputElement>) =>
     setSelectedRows(e.target.checked ? paginatedIds : []);
 
-  const openConfirm = (type: ModalType, ids: number[]) =>
-    setConfirmModal({ isOpen: true, type, ids });
+  const openConfirm = (type: ModalType, ids: number[], vendorName?: string) =>
+    setConfirmModal({ isOpen: true, type, ids, vendorName });
 
   const handleConfirm = () => {
     const { type, ids } = confirmModal;
     if (type === 'approve') bulkApprove(ids);
     else if (type === 'reject') bulkReject(ids);
     else {
-      // deactivate: toggle active=false for each
       ids.forEach((id) => {
         const store = useVendorStore.getState();
         const vendor = store.vendors.find((v) => v.id === id);
@@ -178,52 +164,12 @@ export default function VendorTable() {
           />
         </div>
 
-        {/* Filter by column — only for non-all tabs */}
+        {/* Category filter — only for non-all tabs (pending / suspended) */}
         {!isAllTab && (
-          <PortalDropdown
-            minWidth={180}
-            animate={false}
-            menuClassName="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden"
-            trigger={({ isOpen, toggle }) => (
-              <button
-                className="flex items-center gap-1.5 h-9 px-3 border border-gray-200 rounded-lg bg-white text-sm cursor-pointer hover:bg-gray-50 whitespace-nowrap"
-                onClick={toggle}
-              >
-                <span className="text-gray-400 text-xs">
-                  {t('vendors.table.filterBy')}:
-                </span>
-                <span className="font-medium">{filterColumnLabel}</span>
-                <ChevronDown
-                  size={14}
-                  color="black"
-                  className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-                />
-              </button>
-            )}
-          >
-            {({ close }) => (
-              <>
-                {filterColumns.map((col) => (
-                  <div
-                    key={col.key}
-                    className="flex items-center gap-2.5 px-3.5 py-2.5 text-sm cursor-pointer hover:bg-gray-50"
-                    onClick={() => {
-                      setFilterColumn(col.key);
-                      close();
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      readOnly
-                      checked={filterColumn === col.key}
-                      className="accent-black w-3.5 h-3.5"
-                    />
-                    <span>{col.label}</span>
-                  </div>
-                ))}
-              </>
-            )}
-          </PortalDropdown>
+          <VendorCategoryDropdown
+            selected={selectedCategory}
+            onChange={setSelectedCategory}
+          />
         )}
 
         {/* Status filter — only for All Vendors tab */}
@@ -304,26 +250,54 @@ export default function VendorTable() {
           <tbody>
             {paginated.length === 0 ? (
               <tr>
-                <td colSpan={colSpan} className="text-center py-12 text-gray-400">
-                  <i
-                    className="ti ti-building-store text-2xl block mb-2"
-                    aria-hidden="true"
-                  />
-                  <p>{t('vendors.table.noVendors')}</p>
+                <td colSpan={colSpan} className="text-center py-16 text-gray-400">
+                  {activeTab === 'pending' ? (
+                    /* ── "No Pending Requests" empty state ── */
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
+                        <i className="ti ti-mail text-2xl text-gray-400" aria-hidden="true" />
+                      </div>
+                      <div>
+                        <p className="text-base font-semibold text-gray-700 mb-1">
+                          {t('vendors.table.noPendingRequests')}
+                        </p>
+                        <p className="text-sm text-gray-400 max-w-xs mx-auto">
+                          {t('vendors.table.noPendingSubtext')}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => window.location.reload()}
+                        className="mt-1 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+                      >
+                        <RefreshCw size={14} />
+                        {t('vendors.table.refresh')}
+                      </button>
+                    </div>
+                  ) : (
+                    /* ── Generic empty state ── */
+                    <div className="flex flex-col items-center gap-2">
+                      <i className="ti ti-building-store text-2xl block" aria-hidden="true" />
+                      <p>{t('vendors.table.noVendors')}</p>
+                    </div>
+                  )}
                 </td>
               </tr>
             ) : isAllTab ? (
-              // ── All Vendors: approved only with toggle ──
+              // ── All Vendors: approved only with toggle, rows navigate to detail ──
               paginated.map((vendor) => {
                 const isSelected = selectedRows.includes(vendor.id);
                 return (
                   <tr
                     key={vendor.id}
-                    className={`border-b border-gray-100 transition-colors ${
+                    onClick={() => navigate(`/vendors/${vendor.id}`)}
+                    className={`border-b border-gray-100 transition-colors cursor-pointer ${
                       isSelected ? 'bg-indigo-50/60' : 'bg-white hover:bg-gray-50'
                     }`}
                   >
-                    <td className="px-3 py-3.5">
+                    <td
+                      className="px-3 py-3.5"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <input
                         type="checkbox"
                         checked={isSelected}
@@ -349,7 +323,10 @@ export default function VendorTable() {
                     <td className="px-4 py-3.5 text-gray-600 whitespace-nowrap">
                       {vendor.orders ?? 0}
                     </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
+                    <td
+                      className="px-4 py-3.5 whitespace-nowrap"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Toggle
                         checked={vendor.active ?? true}
                         onChange={() => {
@@ -384,7 +361,12 @@ export default function VendorTable() {
                       />
                     </td>
                     <td className="px-4 py-3.5 font-medium text-gray-900 whitespace-nowrap">
-                      {vendor.businessName}
+                      <button
+                        onClick={() => navigate(`/vendors/${vendor.id}`)}
+                        className="font-medium text-gray-900 hover:text-indigo-600 hover:underline underline-offset-2 transition-colors text-start"
+                      >
+                        {vendor.businessName}
+                      </button>
                     </td>
                     <td className="px-4 py-3.5 text-gray-600 whitespace-nowrap">
                       {vendor.owner}
@@ -402,14 +384,18 @@ export default function VendorTable() {
                       {vendor.status === 'pending' ? (
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => openConfirm('approve', [vendor.id])}
-                            className="px-3 py-1 text-xs font-semibold rounded bg-green-600 text-white hover:bg-green-700 transition-colors"
+                            onClick={() =>
+                              openConfirm('approve', [vendor.id], vendor.businessName)
+                            }
+                            className="px-3.5 py-2 text-xs font-semibold rounded-lg bg-[#1e8528] text-white hover:bg-green-800 transition-colors shadow-2xs"
                           >
                             {t('vendors.table.approve')}
                           </button>
                           <button
-                            onClick={() => openConfirm('reject', [vendor.id])}
-                            className="px-3 py-1 text-xs font-semibold rounded bg-red-500 text-white hover:bg-red-600 transition-colors"
+                            onClick={() =>
+                              openConfirm('reject', [vendor.id], vendor.businessName)
+                            }
+                            className="px-3.5 py-2 text-xs font-semibold rounded-lg border border-red-300 text-red-700 bg-white hover:bg-red-50 transition-colors shadow-2xs"
                           >
                             {t('vendors.table.reject')}
                           </button>
@@ -501,7 +487,7 @@ export default function VendorTable() {
           {activeTab === 'all' && (
             <button
               onClick={() => openConfirm('deactivate', selectedRows)}
-              className="flex px-3.5 py-1 items-center justify-center rounded-md border border-amber-500 text-amber-600 transition-colors hover:bg-amber-50 text-sm font-medium"
+              className="flex px-3.5 py-1 items-center justify-center rounded-md border border-red-500 text-red-600 transition-colors hover:bg-red-50 text-sm font-medium"
             >
               {t('vendors.table.deactivateSelected')}
             </button>
@@ -531,6 +517,7 @@ export default function VendorTable() {
         isOpen={confirmModal.isOpen}
         type={confirmModal.type}
         count={confirmModal.ids.length}
+        vendorName={confirmModal.vendorName}
         onConfirm={handleConfirm}
         onCancel={handleCancel}
       />
