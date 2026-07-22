@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { CheckCircle2, Clock, Circle, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
-import { MOCK_RETURNS, type ReturnItem } from '../data/mockReturns';
+import { type ReturnItem } from '../features/Returns/types';
 import { StatusBadge } from './ReturnRequests';
 import ApproveReturnModal from '../components/returns/ApproveReturnModal';
 import RejectReturnModal from '../components/returns/RejectReturnModal';
@@ -14,10 +14,8 @@ export default function ReturnRequestDetailsPage() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
 
-  const decodedId = id ? decodeURIComponent(id) : '#RET-20240617-001';
-  const foundItem = MOCK_RETURNS.find((r) => r.id === decodedId) || MOCK_RETURNS[0];
-
-  const [item, setItem] = useState<ReturnItem>(foundItem);
+  const decodedId = id ? decodeURIComponent(id) : '';
+  const [item, setItem] = useState<ReturnItem | null>(null);
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [internalNote, setInternalNote] = useState('');
@@ -28,29 +26,64 @@ export default function ReturnRequestDetailsPage() {
 
     let isMounted = true;
     async function loadSubOrder() {
-      const rawId = decodedId.replace('#RET-', '');
-      if (rawId && rawId.length >= 8) {
+      const rawId = decodedId.startsWith('#RET-') ? decodedId.replace('#RET-', '') : decodedId;
+      const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(rawId);
+      if (isUuid) {
         try {
           const sub = await getVendorSubOrderDetails(rawId);
           if (isMounted && sub) {
-            const firstProduct = sub.items[0] || {};
+            const firstProduct = (sub.items[0] || {}) as any;
+            // Resolve product image URL defensively
+            let productImage = '';
+            if (firstProduct.productImage) {
+              productImage = firstProduct.productImage;
+            } else if ((firstProduct as any).imageUrl) {
+              productImage = (firstProduct as any).imageUrl;
+            } else if (firstProduct.productId && typeof firstProduct.productId === 'object') {
+              const prod = firstProduct.productId as any;
+              if (prod.thumbnailUrl) {
+                productImage = typeof prod.thumbnailUrl === 'string' ? prod.thumbnailUrl : (prod.thumbnailUrl.url || '');
+              } else if (Array.isArray(prod.images) && prod.images.length > 0) {
+                const firstImg = prod.images[0];
+                productImage = typeof firstImg === 'string' ? firstImg : (firstImg.url || '');
+              }
+            }
+
+            // Resolve SKU defensively
+            const productSku = (firstProduct as any).sku || 
+              (firstProduct.productId && typeof firstProduct.productId === 'object' ? (firstProduct.productId as any).sku : null) || 
+              (typeof firstProduct.productId === 'string' ? firstProduct.productId : null) || 
+              'SKU-001';
+
+            // Resolve customer details defensively
+            const orderObj = (sub as any).order;
+            const buyerObj = orderObj?.buyer || (sub as any).buyer;
+            const customerName = buyerObj?.name || buyerObj?.nameAr || orderObj?.customerName || (sub as any).customerName || 'Customer';
+            const customerEmail = buyerObj?.email || orderObj?.customerEmail || (sub as any).customerEmail || 'customer@example.com';
+            const customerPhone = buyerObj?.phone || orderObj?.customerPhone || (sub as any).customerPhone || '';
+            const shippingAddress = orderObj?.shippingAddress || (sub as any).shippingAddress || '';
+
             setItem({
               id: `#RET-${sub.id.slice(0, 8).toUpperCase()}`,
               orderId: `#ORD-${sub.orderId.slice(0, 8).toUpperCase()}`,
-              customerName: 'Customer',
+              customerName,
+              customerEmail,
+              customerPhone,
+              shippingAddress,
               productTitle: firstProduct.productName || 'Order Product',
-              productSku: firstProduct.productId || 'SKU-001',
+              productSku,
               productVariant: firstProduct.variantLabel || 'Default',
               productQty: firstProduct.quantity || 1,
-              productPrice: `SAR ${(firstProduct.lineTotal || 0).toFixed(2)}`,
-              productImage: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=150',
+              productPrice: `SAR ${(firstProduct.unitPrice || firstProduct.lineTotal || 0).toFixed(2)}`,
+              productImage,
               reason: sub.statusOverrideReason || "Item doesn't fit",
               requestedDate: new Date(sub.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
               status: sub.status === 'DELIVERED' ? 'COMPLETED' : sub.status === 'CANCELLED' ? 'REJECTED' : 'PENDING_REVIEW',
+              rawId: sub.id,
             });
           }
         } catch (_err) {
-          // Keep mock item on error
+          // Keep null or show error
         }
       }
     }
@@ -60,22 +93,31 @@ export default function ReturnRequestDetailsPage() {
     };
   }, [decodedId, id]);
 
+  if (!item) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
+      </div>
+    );
+  }
+
   const handleApprove = async () => {
     // 1. Optimistic UI update (Instant execution)
     const prevStatus = item.status;
-    setItem((prev) => ({ ...prev, status: 'APPROVED' }));
+    setItem((prev) => prev ? { ...prev, status: 'APPROVED' } : null);
     setShowApproveModal(false);
     toast.success('Return Request Approved successfully');
 
     // 2. Background Network Sync
     try {
-      const rawId = item.id.replace('#RET-', '');
-      if (rawId.length >= 8) {
+      const rawId = item.rawId || (item.id.startsWith('#RET-') ? item.id.replace('#RET-', '') : item.id);
+      const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(rawId);
+      if (isUuid) {
         await updateVendorSubOrderStatus(rawId, { status: 'DELIVERED' });
       }
     } catch (_e) {
       // If network fails, revert state
-      setItem((prev) => ({ ...prev, status: prevStatus }));
+      setItem((prev) => prev ? { ...prev, status: prevStatus } : null);
       toast.error('Failed to sync status with server');
     }
   };
@@ -83,19 +125,20 @@ export default function ReturnRequestDetailsPage() {
   const handleReject = async (reason: string) => {
     // 1. Optimistic UI update (Instant execution)
     const prevStatus = item.status;
-    setItem((prev) => ({ ...prev, status: 'REJECTED' }));
+    setItem((prev) => prev ? { ...prev, status: 'REJECTED' } : null);
     setShowRejectModal(false);
     toast.success(`Return Request Rejected: ${reason || 'Decision recorded'}`);
 
     // 2. Background Network Sync
     try {
-      const rawId = item.id.replace('#RET-', '');
-      if (rawId.length >= 8) {
+      const rawId = item.rawId || (item.id.startsWith('#RET-') ? item.id.replace('#RET-', '') : item.id);
+      const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(rawId);
+      if (isUuid) {
         await updateVendorSubOrderStatus(rawId, { status: 'CANCELLED' });
       }
     } catch (_e) {
       // If network fails, revert state
-      setItem((prev) => ({ ...prev, status: prevStatus }));
+      setItem((prev) => prev ? { ...prev, status: prevStatus } : null);
       toast.error('Failed to sync status with server');
     }
   };

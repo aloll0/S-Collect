@@ -38,23 +38,6 @@ const ReceivablesGrid = () => {
 
   return (
     <div className="mb-6">
-      <style>{`
-        @keyframes receivablesFadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-receivables-fade-in-up {
-          opacity: 0;
-          animation: receivablesFadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-      `}</style>
-
       <div
         className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6"
         dir={isArabic ? 'rtl' : 'ltr'}
