@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { CheckCircle2, Clock, Circle, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -9,91 +9,116 @@ import ApproveReturnModal from '../components/returns/ApproveReturnModal';
 import RejectReturnModal from '../components/returns/RejectReturnModal';
 import { getVendorSubOrderDetails, updateVendorSubOrderStatus } from '../services/returns';
 import toast from 'react-hot-toast';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function ReturnRequestDetailsPage() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
+  const queryClient = useQueryClient();
 
   const decodedId = id ? decodeURIComponent(id) : '';
-  const [item, setItem] = useState<ReturnItem | null>(null);
+  const rawId = decodedId.startsWith('#RET-') ? decodedId.replace('#RET-', '') : decodedId;
+  const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(rawId);
+
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [internalNote, setInternalNote] = useState('');
 
-  // Smooth scroll to top & attempt API load when opening details
+  // Smooth scroll to top when opening details
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [decodedId]);
 
-    let isMounted = true;
-    async function loadSubOrder() {
-      const rawId = decodedId.startsWith('#RET-') ? decodedId.replace('#RET-', '') : decodedId;
-      const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(rawId);
-      if (isUuid) {
-        try {
-          const sub = await getVendorSubOrderDetails(rawId);
-          if (isMounted && sub) {
-            const firstProduct = (sub.items[0] || {}) as any;
-            // Resolve product image URL defensively
-            let productImage = '';
-            if (firstProduct.productImage) {
-              productImage = firstProduct.productImage;
-            } else if ((firstProduct as any).imageUrl) {
-              productImage = (firstProduct as any).imageUrl;
-            } else if (firstProduct.productId && typeof firstProduct.productId === 'object') {
-              const prod = firstProduct.productId as any;
-              if (prod.thumbnailUrl) {
-                productImage = typeof prod.thumbnailUrl === 'string' ? prod.thumbnailUrl : (prod.thumbnailUrl.url || '');
-              } else if (Array.isArray(prod.images) && prod.images.length > 0) {
-                const firstImg = prod.images[0];
-                productImage = typeof firstImg === 'string' ? firstImg : (firstImg.url || '');
-              }
-            }
+  // Fetch using react-query
+  const { data: sub, isLoading } = useQuery({
+    queryKey: ['returnRequestDetails', rawId],
+    queryFn: () => getVendorSubOrderDetails(rawId),
+    enabled: isUuid,
+    staleTime: 10_000,
+  });
 
-            // Resolve SKU defensively
-            const productSku = (firstProduct as any).sku || 
-              (firstProduct.productId && typeof firstProduct.productId === 'object' ? (firstProduct.productId as any).sku : null) || 
-              (typeof firstProduct.productId === 'string' ? firstProduct.productId : null) || 
-              'SKU-001';
+  // Mutator for updating status
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ status }: { status: string }) => updateVendorSubOrderStatus(rawId, { status }),
+    onMutate: async ({ status }) => {
+      await queryClient.cancelQueries({ queryKey: ['returnRequestDetails', rawId] });
+      const previousSub = queryClient.getQueryData(['returnRequestDetails', rawId]);
+      if (previousSub) {
+        queryClient.setQueryData(['returnRequestDetails', rawId], {
+          ...(previousSub as any),
+          status,
+        });
+      }
+      return { previousSub };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousSub) {
+        queryClient.setQueryData(['returnRequestDetails', rawId], context.previousSub);
+      }
+      toast.error('Failed to sync status with server');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['returnRequestDetails', rawId] });
+      queryClient.invalidateQueries({ queryKey: ['returnRequests'] });
+    },
+  });
 
-            // Resolve customer details defensively
-            const orderObj = (sub as any).order;
-            const buyerObj = orderObj?.buyer || (sub as any).buyer;
-            const customerName = buyerObj?.name || buyerObj?.nameAr || orderObj?.customerName || (sub as any).customerName || 'Customer';
-            const customerEmail = buyerObj?.email || orderObj?.customerEmail || (sub as any).customerEmail || 'customer@example.com';
-            const customerPhone = buyerObj?.phone || orderObj?.customerPhone || (sub as any).customerPhone || '';
-            const shippingAddress = orderObj?.shippingAddress || (sub as any).shippingAddress || '';
+  // Map sub-order data to ReturnItem structure
+  const item = useMemo<ReturnItem | null>(() => {
+    if (!sub) return null;
+    const firstProduct = (sub.items[0] || {}) as any;
 
-            setItem({
-              id: `#RET-${sub.id.slice(0, 8).toUpperCase()}`,
-              orderId: `#ORD-${sub.orderId.slice(0, 8).toUpperCase()}`,
-              customerName,
-              customerEmail,
-              customerPhone,
-              shippingAddress,
-              productTitle: firstProduct.productName || 'Order Product',
-              productSku,
-              productVariant: firstProduct.variantLabel || 'Default',
-              productQty: firstProduct.quantity || 1,
-              productPrice: `SAR ${(firstProduct.unitPrice || firstProduct.lineTotal || 0).toFixed(2)}`,
-              productImage,
-              reason: sub.statusOverrideReason || "Item doesn't fit",
-              requestedDate: new Date(sub.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-              status: sub.status === 'DELIVERED' ? 'COMPLETED' : sub.status === 'CANCELLED' ? 'REJECTED' : 'PENDING_REVIEW',
-              rawId: sub.id,
-            });
-          }
-        } catch (_err) {
-          // Keep null or show error
-        }
+    // Resolve product image URL defensively
+    let productImage = '';
+    if (firstProduct.productImage) {
+      productImage = firstProduct.productImage;
+    } else if ((firstProduct as any).imageUrl) {
+      productImage = (firstProduct as any).imageUrl;
+    } else if (firstProduct.productId && typeof firstProduct.productId === 'object') {
+      const prod = firstProduct.productId as any;
+      if (prod.thumbnailUrl) {
+        productImage = typeof prod.thumbnailUrl === 'string' ? prod.thumbnailUrl : (prod.thumbnailUrl.url || '');
+      } else if (Array.isArray(prod.images) && prod.images.length > 0) {
+        const firstImg = prod.images[0];
+        productImage = typeof firstImg === 'string' ? firstImg : (firstImg.url || '');
       }
     }
-    loadSubOrder();
-    return () => {
-      isMounted = false;
-    };
-  }, [decodedId, id]);
 
-  if (!item) {
+    // Resolve SKU defensively
+    const productSku = (firstProduct as any).sku || 
+      (firstProduct.productId && typeof firstProduct.productId === 'object' ? (firstProduct.productId as any).sku : null) || 
+      (typeof firstProduct.productId === 'string' ? firstProduct.productId : null) || 
+      'SKU-001';
+
+    // Resolve customer details defensively
+    const orderObj = (sub as any).order;
+    const buyerObj = orderObj?.buyer || (sub as any).buyer;
+    const customerName = buyerObj?.name || buyerObj?.nameAr || orderObj?.customerName || (sub as any).customerName || 'Customer';
+    const customerEmail = buyerObj?.email || orderObj?.customerEmail || (sub as any).customerEmail || 'customer@example.com';
+    const customerPhone = buyerObj?.phone || orderObj?.customerPhone || (sub as any).customerPhone || '';
+    const shippingAddress = orderObj?.shippingAddress || (sub as any).shippingAddress || '';
+
+    return {
+      id: `#RET-${sub.id.slice(0, 8).toUpperCase()}`,
+      orderId: `#ORD-${sub.orderId.slice(0, 8).toUpperCase()}`,
+      customerName,
+      customerEmail,
+      customerPhone,
+      shippingAddress,
+      productTitle: firstProduct.productName || 'Order Product',
+      productSku,
+      productVariant: firstProduct.variantLabel || 'Default',
+      productQty: firstProduct.quantity || 1,
+      productPrice: `SAR ${(firstProduct.unitPrice || firstProduct.lineTotal || 0).toFixed(2)}`,
+      productImage,
+      reason: sub.statusOverrideReason || "Item doesn't fit",
+      requestedDate: new Date(sub.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      status: sub.status === 'DELIVERED' ? 'COMPLETED' : sub.status === 'CANCELLED' ? 'REJECTED' : 'PENDING_REVIEW',
+      rawId: sub.id,
+    };
+  }, [sub]);
+
+  if (isLoading || !item) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
@@ -102,45 +127,15 @@ export default function ReturnRequestDetailsPage() {
   }
 
   const handleApprove = async () => {
-    // 1. Optimistic UI update (Instant execution)
-    const prevStatus = item.status;
-    setItem((prev) => prev ? { ...prev, status: 'APPROVED' } : null);
     setShowApproveModal(false);
     toast.success('Return Request Approved successfully');
-
-    // 2. Background Network Sync
-    try {
-      const rawId = item.rawId || (item.id.startsWith('#RET-') ? item.id.replace('#RET-', '') : item.id);
-      const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(rawId);
-      if (isUuid) {
-        await updateVendorSubOrderStatus(rawId, { status: 'DELIVERED' });
-      }
-    } catch (_e) {
-      // If network fails, revert state
-      setItem((prev) => prev ? { ...prev, status: prevStatus } : null);
-      toast.error('Failed to sync status with server');
-    }
+    updateStatusMutation.mutate({ status: 'DELIVERED' });
   };
 
   const handleReject = async (reason: string) => {
-    // 1. Optimistic UI update (Instant execution)
-    const prevStatus = item.status;
-    setItem((prev) => prev ? { ...prev, status: 'REJECTED' } : null);
     setShowRejectModal(false);
     toast.success(`Return Request Rejected: ${reason || 'Decision recorded'}`);
-
-    // 2. Background Network Sync
-    try {
-      const rawId = item.rawId || (item.id.startsWith('#RET-') ? item.id.replace('#RET-', '') : item.id);
-      const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(rawId);
-      if (isUuid) {
-        await updateVendorSubOrderStatus(rawId, { status: 'CANCELLED' });
-      }
-    } catch (_e) {
-      // If network fails, revert state
-      setItem((prev) => prev ? { ...prev, status: prevStatus } : null);
-      toast.error('Failed to sync status with server');
-    }
+    updateStatusMutation.mutate({ status: 'CANCELLED' });
   };
 
   return (

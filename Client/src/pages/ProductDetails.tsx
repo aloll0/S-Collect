@@ -89,7 +89,7 @@ const ProductDetails = () => {
   const variant = product.variants[0];
   const image = product.images[0];
 
-  const category = categories.find((c) => c.id === product.categoryId);
+  const category = categories.find((c: any) => c.id === product.categoryId);
 
   const categoryName =
     i18n.language === 'ar' ? category?.nameAr : category?.name;
