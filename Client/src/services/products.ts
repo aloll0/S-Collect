@@ -83,3 +83,15 @@ export const getCategories = async (): Promise<Category[]> => {
   const { data } = await api.get('/vendor/categories');
   return data;
 };
+
+export const updateProductVariant = async (
+  productId: string,
+  variantId: string,
+  body: { stock?: number; price?: number; compareAtPrice?: number; isActive?: boolean }
+) => {
+  const { data } = await api.patch(`/vendor/products/${productId}/variants/${variantId}`, body);
+  return data;
+};
+
+
+

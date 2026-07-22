@@ -479,9 +479,15 @@ html,
    ============================================================ */
 
 @utility sidebar-page-container {
-  @apply px-4 lg:px-8 xl:px-14;
+  @apply px-4 lg:px-8 xl:px-14 py-4 lg:py-6;
 }
 
+@utility sidebar-page-container-header {
+  @apply px-4 lg:px-8 xl:px-14 py-6 bg-white;
+}
+@utility heading-page-title {
+  @apply text-xl md:text-2xl 2xl:text-3xl;
+}
 @utility icon-stroke {
   stroke-width: var(--icon-stroke-width);
 }

@@ -4,7 +4,7 @@ import { type ProductRow, STATUS_STYLES } from '../types';
 
 interface ProductCardProps {
   product: ProductRow;
-  onStockChange: (id: number, value: string) => void;
+  onStockChange: (id: string, value: string) => void;
 }
 
 export const ProductCard = ({ product, onStockChange }: ProductCardProps) => {
