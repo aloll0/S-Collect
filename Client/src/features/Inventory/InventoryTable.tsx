@@ -5,7 +5,7 @@ import { STATUS_STYLES, type ProductRow } from './types';
 
 interface InventoryTableProps {
   data: ProductRow[];
-  onStockChange: (id: number, value: string) => void;
+  onStockChange: (id: string, value: string) => void;
 }
 
 export const InventoryTable = ({

@@ -2,7 +2,7 @@ import type { Product } from '../types';
 
 export const FAKE_PRODUCTS: Product[] = [
   {
-    id: 1,
+    id: '1',
     name: 'Cotton Summer Dress',
     sku: 'DRS-001',
     variant: 'Blue / M',
@@ -10,7 +10,7 @@ export const FAKE_PRODUCTS: Product[] = [
     updatedAt: '2h ago',
   },
   {
-    id: 2,
+    id: '2',
     name: 'Classic Slim Jeans',
     sku: 'JNS-205',
     variant: 'Black / 32',
@@ -18,7 +18,7 @@ export const FAKE_PRODUCTS: Product[] = [
     updatedAt: '5h ago',
   },
   {
-    id: 3,
+    id: '3',
     name: 'Running Sneakers',
     sku: 'SHOE-99',
     variant: 'White / 42',
@@ -26,7 +26,7 @@ export const FAKE_PRODUCTS: Product[] = [
     updatedAt: '1d ago',
   },
   {
-    id: 4,
+    id: '4',
     name: 'Leather Tote Bag',
     sku: 'ACC-442',
     variant: 'Brown',
@@ -34,7 +34,7 @@ export const FAKE_PRODUCTS: Product[] = [
     updatedAt: '3h ago',
   },
   {
-    id: 5,
+    id: '5',
     name: 'Graphic Cotton Tee',
     sku: 'TSH-881',
     variant: 'White / L',
@@ -42,7 +42,7 @@ export const FAKE_PRODUCTS: Product[] = [
     updatedAt: '12h ago',
   },
   {
-    id: 6,
+    id: '6',
     name: 'Wool Blend Sweater',
     sku: 'SWT-112',
     variant: 'Grey / S',
@@ -50,7 +50,7 @@ export const FAKE_PRODUCTS: Product[] = [
     updatedAt: '1d ago',
   },
   {
-    id: 7,
+    id: '7',
     name: 'Formal Silk Shirt',
     sku: 'SHR-772',
     variant: 'White / XL',
@@ -58,7 +58,7 @@ export const FAKE_PRODUCTS: Product[] = [
     updatedAt: '6h ago',
   },
   {
-    id: 8,
+    id: '8',
     name: 'Denim Jacket',
     sku: 'JKT-339',
     variant: 'Light Blue / M',
@@ -66,7 +66,7 @@ export const FAKE_PRODUCTS: Product[] = [
     updatedAt: '2d ago',
   },
   {
-    id: 9,
+    id: '9',
     name: 'Summer Shorts',
     sku: 'SHT-555',
     variant: 'Khaki / 34',
@@ -74,7 +74,7 @@ export const FAKE_PRODUCTS: Product[] = [
     updatedAt: '4h ago',
   },
   {
-    id: 10,
+    id: '10',
     name: 'Cashmere Scarf',
     sku: 'ACC-789',
     variant: 'Red',
@@ -82,7 +82,7 @@ export const FAKE_PRODUCTS: Product[] = [
     updatedAt: '1h ago',
   },
   {
-    id: 11,
+    id: '11',
     name: 'Leather Belt',
     sku: 'ACC-654',
     variant: 'Brown / 38',
@@ -90,7 +90,7 @@ export const FAKE_PRODUCTS: Product[] = [
     updatedAt: '3d ago',
   },
   {
-    id: 12,
+    id: '12',
     name: 'Oxford Shoes',
     sku: 'SHOE-321',
     variant: 'Black / 43',

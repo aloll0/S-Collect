@@ -325,6 +325,7 @@
     "orderDetails": "تفاصيل الطلب",
     "orderItems": "عناصر الطلب",
     "orderTimeline": "سجل الطلب",
+    "orderPlaced": "تم تقديم الطلب",
     "orderInformation": "معلومات الطلب",
     "customerInformation": "معلومات العميل",
     "shippingAddress": "عنوان الشحن",

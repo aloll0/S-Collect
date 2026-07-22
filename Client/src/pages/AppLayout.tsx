@@ -27,7 +27,8 @@ const AppLayout = () => {
       } catch (err: any) {
         if (err?.response?.status === 401) {
           localStorage.removeItem('token');
-          navigate('/login');
+          localStorage.removeItem('refreshToken');
+          navigate('/login?state=expired');
         } else {
           // If onboarding status endpoint fails due to server issue or not existing yet on target env,
           // default to APPROVED to not block testing the dashboard.
