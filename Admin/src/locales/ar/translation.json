@@ -81,7 +81,6 @@
     "emailPlaceholder": "أدخل بريدك الإلكتروني",
     "passwordLabel": "كلمة المرور",
     "passwordPlaceholder": "أدخل كلمة المرور",
-    "forgotPassword": "نسيت كلمة المرور؟",
     "signIn": "تسجيل الدخول",
     "signingIn": "جارٍ تسجيل الدخول...",
     "tryAgain": "حاول مرة أخرى لاحقاً",
@@ -91,10 +90,7 @@
     "expiredAlert": "انتهت جلستك بسبب عدم النشاط.",
     "lockedTitle": "تم قفل الحساب مؤقتاً",
     "lockedSubtitle": "محاولات تسجيل دخول فاشلة كثيرة. يرجى الانتظار قبل المحاولة مرة أخرى.",
-    "trouble": "هل تواجه مشكلة؟",
     "contactSupport": "تواصل مع الدعم",
-    "noAccount": "ليس لديك حساب؟",
-    "register": "إنشاء حساب",
     "errorFillAll": "يرجى تعبئة جميع الحقول.",
     "tryAgainIn": "يمكنك المحاولة بعد",
     "minutes": "دقيقة",
@@ -102,97 +98,6 @@
       "emailRequired": "البريد الإلكتروني مطلوب",
       "emailInvalid": "يرجى إدخال بريد إلكتروني صحيح",
       "passwordRequired": "كلمة المرور مطلوبة"
-    }
-  },
-  "forgetPass": {
-    "title": "تغيير كلمة المرور",
-    "subtitle": "يجب تغيير كلمة المرور المؤقتة قبل الوصول إلى لوحة التحكم.",
-    "alert": "هذه أول تسجيل دخول لك. يرجى تحديث كلمة المرور.",
-    "tempPassword": "كلمة المرور المؤقتة",
-    "tempPasswordPlaceholder": "أدخل كلمة المرور المؤقتة",
-    "newPassword": "كلمة المرور الجديدة",
-    "newPasswordPlaceholder": "أنشئ كلمة مرور جديدة",
-    "confirmPassword": "تأكيد كلمة المرور الجديدة",
-    "confirmPasswordPlaceholder": "أكد كلمة المرور الجديدة",
-    "submit": "تعيين كلمة مرور جديدة",
-    "errors": {
-      "tempPasswordRequired": "كلمة المرور المؤقتة مطلوبة",
-      "newPasswordRequired": "كلمة المرور الجديدة مطلوبة",
-      "newPasswordMinLength": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
-      "newPasswordWeak": "كلمة المرور يجب أن تحتوي على حرف كبير واحد ورقم واحد على الأقل",
-      "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
-      "passwordsMismatch": "كلمتا المرور غير متطابقتين"
-    }
-  },
-  "register": {
-    "step1": "المعلومات الشخصية",
-    "step2": "معلومات المتجر",
-    "step3": "تعيين كلمة المرور",
-    "continue": "متابعة",
-    "back": "رجوع",
-    "createAccount": "إنشاء الحساب",
-    "creatingAccount": "جارٍ إنشاء الحساب...",
-    "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
-    "logIn": "تسجيل الدخول",
-    "firstNameLabel": "الاسم الأول",
-    "firstNamePlaceholder": "مثال: أحمد",
-    "lastNameLabel": "اسم العائلة",
-    "lastNamePlaceholder": "مثال: محمد",
-    "emailLabel": "البريد الإلكتروني",
-    "emailPlaceholder": "john@company.com",
-    "phoneLabel": "رقم الهاتف",
-    "phonePlaceholder": "+20 10 0000 0000",
-    "storeNameLabel": "اسم المتجر",
-    "storeNamePlaceholder": "مثال: متجري الرائع",
-    "categoryLabel": "الفئة",
-    "categoryPlaceholder": "اختر فئة",
-    "websiteLabel": "السجل التجاري",
-    "websitePlaceholder": "رقم السجل التجاري",
-    "descriptionLabel": "وصف المتجر",
-    "descriptionPlaceholder": "أخبر المشترين عن متجرك...",
-    "passwordLabel": "كلمة المرور",
-    "passwordPlaceholder": "أنشئ كلمة مرور قوية",
-    "confirmPasswordLabel": "تأكيد كلمة المرور",
-    "confirmPasswordPlaceholder": "أعد كتابة كلمة المرور",
-    "emailSentTitle": "تحقق من بريدك الإلكتروني",
-    "emailSentSubtitle": "أرسلنا رابط التحقق إلى",
-    "emailSentBody": "انقر على الرابط في البريد لتفعيل حساب البائع الخاص بك. ينتهي الرابط خلال 24 ساعة.",
-    "didntGetEmail": "لم تستلم البريد؟",
-    "checkSpam": "تحقق من مجلد الرسائل المزعجة، أو",
-    "resend": "انقر هنا لإعادة الإرسال",
-    "errors": {
-      "firstNameRequired": "الاسم الأول مطلوب",
-      "lastNameRequired": "اسم العائلة مطلوب",
-      "emailRequired": "البريد الإلكتروني مطلوب",
-      "emailInvalid": "أدخل بريداً إلكترونياً صحيحاً",
-      "phoneRequired": "رقم الهاتف مطلوب",
-      "storeNameRequired": "اسم المتجر مطلوب",
-      "categoryRequired": "يرجى اختيار فئة",
-      "descriptionRequired": "وصف المتجر مطلوب",
-      "passwordRequired": "كلمة المرور مطلوبة",
-      "passwordMinLength": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
-      "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
-      "passwordsMismatch": "كلمتا المرور غير متطابقتين"
-    },
-    "passwordStrength": {
-      "weak": "ضعيف",
-      "fair": "مقبول",
-      "good": "جيد",
-      "strong": "قوي",
-      "chars": "8+ أحرف",
-      "uppercase": "حرف كبير",
-      "number": "رقم",
-      "special": "حرف خاص"
-    },
-    "categories": {
-      "electronics": "إلكترونيات",
-      "fashion": "أزياء",
-      "homeGarden": "المنزل والحديقة",
-      "sports": "رياضة",
-      "books": "كتب",
-      "beauty": "جمال",
-      "food": "طعام ومشروبات",
-      "other": "أخرى"
     }
   },
   "panel": {
@@ -210,58 +115,44 @@
   "addProduct": {
     "title": "إضافة منتج",
     "subtitle": "أضف منتجًا جديدًا إلى المخزون الخاص بك",
-
     "productInformation": "معلومات المنتج",
     "productMedia": "صور المنتج",
     "productStatus": "حالة المنتج",
     "pricingRules": "قواعد التسعير",
-
     "nameAr": "اسم المنتج (بالعربية)",
     "nameEn": "اسم المنتج (بالإنجليزية)",
     "description": "الوصف",
-
     "categories": "التصنيفات",
     "sizes": "المقاسات",
     "colors": "الألوان",
-
     "addCategory": "إضافة تصنيف",
     "addSize": "إضافة مقاس",
     "addColor": "إضافة لون",
-
     "enterCategory": "أدخل اسم التصنيف",
     "enterSize": "أدخل المقاس",
     "enterColor": "أدخل اللون",
-
     "add": "إضافة",
-
     "nameArPlaceholder": "أدخل اسم المنتج بالعربية",
     "nameEnPlaceholder": "أدخل اسم المنتج بالإنجليزية",
     "descriptionPlaceholder": "أدخل وصف المنتج",
-
     "basePrice": "السعر الأساسي",
     "comparePrice": "السعر قبل الخصم",
     "sku": "رمز المنتج",
-
     "visibility": "الظهور",
     "homepage": "الصفحة الرئيسية",
     "promotions": "العروض",
     "searchResults": "نتائج البحث",
-
     "save": "حفظ التغييرات",
     "cancel": "إلغاء",
     "continue": "متابعة",
     "publish": "نشر",
     "previous": "السابق",
-
     "uploadImage": "رفع صورة",
     "dragImage": "اسحب الصورة هنا أو اضغط للرفع",
-
     "active": "نشط",
     "inactive": "غير نشط",
-
     "addingProduct": "جاري إضافة المنتج...",
     "addingProductMessage": "يرجى الانتظار بينما نقوم بإضافة منتجك.",
-
     "productAddedSuccessfully": "تمت إضافة المنتج بنجاح",
     "productAddedMessage": "تمت إضافة منتجك بنجاح.",
     "done": "تم",
@@ -299,34 +190,26 @@
     "processing": "قيد المعالجة",
     "shipped": "تم الشحن",
     "delivered": "تم التسليم",
-
     "sortBy": "ترتيب حسب",
     "newestFirst": "الأحدث أولاً",
     "oldestFirst": "الأقدم أولاً",
-
     "orderId": "رقم الطلب",
     "orderDate": "تاريخ الطلب",
     "customerName": "اسم العميل",
     "totalAmount": "إجمالي المبلغ",
     "orderStatus": "حالة الطلب",
     "actions": "الإجراءات",
-
     "viewDetails": "عرض التفاصيل",
-
     "showing": "عرض",
     "of": "من",
     "results": "نتيجة",
-
     "noOrders": "لا توجد طلبات بعد",
     "noOrdersDesc": "ستظهر الطلبات هنا بمجرد استلام أول طلب",
-
     "save": "حفظ",
     "cancel": "إلغاء",
-
     "addTrackingNumber": "إضافة رقم تتبع",
     "trackingDescription": "الرجاء إدخال رقم التتبع لمساعدة العميل على متابعة الشحنة",
     "trackingPlaceholder": "أدخل رقم التتبع",
-
     "orderDetails": "تفاصيل الطلب",
     "orderItems": "عناصر الطلب",
     "orderTimeline": "سجل الطلب",
@@ -334,25 +217,20 @@
     "customerInformation": "معلومات العميل",
     "shippingAddress": "عنوان الشحن",
     "orderSummary": "ملخص الطلب",
-
     "paymentStatus": "حالة الدفع",
     "trackingNumber": "رقم التتبع",
-
     "name": "الاسم",
     "email": "البريد الإلكتروني",
     "phone": "رقم الهاتف",
-
     "subtotal": "المجموع الفرعي",
     "shippingFee": "رسوم الشحن",
     "discount": "الخصم",
     "tax": "الضريبة",
     "grandTotal": "الإجمالي النهائي",
-
     "updateOrderStatus": "تحديث حالة الطلب",
     "updateOrderStatusDesc": "لا يمكن التراجع عن تغيير الحالة بعد الحفظ",
     "trackingOptional": "رقم التتبع (اختياري)",
     "updateButton": "تحديث حالة الطلب",
-
     "updatedSuccessfully": "تم تحديث الطلب بنجاح",
     "pendingLabel": "بانتظار التنفيذ"
   },
@@ -394,8 +272,6 @@
       "emailLockedHint": "لا يمكن تغيير البريد الإلكتروني من هذه الصفحة. يرجى التواصل مع المسؤول لطلب تغييره.",
       "requestEmailChange": "طلب تغيير البريد الإلكتروني",
       "phoneNumber": "رقم الهاتف",
-      "changePassword": "تغيير كلمة المرور",
-      "changePasswordDescription": "تحديث كلمة مرور حسابك.",
       "currentPassword": "كلمة المرور الحالية",
       "newPassword": "كلمة المرور الجديدة",
       "confirmPassword": "تأكيد كلمة المرور",
@@ -605,12 +481,12 @@
     },
     "reviews": {
       "filters": {
-        "all": "كل المراجعات",
-        "5": "5 نجوم",
-        "4": "4 نجوم",
-        "3": "3 نجوم",
-        "2": "2 نجوم",
         "1": "نجمة واحدة",
+        "2": "2 نجوم",
+        "3": "3 نجوم",
+        "4": "4 نجوم",
+        "5": "5 نجوم",
+        "all": "كل المراجعات",
         "photos": "بصور",
         "newest": "الأحدث",
         "highest": "أعلى تقييم",
@@ -623,7 +499,6 @@
       "showingRange": "عرض {{start}}–{{end}} من {{total}} مراجعة"
     }
   },
-
   "receivables": {
     "title": "المستحقات",
     "description": "تتبع الأرباح والعمولات وسجل الدفع.",
@@ -643,9 +518,7 @@
       "failed": "فشل"
     }
   },
-
   "Add Product": "إضافة منتج",
-
   "returnsPage": {
     "title": "طلبات الإرجاع",
     "breadcrumb": "تفاصيل طلب الإرجاع",

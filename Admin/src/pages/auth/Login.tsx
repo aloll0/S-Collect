@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   AlertTriangle,
   Clock3,
@@ -43,13 +43,8 @@ interface LoginFormValues {
   password: string;
 }
 
-interface LoginProps {
-  onGoToRegister?: () => void;
-}
-
-const Login = ({ onGoToRegister }: LoginProps) => {
+const Login = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [remainingTime, setRemainingTime] = useState<number>(14 * 60); 
   
@@ -99,8 +94,6 @@ const Login = ({ onGoToRegister }: LoginProps) => {
     let timer: ReturnType<typeof setInterval>;
 
     if (isLocked) {
-      setRemainingTime(14 * 60); // reset to 14 minutes
-
       timer = setInterval(() => {
         setRemainingTime((prev) => {
           if (prev <= 1) {
@@ -230,18 +223,6 @@ const Login = ({ onGoToRegister }: LoginProps) => {
                 )}
               </div>
 
-              {!isLocked && (
-                <div className="flex justify-start">
-                  <button
-                    type="button"
-                    onClick={() => navigate('/forget-pass?mode=forgot')}
-                    className="text-label-sm text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
-                  >
-                    {t('login.forgotPassword')}
-                  </button>
-                </div>
-              )}
-
               <button
                 type="submit"
                 disabled={isPending || isLocked}
@@ -275,30 +256,6 @@ const Login = ({ onGoToRegister }: LoginProps) => {
               )}
             </form>
 
-            {!isLocked && !isExpired && (
-              <p className="text-center mt-6 text-body-sm text-gray-500 animate-fade-in-up">
-                {t('login.trouble')}{' '}
-                <button
-                  type="button"
-                  onClick={() => navigate('/register')}
-                  className="text-label-sm font-semibold text-gray-900 transition-colors cursor-pointer"
-                >
-                  {t('login.register')}
-                </button>
-              </p>
-            )}
-
-            {onGoToRegister && !isLocked && !isExpired && (
-              <p className="text-center mt-3 text-body-sm text-gray-500">
-                {t('login.noAccount')}{' '}
-                <button
-                  onClick={onGoToRegister}
-                  className="text-gray-900 font-semibold hover:underline"
-                >
-                  {t('login.register')}
-                </button>
-              </p>
-            )}
           </div>
         </div>
       </div>

@@ -8,6 +8,28 @@ export interface LoginFormValues {
   password: string;
 }
 
+interface ApiErrorResponse {
+  response?: {
+    data?: {
+      error?: {
+        message?: string;
+      };
+      message?: string;
+    };
+  };
+  message?: string;
+}
+
+const getLoginErrorMessage = (error: unknown) => {
+  const apiError = error as ApiErrorResponse;
+  return (
+    apiError.response?.data?.error?.message ||
+    apiError.response?.data?.message ||
+    apiError.message ||
+    'Login failed'
+  );
+};
+
 export const useLogin = () => {
   const navigate = useNavigate();
   const { initializeLogin } = useAuthStore();
@@ -20,12 +42,8 @@ export const useLogin = () => {
           throw new Error(response.message || 'Login failed');
         }
         return response;
-      } catch (error: any) {
-        const responseData = error?.response?.data;
-        const apiError = responseData?.error || responseData;
-        const message =
-          apiError?.message || error.message || 'Login failed';
-        throw new Error(message);
+      } catch (error: unknown) {
+        throw new Error(getLoginErrorMessage(error), { cause: error });
       }
     },
     onSuccess: (data) => {
@@ -45,9 +63,7 @@ export const useLogin = () => {
         initializeLogin('default');
       }
 
-      if (result === 'change-password') {
-        navigate('/forget-pass');
-      } else if (result === 'success' || !data?.status) {
+      if (result === 'success' || !data?.status) {
         navigate('/');
       }
     },

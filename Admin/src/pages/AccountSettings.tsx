@@ -1,22 +1,16 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronsRight } from 'lucide-react';
 
 import { AccountSettingsForm } from '../features/settings/AccountSettingsForm';
 import { SuccessToast } from '../features/settings/shared';
-import type {
-  AccountSettingsData,
-  PasswordData,
-} from '../features/settings/types';
-import { getVendorOnboardingStatus } from '../services/auth';
+import type { AccountSettingsData } from '../features/settings/types';
 
 interface AccountSettingsPageProps {
   initialAccountSettings?: Partial<AccountSettingsData>;
-  onAccountSettingsSave?: (
-    data: AccountSettingsData & PasswordData
-  ) => Promise<void>;
+  onAccountSettingsSave?: (data: AccountSettingsData) => Promise<void>;
 }
 
 const defaultAccountSettings: AccountSettingsData = {
@@ -32,41 +26,13 @@ export default function AccountSettingsPage({
 }: AccountSettingsPageProps) {
   const { t } = useTranslation();
   const [toast, setToast] = useState<string | null>(null);
-  const [fetchedData, setFetchedData] = useState<Partial<AccountSettingsData>>({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchVendorData = async () => {
-      try {
-        const data = await getVendorOnboardingStatus();
-        if (isMounted && data) {
-          setFetchedData({
-            firstName: data.firstName || '',
-            lastName: data.lastName || '',
-            email: data.email || '',
-            phoneNumber: data.phoneNumber || '',
-          });
-        }
-      } catch (err) {
-        console.error('Failed to fetch vendor status info:', err);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-    fetchVendorData();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const accountData = useMemo(
     () => ({
       ...defaultAccountSettings,
       ...initialAccountSettings,
-      ...fetchedData,
     }),
-    [initialAccountSettings, fetchedData]
+    [initialAccountSettings]
   );
 
   return (
@@ -89,19 +55,13 @@ export default function AccountSettingsPage({
       </div>
 
       <div className="settings-surface-enter settings-stagger-1 p-2 md:p-4 md:px-8 md:py-7 max-w-[720px]">
-        {loading ? (
-          <div className="p-8 flex items-center justify-center bg-white rounded-xl border border-gray-200">
-            <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-900 border-t-transparent"></div>
-          </div>
-        ) : (
-          <AccountSettingsForm
-            initialData={accountData}
-            onSave={onAccountSettingsSave}
-            onSuccess={() =>
-              setToast(t('settings.toast.accountSettingsSaved'))
-            }
-          />
-        )}
+        <AccountSettingsForm
+          initialData={accountData}
+          onSave={onAccountSettingsSave}
+          onSuccess={() =>
+            setToast(t('settings.toast.accountSettingsSaved'))
+          }
+        />
       </div>
     </div>
   );
