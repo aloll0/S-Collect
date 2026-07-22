@@ -31,6 +31,11 @@
       "vendorReports": "Vendor Reports",
       "commissionRates": "Commission Rates",
       "payouts": "Payouts",
+      "categories": "Categories",
+      "products": "Products",
+      "reviews": "Reviews",
+      "buyers": "Buyers",
+      "adminSettings": "Settings",
       "logout": "Logout",
       "cancel": "Cancel",
       "signOut": "Sign Out",
@@ -581,5 +586,29 @@
   "payouts": {
     "title": "Payouts",
     "description": "Track and manage vendor payouts and payment history."
+  },
+  "categories": {
+    "title": "Categories",
+    "description": "Manage product categories across the marketplace."
+  },
+  "productsListing": {
+    "title": "Products",
+    "description": "Browse and manage all products in the marketplace."
+  },
+  "reviews": {
+    "title": "Reviews",
+    "description": "Moderate and review customer product feedback."
+  },
+  "ordersListing": {
+    "title": "Orders",
+    "description": "View and manage all marketplace orders."
+  },
+  "buyers": {
+    "title": "Buyers",
+    "description": "Manage buyer accounts and information."
+  },
+  "adminSettings": {
+    "title": "Settings",
+    "description": "Configure admin account and application preferences."
   }
 }

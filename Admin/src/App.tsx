@@ -23,6 +23,12 @@ import Vendors from './pages/Vendors.js';
 import VendorReports from './pages/VendorReports.js';
 import CommissionRates from './pages/CommissionRates.js';
 import Payouts from './pages/Payouts.js';
+import Categories from './pages/Categories.js';
+import Products from './pages/Products.js';
+import Reviews from './pages/Reviews.js';
+import OrdersListing from './pages/OrdersListing.js';
+import Buyers from './pages/Buyers.js';
+import AdminSettings from './pages/AdminSettings.js';
 
 function App() {
   const { i18n } = useTranslation();
@@ -53,6 +59,12 @@ function App() {
           <Route path="/vendor-reports" element={<VendorReports />} />
           <Route path="/commission-rates" element={<CommissionRates />} />
           <Route path="/payouts" element={<Payouts />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/orders" element={<OrdersListing />} />
+          <Route path="/buyers" element={<Buyers />} />
+          <Route path="/admin-settings" element={<AdminSettings />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

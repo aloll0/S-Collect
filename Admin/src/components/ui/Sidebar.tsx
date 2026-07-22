@@ -1,34 +1,40 @@
 import {
-  Boxes,
   X,
   ChartNoAxesCombined,
   FileChartColumn,
   PackageOpen,
   BadgePercent,
   CircleDollarSign,
+  LayoutGrid,
+  CirclePlus,
+  Star,
+  PackageCheck,
   Handbag,
-  SquareUserRoundIcon,
-  RotateCcw,
+  Settings,
+  LogOut,
 } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import Logo from '../ui/Logo';
-import LogoutButton from '../auth/LogoutButton';
+import LogoutModal from '../auth/LogoutModal';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import type { Variants } from 'motion/react';
 import { Globe, Check } from 'lucide-react';
 import i18n from '../../i18n';
 import PortalDropdown from './PortalDropdown';
+import toast from 'react-hot-toast';
+import { logout } from '../../services/auth';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface NavItemProps {
   icon: ReactNode;
   labelKey: string;
-  to: string;
+  to?: string;
   danger?: boolean;
   onClick?: () => void;
+  isLogout?: boolean;
 }
 
 interface NavSectionProps {
@@ -131,7 +137,7 @@ const NavItem = ({
   return (
     <motion.div variants={navItemVariants}>
       <NavLink
-        to={to}
+        to={to ?? '#'}
         onClick={onClick}
         className={({ isActive }) =>
           `group flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 ease-in-out relative overflow-hidden text-label-md
@@ -151,6 +157,58 @@ const NavItem = ({
   );
 };
 
+// ─── Logout Nav Item ──────────────────────────────────────────────────────────
+const LogoutNavItem = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setLoading(true);
+    try {
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken) {
+        await logout(refreshToken);
+      }
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      toast.success('Logged out successfully');
+      navigate('/login', { replace: true });
+      setOpen(false);
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <motion.div variants={navItemVariants}>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="group flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 ease-in-out relative overflow-hidden text-label-md text-gray-400 hover:bg-red-500/10 hover:text-red-500 w-full"
+        >
+          <span className="shrink-0">
+            <LogOut size={18} />
+          </span>
+          <span className="truncate">{t('sidebar.items.logout')}</span>
+          <span className="absolute left-0 top-0 h-full w-0 bg-gray-700/20 group-hover:w-full transition-all duration-300" />
+        </button>
+      </motion.div>
+
+      <LogoutModal
+        open={open}
+        loading={loading}
+        onClose={() => setOpen(false)}
+        onConfirm={handleLogout}
+      />
+    </>
+  );
+};
+
 // ─── Nav Section ──────────────────────────────────────────────────────────────
 const NavSection = ({ titleKey, items, onItemClick }: NavSectionProps) => {
   const { t } = useTranslation();
@@ -164,9 +222,13 @@ const NavSection = ({ titleKey, items, onItemClick }: NavSectionProps) => {
         {t(titleKey)}
       </motion.p>
       <motion.div variants={navListVariants} className="flex flex-col gap-0.5">
-        {items.map((item) => (
-          <NavItem key={item.to} {...item} onClick={onItemClick} />
-        ))}
+        {items.map((item) =>
+          item.isLogout ? (
+            <LogoutNavItem key="logout" />
+          ) : (
+            <NavItem key={item.to} {...item} onClick={onItemClick} />
+          )
+        )}
       </motion.div>
     </motion.div>
   );
@@ -213,24 +275,29 @@ const NAV_SECTIONS: NavSectionProps[] = [
     titleKey: 'sidebar.sections.management',
     items: [
       {
-        icon: <Boxes size={18} />,
-        labelKey: 'sidebar.items.inventory',
-        to: '/inventory',
+        icon: <LayoutGrid size={18} />,
+        labelKey: 'sidebar.items.categories',
+        to: '/categories',
+      },
+      {
+        icon: <CirclePlus size={18} />,
+        labelKey: 'sidebar.items.products',
+        to: '/products',
+      },
+      {
+        icon: <Star size={18} />,
+        labelKey: 'sidebar.items.reviews',
+        to: '/reviews',
+      },
+      {
+        icon: <PackageCheck size={18} />,
+        labelKey: 'sidebar.items.orders',
+        to: '/orders',
       },
       {
         icon: <Handbag size={18} />,
-        labelKey: 'sidebar.items.incomingOrders',
-        to: '/incoming-orders',
-      },
-      {
-        icon: <Handbag size={18} />,
-        labelKey: 'sidebar.sections.receivables',
-        to: '/receivables',
-      },
-      {
-        icon: <RotateCcw size={18} />,
-        labelKey: 'sidebar.items.returns',
-        to: '/returns',
+        labelKey: 'sidebar.items.buyers',
+        to: '/buyers',
       },
     ],
   },
@@ -238,14 +305,14 @@ const NAV_SECTIONS: NavSectionProps[] = [
     titleKey: 'sidebar.sections.account',
     items: [
       {
-        icon: <Handbag size={18} />,
-        labelKey: 'sidebar.items.settings',
-        to: '/settings',
+        icon: <Settings size={18} />,
+        labelKey: 'sidebar.items.adminSettings',
+        to: '/admin-settings',
       },
       {
-        icon: <SquareUserRoundIcon size={18} />,
-        labelKey: 'sidebar.items.accountSettings',
-        to: '/account-settings',
+        icon: <LogOut size={18} />,
+        labelKey: 'sidebar.items.logout',
+        isLogout: true,
       },
     ],
   },
@@ -341,10 +408,6 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           <LanguageDropdown />
         </div>
       </motion.nav>
-
-      <div className="shrink-0 p-3">
-        <LogoutButton />
-      </div>
     </>
   );
 
