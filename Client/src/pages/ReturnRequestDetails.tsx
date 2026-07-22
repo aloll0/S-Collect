@@ -101,20 +101,15 @@ export default function ReturnRequestDetailsPage() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -16 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="p-4 sm:p-6 md:p-8 min-h-screen space-y-6 pb-24 md:pb-8"
-    >
-      {/* Title & Breadcrumbs */}
+    <>
+    {/* Title & Breadcrumbs */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
+        className='sidebar-page-container-header bg-white'
       >
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+        <h1 className="heading-page-title font-bold text-gray-900">
           {t('returnsPage.title', { defaultValue: 'Return Requests' })}
         </h1>
         <div className="flex items-center flex-wrap gap-1.5 text-xs sm:text-sm text-gray-500 mt-1.5">
@@ -122,11 +117,19 @@ export default function ReturnRequestDetailsPage() {
             {t('returnsPage.title', { defaultValue: 'Return Requests' })}
           </Link>
           <ChevronRight size={16} className="text-gray-400 shrink-0" />
-          <span className="text-gray-800 font-semibold font-mono">
+          <span className="text-gray-800 font-semibold">
             {t('returnsPage.breadcrumb', { defaultValue: 'Return Request Details' })} {item.id}
           </span>
         </div>
       </motion.div>
+
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      className="sidebar-page-container min-h-screen "
+    >
 
       {/* Main Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -358,5 +361,6 @@ export default function ReturnRequestDetailsPage() {
         item={item}
       />
     </motion.div>
+    </>
   );
 }
