@@ -1,11 +1,12 @@
+import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { MoreVertical, SquarePen, Trash } from 'lucide-react';
 import StatusBadge from '../StatusBadge';
 import Toggle from '../Toggle';
 import { showDeleteConfirmation } from '../deleteConfirmation';
 import { THUMB_STYLES } from '../constant';
 import type { Product } from '../mangement';
-import PortalDropdown from '../../../components/ui/PortalDropdown';
 
 type Props = {
   product: Product;
@@ -15,18 +16,41 @@ type Props = {
 
 const ProductCard = ({ product, onDelete, onToggle }: Props) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const thumb = THUMB_STYLES[product.category] ?? {
     bg: 'bg-gray-100',
     icon: 'text-gray-500',
   };
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (menuRef.current?.contains(e.target as Node)) return;
+      setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [menuOpen]);
+
   const handleDelete = () => {
+    setMenuOpen(false);
     showDeleteConfirmation(
       'managementTable.deleteConfirmMessage',
       { name: product.name },
       onDelete
     );
+  };
+
+  const handleEdit = () => {
+    setMenuOpen(false);
+    navigate(`/edit-product/${product.id}`);
   };
 
   const handleToggle = () => {
@@ -59,9 +83,7 @@ const ProductCard = ({ product, onDelete, onToggle }: Props) => {
 
   return (
     <div
-      className={`p-4 bg-white rounded-lg shadow-sm transition-all ${
-        !product.enabled ? 'opacity-50' : ''
-      }`}
+      className={`p-4 bg-white rounded-lg shadow-sm transition-all ${!product.enabled ? 'opacity-50' : ''}`}
     >
       <div className="pb-4 border-t border-gray-100 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -69,24 +91,21 @@ const ProductCard = ({ product, onDelete, onToggle }: Props) => {
         </div>
         <div className="flex items-center gap-2">
           <Toggle checked={product.enabled} onChange={handleToggle} />
-          <PortalDropdown
-            align="right"
-            minWidth={150}
-            animate={false}
-            menuClassName="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden"
-            trigger={() => (
-              <button
-                aria-label={t('managementTable.actions')}
-                className="w-[30px] h-[30px] flex items-center justify-center border border-gray-200 hover:bg-gray-100 transition-colors rounded-full"
-              >
-                <MoreVertical size={16} />
-              </button>
-            )}
-          >
-            {({ close }) => (
-              <>
+
+          {/* Inline dropdown — works on touch without portal positioning issues */}
+          <div ref={menuRef} className="relative">
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label={t('managementTable.actions')}
+              className="w-[30px] h-[30px] flex items-center justify-center border border-gray-200 hover:bg-gray-100 transition-colors rounded-full"
+            >
+              <MoreVertical size={16} />
+            </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 top-full mt-1 z-50 bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden min-w-[150px]">
                 <button
-                  onClick={close}
+                  onClick={handleEdit}
                   aria-label={t('managementTable.editProduct', {
                     name: product.name,
                   })}
@@ -97,10 +116,7 @@ const ProductCard = ({ product, onDelete, onToggle }: Props) => {
                 </button>
                 <div className="h-px bg-gray-100" />
                 <button
-                  onClick={() => {
-                    close();
-                    handleDelete();
-                  }}
+                  onClick={handleDelete}
                   aria-label={t('managementTable.deleteProduct', {
                     name: product.name,
                   })}
@@ -109,9 +125,9 @@ const ProductCard = ({ product, onDelete, onToggle }: Props) => {
                   <Trash size={16} />
                   {t('managementTable.delete')}
                 </button>
-              </>
+              </div>
             )}
-          </PortalDropdown>
+          </div>
         </div>
       </div>
 

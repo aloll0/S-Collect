@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 interface SuccessPopupProps {
   onClose: () => void;
   thumbnailUrl?: string;
+  isEdit?: boolean;
 }
 
-const SuccessPopup = ({ onClose, thumbnailUrl }: SuccessPopupProps) => {
+const SuccessPopup = ({ onClose, thumbnailUrl, isEdit }: SuccessPopupProps) => {
   const { t } = useTranslation();
 
   return (
@@ -39,10 +40,14 @@ const SuccessPopup = ({ onClose, thumbnailUrl }: SuccessPopupProps) => {
         )}
 
         <h3 className="text-2xl font-bold">
-          {t('addProduct.productAddedSuccessfully')}
+          {isEdit
+            ? t('addProduct.productUpdatedSuccessfully', 'Product Updated Successfully')
+            : t('addProduct.productAddedSuccessfully')}
         </h3>
         <p className="mt-2 text-gray-500">
-          {t('addProduct.productAddedMessage')}
+          {isEdit
+            ? t('addProduct.productUpdatedMessage', 'Your product has been updated successfully.')
+            : t('addProduct.productAddedMessage')}
         </p>
 
         <button
