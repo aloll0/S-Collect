@@ -585,7 +585,31 @@
   },
   "categories": {
     "title": "الفئات",
-    "description": "إدارة فئات المنتجات عبر السوق."
+    "description": "إدارة فئات المنتجات عبر السوق.",
+    "columns": {
+      "category": "الفئة",
+      "slug": "الرابط (Slug)",
+      "productsCount": "عدد المنتجات",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "modal": {
+      "addCategory": "إضافة فئة",
+      "editCategory": "تعديل فئة",
+      "nameAr": "اسم الفئة (بالعربية)",
+      "nameArPlaceholder": "أدخل اسم الفئة بالعربية",
+      "nameEn": "اسم الفئة (بالإنجليزية)",
+      "nameEnPlaceholder": "أدخل اسم الفئة بالإنجليزية",
+      "slug": "الرابط (تلقائي)",
+      "slugPlaceholder": "category-slug",
+      "status": "الحالة",
+      "save": "حفظ الفئة",
+      "cancel": "إلغاء"
+    },
+    "filter": {
+      "all": "الفئة: الكل",
+      "search": "البحث في الفئات..."
+    }
   },
   "productsListing": {
     "title": "المنتجات",

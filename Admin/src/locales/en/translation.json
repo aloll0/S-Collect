@@ -589,7 +589,31 @@
   },
   "categories": {
     "title": "Categories",
-    "description": "Manage product categories across the marketplace."
+    "description": "Manage product categories across the marketplace.",
+    "columns": {
+      "category": "Category",
+      "slug": "Slug",
+      "productsCount": "Products Count",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "modal": {
+      "addCategory": "Add Category",
+      "editCategory": "Edit Category",
+      "nameAr": "Category Name (Arabic)",
+      "nameArPlaceholder": "Enter category name in Arabic",
+      "nameEn": "Category Name (English)",
+      "nameEnPlaceholder": "Enter category name in English",
+      "slug": "Slug (Auto-generated)",
+      "slugPlaceholder": "category-slug",
+      "status": "Status",
+      "save": "Save Category",
+      "cancel": "Cancel"
+    },
+    "filter": {
+      "all": "Category: All",
+      "search": "Search categories..."
+    }
   },
   "productsListing": {
     "title": "Products",
