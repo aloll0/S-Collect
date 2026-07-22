@@ -15,8 +15,8 @@ const Dashboard = () => {
   }
   return (
     <div className="flex flex-col flex-1">
-      <div className="sidebar-page-container flex items-center justify-between mb-10 bg-gray-50">
-        <h1 className="text-h4 py-5">{t('dashboard')}</h1>
+      <div className="sidebar-page-container-header flex items-center justify-between mb-10 bg-gray-50">
+        <h1 className="heading-page-title">{t('dashboard')}</h1>
       </div>
 
       <main className="sidebar-page-container pb-6">
