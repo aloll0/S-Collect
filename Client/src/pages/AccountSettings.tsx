@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronsRight } from 'lucide-react';
 
@@ -11,6 +11,7 @@ import type {
   PasswordData,
 } from '../features/settings/types';
 import { getVendorOnboardingStatus } from '../services/auth';
+import { useQuery } from '@tanstack/react-query';
 
 interface AccountSettingsPageProps {
   initialAccountSettings?: Partial<AccountSettingsData>;
@@ -32,42 +33,24 @@ export default function AccountSettingsPage({
 }: AccountSettingsPageProps) {
   const { t } = useTranslation();
   const [toast, setToast] = useState<string | null>(null);
-  const [fetchedData, setFetchedData] = useState<Partial<AccountSettingsData>>({});
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let isMounted = true;
-    const fetchVendorData = async () => {
-      try {
-        const data = await getVendorOnboardingStatus();
-        if (isMounted && data) {
-          setFetchedData({
-            firstName: data.firstName || '',
-            lastName: data.lastName || '',
-            email: data.email || '',
-            phoneNumber: data.phoneNumber || '',
-          });
-        }
-      } catch (err) {
-        console.error('Failed to fetch vendor status info:', err);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-    fetchVendorData();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  // Fetch using react-query
+  const { data: onboarding, isLoading } = useQuery({
+    queryKey: ['onboardingStatus'],
+    queryFn: getVendorOnboardingStatus,
+    staleTime: 60_000,
+  });
 
-  const accountData = useMemo(
-    () => ({
+  const accountData = useMemo(() => {
+    return {
       ...defaultAccountSettings,
       ...initialAccountSettings,
-      ...fetchedData,
-    }),
-    [initialAccountSettings, fetchedData]
-  );
+      firstName: onboarding?.firstName || '',
+      lastName: onboarding?.lastName || '',
+      email: onboarding?.email || '',
+      phoneNumber: onboarding?.phoneNumber || '',
+    };
+  }, [initialAccountSettings, onboarding]);
 
   return (
     <>
@@ -89,7 +72,7 @@ export default function AccountSettingsPage({
       {toast && <SuccessToast message={toast} onClose={() => setToast(null)} />}
 
       <div className="settings-surface-enter settings-stagger-1 sidebar-page-container max-w-180">
-        {loading ? (
+        {isLoading ? (
           <div className="p-8 flex items-center justify-center bg-white rounded-xl border border-gray-200">
             <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-900 border-t-transparent"></div>
           </div>

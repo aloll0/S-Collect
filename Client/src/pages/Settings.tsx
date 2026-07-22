@@ -1,6 +1,4 @@
-'use client';
-
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronsRight } from 'lucide-react';
 
@@ -23,6 +21,7 @@ import {
   upsertZoneShippingRate,
   removeZoneShippingRate,
 } from '../services/shipping';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 type SettingsTab = 'store-details' | 'bank-account' | 'shipping';
 
@@ -77,79 +76,58 @@ export default function SettingsPage({
   const [tab, setTab] = useState<SettingsTab>('store-details');
   const [toast, setToast] = useState<string | null>(null);
   const [errorToast, setErrorToast] = useState<string | null>(null);
-
-  // Store Profile State
-  const [fetchedStoreProfile, setFetchedStoreProfile] = useState<Partial<StoreProfileData>>({});
-  const [storeLoading, setStoreLoading] = useState(true);
-
-  // Shipping Settings State
-  const [shippingValues, setShippingValues] = useState<ShippingSettingsValues>({
-    flatRate: 0,
-    regionalRates: {},
-  });
-  const [shippingConfigured, setShippingConfigured] = useState(false);
-  const [shippingLoading, setShippingLoading] = useState(true);
   const [shippingSaving, setShippingSaving] = useState(false);
+  const queryClient = useQueryClient();
 
-  // Fetch Store Profile & Shipping Settings
-  useEffect(() => {
-    let isMounted = true;
-    const loadData = async () => {
-      try {
-        const [onboardingData, shippingData] = await Promise.allSettled([
-          getVendorOnboardingStatus(),
-          getVendorShippingSettings(),
-        ]);
+  // Fetch Store Profile
+  const { data: onboarding, isLoading: storeLoading } = useQuery({
+    queryKey: ['onboardingStatus'],
+    queryFn: getVendorOnboardingStatus,
+    staleTime: 60_000,
+  });
 
-        if (isMounted && onboardingData.status === 'fulfilled' && onboardingData.value) {
-          const v = onboardingData.value;
-          setFetchedStoreProfile({
-            storeName: v.storeName || '',
-            storeDescription: typeof v.storeDescription === 'string' ? v.storeDescription : '',
-            publicEmail: v.email || '',
-            phoneNumber: v.phoneNumber || '',
-          });
-        }
+  // Fetch Shipping Settings
+  const { data: shipping, isLoading: shippingLoading } = useQuery({
+    queryKey: ['shippingSettings'],
+    queryFn: getVendorShippingSettings,
+    staleTime: 60_000,
+  });
 
-        if (isMounted && shippingData.status === 'fulfilled' && shippingData.value) {
-          const s = shippingData.value;
-          const regRates: Record<string, number | undefined> = {};
-          if (s.zoneRates && Array.isArray(s.zoneRates)) {
-            s.zoneRates.forEach((zr) => {
-              const regId = zoneCodeToRegionId(zr.zone);
-              regRates[regId] = zr.rate;
-            });
-          }
-          setShippingValues({
-            flatRate: s.flatRate ?? 0,
-            regionalRates: regRates,
-          });
-          setShippingConfigured(s.flatRate !== null || (s.zoneRates && s.zoneRates.length > 0));
-        }
-      } catch (err) {
-        console.error('Error fetching settings:', err);
-      } finally {
-        if (isMounted) {
-          setStoreLoading(false);
-          setShippingLoading(false);
-        }
-      }
-    };
-
-    loadData();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const storeData = useMemo(
-    () => ({
+  const storeData = useMemo(() => {
+    return {
       ...defaultStoreProfile,
       ...initialStoreProfile,
-      ...fetchedStoreProfile,
-    }),
-    [initialStoreProfile, fetchedStoreProfile]
-  );
+      storeName: onboarding?.storeName || '',
+      storeDescription: typeof onboarding?.storeDescription === 'string' ? onboarding?.storeDescription : '',
+      publicEmail: onboarding?.email || '',
+      phoneNumber: onboarding?.phoneNumber || '',
+    };
+  }, [initialStoreProfile, onboarding]);
+
+  const shippingValues = useMemo<ShippingSettingsValues>(() => {
+    if (!shipping) {
+      return {
+        flatRate: 0,
+        regionalRates: {},
+      };
+    }
+    const regRates: Record<string, number | undefined> = {};
+    if (shipping.zoneRates && Array.isArray(shipping.zoneRates)) {
+      shipping.zoneRates.forEach((zr: any) => {
+        const regId = zoneCodeToRegionId(zr.zone);
+        regRates[regId] = zr.rate;
+      });
+    }
+    return {
+      flatRate: shipping.flatRate ?? 0,
+      regionalRates: regRates,
+    };
+  }, [shipping]);
+
+  const shippingConfigured = useMemo(() => {
+    if (!shipping) return false;
+    return shipping.flatRate !== null || (shipping.zoneRates && shipping.zoneRates.length > 0);
+  }, [shipping]);
 
   const handleSaveShipping = async (values: ShippingSettingsValues) => {
     setShippingSaving(true);
@@ -174,8 +152,7 @@ export default function SettingsPage({
         await Promise.all(promises);
       }
 
-      setShippingValues(values);
-      setShippingConfigured(true);
+      queryClient.invalidateQueries({ queryKey: ['shippingSettings'] });
       onShippingSave?.(values);
       setToast(t('settings.toast.shippingSaved') || 'Shipping settings saved successfully');
     } catch (err: any) {
@@ -191,7 +168,7 @@ export default function SettingsPage({
     if (onStoreProfileSave) {
       await onStoreProfileSave(data);
     }
-    setFetchedStoreProfile(data);
+    queryClient.invalidateQueries({ queryKey: ['onboardingStatus'] });
     setToast(t('settings.toast.storeProfileSaved') || 'Store profile saved successfully');
   };
 
