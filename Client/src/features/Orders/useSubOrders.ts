@@ -17,7 +17,7 @@ export const useSubOrders = (params?: {
   const query = useQuery({
     queryKey: ['sub-orders', params],
     queryFn: () => getSubOrders(params),
-    staleTime: 30_000,
+    staleTime: 5 * 60 * 1000,
     retry: 1,
   });
 
@@ -33,7 +33,7 @@ export const useSubOrders = (params?: {
       queryClient.prefetchQuery({
         queryKey: ['sub-orders', nextParams],
         queryFn: () => getSubOrders(nextParams),
-        staleTime: 30_000,
+        staleTime: 5 * 60 * 1000,
       });
     }
   }, [currentPage, totalPages, params, queryClient]);
@@ -49,7 +49,7 @@ export const useSubOrder = (id: string | null) => {
     queryKey: ['sub-orders', id],
     queryFn: () => getSubOrderById(id!),
     enabled: !!id,
-    staleTime: 30_000,
+    staleTime: 5 * 60 * 1000,
     retry: 1,
   });
 };
