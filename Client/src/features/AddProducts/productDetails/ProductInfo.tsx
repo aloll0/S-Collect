@@ -40,7 +40,7 @@ export default function ProductInfo({
     <div className="w-full  rounded-2xl border border-gray-200 bg-white p-4 lg:p-6">
       <div className="flex gap-6 flex-col lg:flex-row ">
         {/* Image */}
-        <div className="h-[280px] w-full lg:h-[400px] lg:w-[400px] shrink-0 overflow-hidden rounded-xl bg-gray-100">
+        <div className="h-70 w-full lg:h-100 lg:w-100 shrink-0 overflow-hidden rounded-xl bg-gray-100">
           <img
             src={imageUrl}
             alt={name}
@@ -82,7 +82,7 @@ export default function ProductInfo({
               <span className="text-[28px] font-bold text-gray-900">
                 {price} {currency}
               </span>
-              {compareAtPrice && (
+              {compareAtPrice != null && (
                 <span className="text-sm text-gray-400 line-through">
                   {compareAtPrice} {currency}
                 </span>

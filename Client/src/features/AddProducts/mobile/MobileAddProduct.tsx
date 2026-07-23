@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import type { ProductFormData } from '../types';
+import { mapProductToFormData } from '../utils';
+import { useProduct } from '../useProduct';
 import MobileStepIndicator from './MobileStepIndicator';
 import MobileBasicInfoStep from './MobileBasicInfoStep';
 import MobilePricingStep from './MobilePricingStep';
@@ -11,10 +14,17 @@ import MobileReviewStep from './MobileReviewStep';
 import { MobileLoadingPopup, MobileSuccessPopup } from './MobilePublishPopups';
 import { useMobileAddProductStore } from './mobileAddProductStore';
 
-const MobileAddProduct = () => {
+interface MobileAddProductProps {
+  productId?: string;
+}
+
+const MobileAddProduct = ({ productId }: MobileAddProductProps) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const isArabic = i18n.language === 'ar';
+  const isEdit = !!productId;
+
+  const { data: productData, isLoading: isProductLoading } = useProduct(productId);
 
   const { step, isLoading, isSuccess, createdThumbnailUrl, previousStep, reset } =
     useMobileAddProductStore();
@@ -32,6 +42,20 @@ const MobileAddProduct = () => {
     },
   });
 
+  // Populate form + store when product data arrives in edit mode
+  useEffect(() => {
+    if (isEdit && productData) {
+      mapProductToFormData(productData).then((formData) => {
+        methods.reset(formData);
+        const store = useMobileAddProductStore.getState();
+        formData.sizes?.forEach((s) => store.addSize(s));
+        formData.colors?.forEach((c) => store.addColor(c));
+        store.setQuantity(formData.quantity ?? 0);
+        store.setIsActive(formData.enabled ?? true);
+      });
+    }
+  }, [isEdit, productData, methods]);
+
   const handleBack = () => (step > 1 ? previousStep() : navigate(-1));
 
   const handleDone = () => {
@@ -46,6 +70,14 @@ const MobileAddProduct = () => {
     3: t('addProduct.mobile.inventory'),
     4: t('addProduct.mobile.reviewPublish'),
   };
+
+  if (isEdit && isProductLoading) {
+    return (
+      <div className="flex h-full items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-gray-900" />
+      </div>
+    );
+  }
 
   return (
     <FormProvider {...methods}>
@@ -75,7 +107,9 @@ const MobileAddProduct = () => {
             </svg>
           </button>
           <h1 className="text-base font-bold text-gray-900">
-            {t('addProduct.mobile.addProduct')}
+            {isEdit
+              ? t('addProduct.mobile.editProduct', 'Edit Product')
+              : t('addProduct.mobile.addProduct')}
           </h1>
         </div>
 
@@ -98,7 +132,7 @@ const MobileAddProduct = () => {
 
           {step === 3 && <MobileInventoryStep />}
 
-          {step === 4 && <MobileReviewStep />}
+          {step === 4 && <MobileReviewStep productId={productId} />}
         </div>
 
         {/* Popups */}

@@ -5,7 +5,6 @@ import {
   ChevronsRight,
   Check,
   Truck,
-  Circle,
   CircleCheckBig,
 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -153,60 +152,88 @@ export const OrderDetails = ({
 
             <div className="space-y-0">
               {order.timeline.map((item, i) => {
-                const isCurrent = item.step === 'Shipped';
+                const stepToStatusMap: Record<string, OrderStatus> = {
+                  'Order Placed': 'Pending',
+                  'Processing': 'Processing',
+                  'Shipped': 'Shipped',
+                  'Delivered': 'Delivered',
+                };
+                const isCurrent = order.status === stepToStatusMap[item.step];
+
+                const getStepLabel = (step: string) => {
+                  if (step === 'Order Placed') return t('ordersPage.orderPlaced', { defaultValue: 'Order Placed' });
+                  if (step === 'Processing') return t('ordersPage.processing', { defaultValue: 'Processing' });
+                  if (step === 'Shipped') return t('ordersPage.shipped', { defaultValue: 'Shipped' });
+                  if (step === 'Delivered') return t('ordersPage.delivered', { defaultValue: 'Delivered' });
+                  return step;
+                };
 
                 return (
                   <div key={i} className="flex gap-4">
                     {/* Icon + Line */}
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center flex-shrink-0">
                       <div
                         className={`
-                          w-7 h-7 flex items-center justify-center rounded-lg
+                          w-8 h-8 flex items-center justify-center rounded-full transition-colors duration-200
                           ${
                             item.done
-                              ? isCurrent
-                                ? 'bg-amber-500 text-white'
-                                : 'bg-green-600 text-white rounded-full'
-                              : 'border border-gray-300 bg-white text-gray-400 rounded-full'
+                              ? isCurrent && item.step === 'Shipped'
+                                ? 'bg-amber-500 text-white shadow-sm'
+                                : isCurrent && item.step === 'Processing'
+                                ? 'bg-blue-600 text-white shadow-sm'
+                                : 'bg-green-600 text-white shadow-sm'
+                              : 'border border-gray-300 bg-white text-gray-400'
                           }
                         `}
                       >
                         {item.done ? (
-                          isCurrent ? (
-                            <Truck size={14} />
+                          isCurrent && item.step === 'Shipped' ? (
+                            <Truck size={14} className="text-white" />
                           ) : (
-                            <Check size={16} strokeWidth={3} />
+                            <Check size={14} strokeWidth={3.5} className="text-white" />
                           )
                         ) : (
-                          <Circle size={10} fill="currentColor" />
+                          <span className="w-2 h-2 rounded-full bg-gray-400" />
                         )}
                       </div>
 
                       {i < order.timeline.length - 1 && (
                         <div
-                          className={`w-0.5 flex-1 ${
-                            item.done ? 'bg-green-500' : 'bg-gray-200'
+                          className={`w-[2px] flex-1 my-1 transition-colors duration-200 ${
+                            item.done && order.timeline[i + 1]?.done
+                              ? 'bg-green-600'
+                              : 'bg-gray-100'
                           }`}
-                          style={{ minHeight: 28 }}
+                          style={{ minHeight: 36 }}
                         />
                       )}
                     </div>
 
                     {/* Content */}
-                    <div className="pb-6">
-                      <h4
-                        className={`font-semibold text-lg ${
-                          item.done ? 'text-gray-900' : 'text-gray-700'
-                        }`}
-                      >
-                        {item.step}
-                      </h4>
+                    <div className="flex-1 flex justify-between items-start gap-4 pb-8 last:pb-2 min-w-0">
+                      <div className="flex flex-col min-w-0">
+                        <h4
+                          className={`font-semibold text-sm sm:text-base transition-colors duration-200 ${
+                            item.done ? 'text-gray-900' : 'text-gray-400'
+                          }`}
+                        >
+                          {getStepLabel(item.step)}
+                        </h4>
 
-                      {item.desc && (
-                        <p className="text-gray-500 text-sm mt-1">
-                          {item.desc}
-                        </p>
-                      )}
+                        {item.desc && (
+                          <p className={`text-xs sm:text-sm mt-1 transition-colors duration-200 ${
+                            item.done ? 'text-gray-500' : 'text-gray-300'
+                          }`}>
+                            {item.desc}
+                          </p>
+                        )}
+                      </div>
+
+                      <span className={`text-xs sm:text-sm whitespace-nowrap pt-0.5 text-right rtl:text-left transition-colors duration-200 ${
+                        item.done ? 'text-gray-400' : 'text-gray-300'
+                      }`}>
+                        {item.done && item.date ? item.date : t('ordersPage.pendingLabel')}
+                      </span>
                     </div>
                   </div>
                 );

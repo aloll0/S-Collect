@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { SquarePen, Trash, Check, Star } from 'lucide-react';
 import Toggle from './Toggle';
 import StatusBadge from './StatusBadge';
@@ -22,6 +23,7 @@ export default function ProductRow({
   onToggle,
 }: Props) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const thumb = THUMB_STYLES[product.category] ?? {
     bg: 'bg-gray-100',
     icon: 'text-gray-500',
@@ -146,6 +148,7 @@ export default function ProductRow({
             <Trash className="text-red-500" size={16} />
           </button>
           <button
+            onClick={() => navigate(`/edit-product/${product.id}`)}
             aria-label={t('managementTable.editProduct', {
               name: product.name,
             })}

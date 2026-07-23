@@ -1,7 +1,7 @@
 export type StockStatus = 'In Stock' | 'Low Stock' | 'Out of Stock';
 
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   sku: string;
   variant: string;

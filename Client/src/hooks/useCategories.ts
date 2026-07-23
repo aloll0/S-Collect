@@ -1,48 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getCategories } from '../services/products';
-import type { Category } from '../services/products';
 
 export const useCategories = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    const fetchCategories = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getCategories();
-        if (active) {
-          if (Array.isArray(data)) {
-            setCategories(data);
-          } else if (data && typeof data === 'object' && Array.isArray((data as any).data)) {
-            setCategories((data as any).data);
-          } else if (data && typeof data === 'object' && Array.isArray((data as any).categories)) {
-            setCategories((data as any).categories);
-          } else {
-            console.error('Invalid categories API response structure:', data);
-            setCategories([]);
-          }
-        }
-      } catch (err) {
-        if (active) {
-          setError(err as Error);
-          setCategories([]);
-        }
-      } finally {
-        if (active) {
-          setIsLoading(false);
-        }
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const data = await getCategories();
+      if (Array.isArray(data)) {
+        return data;
+      } else if (data && typeof data === 'object' && Array.isArray((data as any).data)) {
+        return (data as any).data;
+      } else if (data && typeof data === 'object' && Array.isArray((data as any).categories)) {
+        return (data as any).categories;
+      } else {
+        console.error('Invalid categories API response structure:', data);
+        return [];
       }
-    };
+    },
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
 
-    fetchCategories();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  return { categories, isLoading, error };
+  return {
+    categories: data || [],
+    isLoading,
+    error: error as Error | null,
+  };
 };
+

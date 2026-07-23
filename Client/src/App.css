@@ -479,9 +479,15 @@ html,
    ============================================================ */
 
 @utility sidebar-page-container {
-  @apply px-4 lg:px-8 xl:px-14;
+  @apply px-4 lg:px-8 xl:px-14 py-4 lg:py-6;
 }
 
+@utility sidebar-page-container-header {
+  @apply px-4 lg:px-8 xl:px-14 py-6 bg-white;
+}
+@utility heading-page-title {
+  @apply text-xl md:text-2xl 2xl:text-3xl;
+}
 @utility icon-stroke {
   stroke-width: var(--icon-stroke-width);
 }
@@ -500,4 +506,59 @@ html,
 .animate-fade-in-up {
   opacity: 0;
   animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* ============================================================
+   SHARED & COMPONENT-SPECIFIC ANIMATIONS
+   ============================================================ */
+
+/* InputSearch Mobile Slide Up */
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.animate-slideUp {
+  animation: slideUp 0.25s ease-out;
+}
+
+/* Dashboard Cards Fade In Up */
+@keyframes dashboardFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-dashboard-fade-in-up {
+  opacity: 0;
+  animation: dashboardFadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Recent Orders Table Fade In Up */
+@keyframes tableFadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tbl-animate-in {
+  opacity: 0;
+  animation: tableFadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Receivables Cards Fade In Up */
+@keyframes receivablesFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-receivables-fade-in-up {
+  opacity: 0;
+  animation: receivablesFadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

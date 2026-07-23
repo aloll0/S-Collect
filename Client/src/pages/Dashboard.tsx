@@ -4,22 +4,19 @@ import SalesChart from '../features/dashboard/SalesChart';
 import InventoryAlert from '../features/dashboard/InventoryAlert';
 import TopSelling from '../features/dashboard/TopSelling';
 import RecentOrdersTable from '../features/dashboard/RecentOrdersTable';
+import DashboardSkeleton from '../features/dashboard/skeleton/DashboardSkeleton';
 import { useProducts } from '../features/AddProducts/useProducts';
 
 const Dashboard = () => {
   const { t } = useTranslation();
-  const { data, isLoading, error } = useProducts();
-  if (isLoading) {
-    return <div>Loading...</div>;
+  const { data, isLoading } = useProducts();
+  if (isLoading || !data) {
+    return <DashboardSkeleton />;
   }
-  if (!data) {
-    return <div>{error ? error.message : 'Loading...'}</div>;
-  }
-  console.log(data)
   return (
     <div className="flex flex-col flex-1">
-      <div className="sidebar-page-container flex items-center justify-between mb-10 bg-gray-50">
-        <h1 className="text-h4 py-5">{t('dashboard')}</h1>
+      <div className="sidebar-page-container-header flex items-center justify-between mb-10 bg-gray-50">
+        <h1 className="heading-page-title">{t('dashboard')}</h1>
       </div>
 
       <main className="sidebar-page-container pb-6">

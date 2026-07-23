@@ -204,6 +204,7 @@
   },
   "addProduct": {
     "title": "إضافة منتج",
+    "editTitle": "تعديل المنتج",
     "subtitle": "أضف منتجًا جديدًا إلى المخزون الخاص بك",
 
     "productInformation": "معلومات المنتج",
@@ -259,6 +260,8 @@
 
     "productAddedSuccessfully": "تمت إضافة المنتج بنجاح",
     "productAddedMessage": "تمت إضافة منتجك بنجاح.",
+    "productUpdatedSuccessfully": "تم تحديث المنتج بنجاح",
+    "productUpdatedMessage": "تم تحديث منتجك بنجاح.",
     "done": "تم",
     "errors": {
       "nameArRequired": "اسم المنتج بالعربية مطلوب",
@@ -281,6 +284,7 @@
       "visibility": "الظهور",
       "adding": "جاري الإضافة...",
       "addingProduct": "جاري إضافة المنتج",
+      "editProduct": "تعديل المنتج",
       "pleaseWait": "يرجى الانتظار بينما نقوم بإضافة منتجك.",
       "productAddedSuccessfully": "تمت إضافة المنتج بنجاح",
       "productAddedMessage": "تمت إضافة منتجك بنجاح.",
@@ -325,6 +329,7 @@
     "orderDetails": "تفاصيل الطلب",
     "orderItems": "عناصر الطلب",
     "orderTimeline": "سجل الطلب",
+    "orderPlaced": "تم تقديم الطلب",
     "orderInformation": "معلومات الطلب",
     "customerInformation": "معلومات العميل",
     "shippingAddress": "عنوان الشحن",

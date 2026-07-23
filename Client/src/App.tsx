@@ -42,7 +42,8 @@ function App() {
           <Route path="/account-settings" element={<AccountSettings />} />
           <Route path="/management" element={<Management />} />
           <Route path="/add-product" element={<AddProduct />} />
-          <Route path="/product-details" element={<ProductDetails />} />
+          <Route path="/edit-product/:productId" element={<AddProduct />} />
+          <Route path="/product-details/:id" element={<ProductDetails />} />
           <Route path="/receivables" element={<Receivables />} />
           <Route path="/incoming-orders" element={<Orders />} />
           <Route path="/returns" element={<ReturnRequests />} />
