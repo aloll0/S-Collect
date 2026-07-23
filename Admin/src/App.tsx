@@ -22,6 +22,10 @@ import Receivables from './pages/Receivables.js';
 import ReturnRequests from './pages/ReturnRequests.js';
 import ReturnRequestDetails from './pages/ReturnRequestDetails.js';
 import Vendors from './pages/Vendors.js';
+import VendorDetails from './pages/VendorDetails.js';
+import VendorPayoutsPage from './pages/VendorPayoutsPage.js';
+import VendorOrdersPage from './pages/VendorOrdersPage.js';
+import VendorProductsPage from './pages/VendorProductsPage.js';
 import VendorReports from './pages/VendorReports.js';
 import CommissionRates from './pages/CommissionRates.js';
 import Payouts from './pages/Payouts.js';
@@ -59,6 +63,10 @@ function App() {
           <Route path="/returns/:id" element={<ReturnRequestDetails />} />
           <Route path="/incoming-orders/:id" element={<SubOrderDetails />} />
           <Route path="/vendors" element={<Vendors />} />
+          <Route path="/vendors/:id" element={<VendorDetails />} />
+          <Route path="/vendors/:id/payouts" element={<VendorPayoutsPage />} />
+          <Route path="/vendors/:id/orders" element={<VendorOrdersPage />} />
+          <Route path="/vendors/:id/products" element={<VendorProductsPage />} />
           <Route path="/vendor-reports" element={<VendorReports />} />
           <Route path="/commission-rates" element={<CommissionRates />} />
           <Route path="/payouts" element={<Payouts />} />
