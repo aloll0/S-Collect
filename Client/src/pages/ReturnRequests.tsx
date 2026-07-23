@@ -38,13 +38,9 @@ export default function ReturnRequestsPage() {
   return (
     <>
       {/* Title */}
-      <motion.h1
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="sidebar-page-container-header heading-page-title"
-      >
+      <h1 className="sidebar-page-container-header heading-page-title">
         {t('returnsPage.title', { defaultValue: 'Return Requests' })}
-      </motion.h1>
+      </h1>
       <div className="sidebar-page-container min-h-screen">
         {/* Filter Bar */}
         <ReturnFilterBar
