@@ -22,7 +22,7 @@ const MobileCard = ({
   onDelete,
   onToggleActive,
 }: MobileCardProps) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <motion.div
@@ -46,7 +46,7 @@ const MobileCard = ({
           <p className="font-semibold text-gray-900 text-sm">
             {i18n.language === 'ar' ? category.nameAr : category.nameEn}
           </p>
-          <p className="text-xs text-gray-400 mt-0.5">slug: {category.slug}</p>
+          <p className="text-xs text-gray-400 mt-0.5">{t('categories.mobile.slug')}: {category.slug}</p>
         </div>
 
         {/* Actions */}
@@ -71,7 +71,7 @@ const MobileCard = ({
       {/* Footer row */}
       <div className="mt-3 flex items-center justify-between pl-7">
         <div>
-          <p className="text-xs text-gray-400">Products Count</p>
+          <p className="text-xs text-gray-400">{t('categories.columns.productsCount')}</p>
           <p className="text-sm font-semibold text-gray-900">{category.productsCount}</p>
         </div>
         <Toggle

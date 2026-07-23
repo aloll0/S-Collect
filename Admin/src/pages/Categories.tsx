@@ -108,9 +108,13 @@ const Categories = () => {
   };
 
   return (
+    <>
+    <div  className='sidebar-page-container-header' >
+
+      <CategoryHeader />
+    </div>
     <div className="flex-1 overflow-y-auto py-6 sidebar-page-container">
       {/* Page Header */}
-      <CategoryHeader />
 
       {/* Search & Filters */}
       <CategoryFilterBar />
@@ -218,6 +222,8 @@ const Categories = () => {
         onClose={closeCannotDeleteModal}
       />
     </div>
+    </>
+
   );
 };
 

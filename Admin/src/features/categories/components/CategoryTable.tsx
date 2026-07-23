@@ -199,7 +199,7 @@ const CategoryTable = ({
       {categories.length === 0 && (
         <div className="py-16 text-center">
           <Tag size={40} className="mx-auto text-gray-300 mb-3" />
-          <p className="text-gray-500 text-sm">No categories found</p>
+          <p className="text-gray-500 text-sm">{t('categories.emptyState')}</p>
         </div>
       )}
     </div>

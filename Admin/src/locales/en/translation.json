@@ -802,11 +802,56 @@
       "slugPlaceholder": "category-slug",
       "status": "Status",
       "save": "Save Category",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "nameLengthError": "Category name must be between 2 and 50 characters.",
+      "duplicateError": "Category name already exists. Please choose a different name."
+    },
+    "statusModal": {
+      "title": "Change Status",
+      "confirmMessage": "Are you sure you want to ",
+      "confirmMessageEnd": "?",
+      "activate": "activate",
+      "deactivate": "deactivate",
+      "activateBtn": "Activate",
+      "deactivateBtn": "Deactivate"
+    },
+    "deleteModal": {
+      "titleSingle": "Delete Category",
+      "titlePlural": "Delete {{count}} Categories",
+      "confirmSingleStart": "Are you sure you want to delete ",
+      "confirmSingleEnd": "? This action cannot be undone.",
+      "confirmPlural": "Are you sure you want to delete {{count}} selected categories? This action cannot be undone.",
+      "delete": "Delete"
+    },
+    "cannotDeleteModal": {
+      "title": "Cannot Delete Category",
+      "bulkBody": "One or more selected categories still contain products. Move or delete all products before removing a category.",
+      "singleBodyPrefix": "",
+      "singleBodyMiddle": " still has ",
+      "singleBodySuffix": ". Move or delete them before removing this category.",
+      "productUnit": "product",
+      "productsUnit": "products",
+      "warningHint": "Deleting a category with products can cause data loss. Make sure to reassign all products first.",
+      "gotIt": "Got it"
     },
     "filter": {
       "all": "Category: All",
       "search": "Search categories..."
+    },
+    "pagination": {
+      "showing": "Showing {{start}}–{{end}} of {{total}} categories"
+    },
+    "bulk": {
+      "selectedCount": "{{count}} category selected",
+      "selectedCountPlural": "{{count}} categories selected",
+      "deleteCount": "Delete ({{count}})",
+      "deleteSingle": "Delete",
+      "clearSelection": "Clear selection"
+    },
+    "emptyState": "No categories found",
+    "mobile": {
+      "slug": "slug",
+      "productsCount": "Products Count"
     }
   },
   "productsListing": {

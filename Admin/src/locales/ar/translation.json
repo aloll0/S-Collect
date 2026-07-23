@@ -798,11 +798,56 @@
       "slugPlaceholder": "category-slug",
       "status": "الحالة",
       "save": "حفظ الفئة",
-      "cancel": "إلغاء"
+      "cancel": "إلغاء",
+      "nameLengthError": "يجب أن يكون اسم الفئة بين 2 و 50 حرفاً",
+      "duplicateError": "اسم الفئة موجود مسبقا يرجى اختيار اسم مختلف"
+    },
+    "statusModal": {
+      "title": "تغيير الحالة",
+      "confirmMessage": "هل أنت تأكيد من أنك تريد ",
+      "confirmMessageEnd": "؟",
+      "activate": "تفعيل",
+      "deactivate": "إلغاء تفعيل",
+      "activateBtn": "تفعيل",
+      "deactivateBtn": "إلغاء التفعيل"
+    },
+    "deleteModal": {
+      "titleSingle": "حذف الفئة",
+      "titlePlural": "حذف {{count}} فئات",
+      "confirmSingleStart": "هل أنت تأكيد من حذف ",
+      "confirmSingleEnd": "؟ لا يمكن التراجع عن هذا الإجراء.",
+      "confirmPlural": "هل أنت تأكيد من حذف {{count}} فئات محدودة؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف"
+    },
+    "cannotDeleteModal": {
+      "title": "لا يمكن حذف الفئة",
+      "bulkBody": "بعض الفئات المحددة تحتوي على منتجات. يجب نقل جميع المنتجات إلى فئة أخرى أو حذفها أولاً قبل حذف الفئة.",
+      "singleBodyPrefix": "الفئة ",
+      "singleBodyMiddle": " تحتوي على ",
+      "singleBodySuffix": ". يجب نقل المنتجات إلى فئة أخرى أو حذفها أولاً.",
+      "productUnit": "منتج",
+      "productsUnit": "منتج",
+      "warningHint": "حذف فئة تحتوي على منتجات قد يؤدي إلى فقدان البيانات. تأكد من نقل المنتجات أولاً.",
+      "gotIt": "حسناً، فهمت"
     },
     "filter": {
       "all": "الفئة: الكل",
       "search": "البحث في الفئات..."
+    },
+    "pagination": {
+      "showing": "عرض {{start}}–{{end}} من {{total}} فئات"
+    },
+    "bulk": {
+      "selectedCount": "تم تحديد {{count}} فئة",
+      "selectedCountPlural": "تم تحديد {{count}} فئات",
+      "deleteCount": "حذف ({{count}})",
+      "deleteSingle": "حذف",
+      "clearSelection": "إلغاء التحديد"
+    },
+    "emptyState": "لم يتم العثور على فئات",
+    "mobile": {
+      "slug": "الرابط",
+      "productsCount": "عدد المنتجات"
     }
   },
   "productsListing": {

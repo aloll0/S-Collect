@@ -21,79 +21,84 @@ export const StatusConfirmModal = ({
   currentStatus,
   onClose,
   onConfirm,
-}: StatusConfirmModalProps) => (
-  <AnimatePresence>
-    {isOpen && (
-      <motion.div
-        key="status-overlay"
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-      >
-        <motion.div
-          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-          onClick={onClose}
-        />
+}: StatusConfirmModalProps) => {
+  const { t } = useTranslation();
 
+  return (
+    <AnimatePresence>
+      {isOpen && (
         <motion.div
-          className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm z-10 overflow-hidden"
-          initial={{ scale: 0.92, opacity: 0, y: 10 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.92, opacity: 0, y: 10 }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
+          key="status-overlay"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
         >
-          <button
-            type="button"
+          <motion.div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
-            className="absolute top-4 right-4 inline-flex items-center justify-center h-7 w-7 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors cursor-pointer"
+          />
+
+          <motion.div
+            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm z-10 overflow-hidden"
+            initial={{ scale: 0.92, opacity: 0, y: 10 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.92, opacity: 0, y: 10 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
           >
-            <X size={16} />
-          </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute top-4 right-4 inline-flex items-center justify-center h-7 w-7 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors cursor-pointer"
+            >
+              <X size={16} />
+            </button>
 
-          <div className="px-6 pt-8 pb-6 text-center">
-            <div className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-50">
-              <AlertTriangle size={24} className="text-amber-500" />
+            <div className="px-6 pt-8 pb-6 text-center">
+              <div className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-50">
+                <AlertTriangle size={24} className="text-amber-500" />
+              </div>
+
+              <h3 className="text-label-lg font-semibold text-gray-900 mb-2">
+                {t('categories.statusModal.title')}
+              </h3>
+              <p className="text-body-sm text-gray-500 mb-6 leading-relaxed">
+                {t('categories.statusModal.confirmMessage')}
+                <span className={`font-semibold ${currentStatus ? 'text-red' : 'text-green'}`}>
+                  {currentStatus ? t('categories.statusModal.deactivate') : t('categories.statusModal.activate')}
+                </span>{' '}
+                &ldquo;{categoryName}&rdquo;
+                {t('categories.statusModal.confirmMessageEnd')}
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 py-2.5 rounded-xl border border-gray-200 text-label-md font-medium text-gray-700 hover:bg-gray-50 transition-all cursor-pointer"
+                >
+                  {t('categories.modal.cancel')}
+                </button>
+                <button
+                  type="button"
+                  onClick={onConfirm}
+                  className={`flex-1 py-2.5 rounded-xl text-white text-label-md font-semibold active:scale-[0.98] transition-all cursor-pointer ${
+                    currentStatus
+                      ? 'bg-red hover:bg-red/90'
+                      : 'bg-green hover:bg-green/90'
+                  }`}
+                >
+                  {currentStatus ? t('categories.statusModal.deactivateBtn') : t('categories.statusModal.activateBtn')}
+                </button>
+              </div>
             </div>
-
-            <h3 className="text-label-lg font-semibold text-gray-900 mb-2">
-              Change Status
-            </h3>
-            <p className="text-body-sm text-gray-500 mb-6 leading-relaxed">
-              Are you sure you want to{' '}
-              <span className={`font-semibold ${currentStatus ? 'text-red' : 'text-green'}`}>
-                {currentStatus ? 'deactivate' : 'activate'}
-              </span>{' '}
-              &ldquo;{categoryName}&rdquo;?
-            </p>
-
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 py-2.5 rounded-xl border border-gray-200 text-label-md font-medium text-gray-700 hover:bg-gray-50 transition-all cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={onConfirm}
-                className={`flex-1 py-2.5 rounded-xl text-white text-label-md font-semibold active:scale-[0.98] transition-all cursor-pointer ${
-                  currentStatus
-                    ? 'bg-red hover:bg-red/90'
-                    : 'bg-green hover:bg-green/90'
-                }`}
-              >
-                {currentStatus ? 'Deactivate' : 'Activate'}
-              </button>
-            </div>
-          </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-);
+      )}
+    </AnimatePresence>
+  );
+};
 
 // ─── Delete Confirmation Modal ─────────────────────────────────────────────────
 export interface DeleteModalProps {
@@ -104,76 +109,88 @@ export interface DeleteModalProps {
   onConfirm: () => void;
 }
 
-export const DeleteModal = ({ isOpen, categoryName, count, onClose, onConfirm }: DeleteModalProps) => (
-  <AnimatePresence>
-    {isOpen && (
-      <motion.div
-        key="delete-overlay"
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-      >
-        <motion.div
-          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-          onClick={onClose}
-        />
+export const DeleteModal = ({ isOpen, categoryName, count, onClose, onConfirm }: DeleteModalProps) => {
+  const { t } = useTranslation();
 
+  return (
+    <AnimatePresence>
+      {isOpen && (
         <motion.div
-          className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm z-10 overflow-hidden"
-          initial={{ scale: 0.92, opacity: 0, y: 10 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.92, opacity: 0, y: 10 }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
+          key="delete-overlay"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
         >
-          {/* Close btn */}
-          <button
-            type="button"
+          <motion.div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
-            className="absolute top-4 right-4 inline-flex items-center justify-center h-7 w-7 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors cursor-pointer"
+          />
+
+          <motion.div
+            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm z-10 overflow-hidden"
+            initial={{ scale: 0.92, opacity: 0, y: 10 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.92, opacity: 0, y: 10 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
           >
-            <X size={16} />
-          </button>
+            {/* Close btn */}
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute top-4 right-4 inline-flex items-center justify-center h-7 w-7 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors cursor-pointer"
+            >
+              <X size={16} />
+            </button>
 
-          <div className="px-6 pt-8 pb-6 text-center">
-            {/* Icon */}
-            <div className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-red-light">
-              <Trash2 size={24} className="text-red" />
+            <div className="px-6 pt-8 pb-6 text-center">
+              {/* Icon */}
+              <div className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-red-light">
+                <Trash2 size={24} className="text-red" />
+              </div>
+
+              <h3 className="text-label-lg font-semibold text-gray-900 mb-2">
+                {count && count > 1
+                  ? t('categories.deleteModal.titlePlural', { count })
+                  : t('categories.deleteModal.titleSingle')}
+              </h3>
+              <p className="text-body-sm text-gray-500 mb-6 leading-relaxed">
+                {count && count > 1
+                  ? t('categories.deleteModal.confirmPlural', { count })
+                  : (
+                    <>
+                      {t('categories.deleteModal.confirmSingleStart')}
+                      &ldquo;{categoryName}&rdquo;
+                      {t('categories.deleteModal.confirmSingleEnd')}
+                    </>
+                  )
+                }
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 py-2.5 rounded-xl border border-gray-200 text-label-md font-medium text-gray-700 hover:bg-gray-50 transition-all cursor-pointer"
+                >
+                  {t('categories.modal.cancel')}
+                </button>
+                <button
+                  type="button"
+                  onClick={onConfirm}
+                  className="flex-1 py-2.5 rounded-xl bg-red text-white text-label-md font-semibold hover:bg-red/90 active:scale-[0.98] transition-all cursor-pointer"
+                >
+                  {t('categories.deleteModal.delete')}
+                </button>
+              </div>
             </div>
-
-            <h3 className="text-label-lg font-semibold text-gray-900 mb-2">
-              Delete {count && count > 1 ? `${count} Categories` : 'Category'}
-            </h3>
-            <p className="text-body-sm text-gray-500 mb-6 leading-relaxed">
-              {count && count > 1
-                ? `Are you sure you want to delete ${count} selected categories? This action cannot be undone.`
-                : <>Are you sure you want to delete &ldquo;{categoryName}&rdquo;? This action cannot be undone.</>
-              }
-            </p>
-
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 py-2.5 rounded-xl border border-gray-200 text-label-md font-medium text-gray-700 hover:bg-gray-50 transition-all cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={onConfirm}
-                className="flex-1 py-2.5 rounded-xl bg-red text-white text-label-md font-semibold hover:bg-red/90 active:scale-[0.98] transition-all cursor-pointer"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-);
+      )}
+    </AnimatePresence>
+  );
+};
 
 // ─── Category Form Modal ───────────────────────────────────────────────────────
 export interface CategoryFormModalProps {
@@ -298,16 +315,12 @@ export const CategoryFormModal = ({
                 />
                 {touchedEn && !isNameEnValid && (
                   <p className="text-xs text-red mt-1.5">
-                    {i18n.language === 'ar'
-                      ? 'يجب أن يكون اسم الفئة بين 2 و 50 حرفاً'
-                      : 'Category name must be between 2 and 50 characters.'}
+                    {t('categories.modal.nameLengthError')}
                   </p>
                 )}
                 {isDuplicateEn && (
                   <p className="text-xs text-red mt-1.5">
-                    {i18n.language === 'ar'
-                      ? 'اسم الفئة موجود مسبقا يرجى اختيار اسم مختلف'
-                      : 'Category name already exists. Please choose a different name.'}
+                    {t('categories.modal.duplicateError')}
                   </p>
                 )}
               </div>
@@ -331,16 +344,12 @@ export const CategoryFormModal = ({
                 />
                 {touchedAr && !isNameArValid && (
                   <p className="text-xs text-red mt-1.5">
-                    {i18n.language === 'ar'
-                      ? 'يجب أن يكون اسم الفئة بين 2 و 50 حرفاً'
-                      : 'Category name must be between 2 and 50 characters.'}
+                    {t('categories.modal.nameLengthError')}
                   </p>
                 )}
                 {isDuplicateAr && (
                   <p className="text-xs text-red mt-1.5">
-                    {i18n.language === 'ar'
-                      ? 'اسم الفئة موجود مسبقا يرجى اختيار اسم مختلف'
-                      : 'Category name already exists. Please choose a different name.'}
+                    {t('categories.modal.duplicateError')}
                   </p>
                 )}
               </div>
@@ -407,8 +416,7 @@ export const CannotDeleteModal = ({
   productsCount,
   onClose,
 }: CannotDeleteModalProps) => {
-  const { i18n } = useTranslation();
-  const isAr = i18n.language === 'ar';
+  const { t } = useTranslation();
 
   return (
     <AnimatePresence>
@@ -452,38 +460,23 @@ export const CannotDeleteModal = ({
 
               {/* Title */}
               <h3 className="text-label-lg font-bold text-gray-900 mb-2">
-                {isAr ? 'لا يمكن حذف الفئة' : 'Cannot Delete Category'}
+                {t('categories.cannotDeleteModal.title')}
               </h3>
 
               {/* Body */}
               {isBulk ? (
                 <p className="text-body-sm text-gray-500 leading-relaxed mb-5">
-                  {isAr
-                    ? 'بعض الفئات المحددة تحتوي على منتجات. يجب نقل جميع المنتجات إلى فئة أخرى أو حذفها أولاً قبل حذف الفئة.'
-                    : 'One or more selected categories still contain products. Move or delete all products before removing a category.'}
+                  {t('categories.cannotDeleteModal.bulkBody')}
                 </p>
               ) : (
                 <p className="text-body-sm text-gray-500 leading-relaxed mb-5">
-                  {isAr ? (
-                    <>
-                      الفئة{' '}
-                      <span className="font-semibold text-gray-800">&ldquo;{categoryName}&rdquo;</span>
-                      {' '}تحتوي على{' '}
-                      <span className="inline-flex items-center gap-1 font-bold text-red px-1.5 py-0.5 rounded-lg bg-red-light text-sm">
-                        {productsCount} منتج
-                      </span>
-                      . يجب نقل المنتجات إلى فئة أخرى أو حذفها أولاً.
-                    </>
-                  ) : (
-                    <>
-                      <span className="font-semibold text-gray-800">&ldquo;{categoryName}&rdquo;</span>
-                      {' '}still has{' '}
-                      <span className="inline-flex items-center gap-1 font-bold text-red px-1.5 py-0.5 rounded-lg bg-red-light text-sm">
-                        {productsCount} {productsCount === 1 ? 'product' : 'products'}
-                      </span>
-                      . Move or delete them before removing this category.
-                    </>
-                  )}
+                  {t('categories.cannotDeleteModal.singleBodyPrefix')}
+                  <span className="font-semibold text-gray-800">&ldquo;{categoryName}&rdquo;</span>
+                  {t('categories.cannotDeleteModal.singleBodyMiddle')}
+                  <span className="inline-flex items-center gap-1 font-bold text-red px-1.5 py-0.5 rounded-lg bg-red-light text-sm">
+                    {productsCount} {productsCount === 1 ? t('categories.cannotDeleteModal.productUnit') : t('categories.cannotDeleteModal.productsUnit')}
+                  </span>
+                  {t('categories.cannotDeleteModal.singleBodySuffix')}
                 </p>
               )}
 
@@ -491,9 +484,7 @@ export const CannotDeleteModal = ({
               <div className="flex items-start gap-2.5 bg-amber-50 rounded-xl p-3.5 text-left mb-5">
                 <AlertTriangle size={15} className="text-amber-500 mt-0.5 shrink-0" />
                 <p className="text-xs text-amber-700 leading-relaxed">
-                  {isAr
-                    ? 'حذف فئة تحتوي على منتجات قد يؤدي إلى فقدان البيانات. تأكد من نقل المنتجات أولاً.'
-                    : 'Deleting a category with products can cause data loss. Make sure to reassign all products first.'}
+                  {t('categories.cannotDeleteModal.warningHint')}
                 </p>
               </div>
 
@@ -503,7 +494,7 @@ export const CannotDeleteModal = ({
                 onClick={onClose}
                 className="w-full py-3 rounded-xl bg-gray-950 text-white text-label-md font-semibold hover:bg-gray-800 active:scale-[0.98] transition-all cursor-pointer"
               >
-                {isAr ? 'حسناً، فهمت' : 'Got it'}
+                {t('categories.cannotDeleteModal.gotIt')}
               </button>
             </div>
           </motion.div>

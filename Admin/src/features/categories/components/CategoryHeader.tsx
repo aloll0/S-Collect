@@ -9,10 +9,10 @@ export const CategoryHeader = () => {
   const openAdd = useCategoryStore((state) => state.openAdd);
 
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center justify-between">
       <div>
-        <h1 className="text-h6 sm:text-h5 font-bold text-gray-900">
-          {isMobile ? 'Product Management' : 'Category Management'}
+        <h1 className="font-bold text-gray-900 heading-page-title">
+          {t('categories.title')}
         </h1>
         {!isMobile && (
           <p className="text-body-sm text-gray-500 mt-1">
@@ -30,7 +30,7 @@ export const CategoryHeader = () => {
         }`}
       >
         <Plus size={18} />
-        {!isMobile && <span>Add Category</span>}
+        {!isMobile && <span>{t('categories.modal.addCategory')}</span>}
       </button>
     </div>
   );
