@@ -92,17 +92,6 @@ const InputSearch = () => {
           </div>
         </div>
       )}
-
-      {/* Animation */}
-      <style>{`
-        @keyframes slideUp {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0); }
-        }
-        .animate-slideUp {
-          animation: slideUp 0.25s ease-out;
-        }
-      `}</style>
     </>
   );
 };

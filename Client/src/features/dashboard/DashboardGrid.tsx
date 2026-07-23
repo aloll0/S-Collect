@@ -71,31 +71,12 @@ const DashboardGrid = () => {
 
   return (
     <div className="mb-10 ">
-      {/* Injected CSS for smooth first appearance */}
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in-up {
-          opacity: 0;
-          /* Using a smooth cubic-bezier for a modern "ease-out" feel */
-          animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-      `}</style>
-
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4 xl:gap-6">
         {dashboardMetrics.map((metric, index) => (
           <div
             key={metric.title}
             // Added the animation class
-            className={`bg-white border border-gray-100 rounded-xl p-3 lg:p-5 shadow-sm h-[120px] md:h-[135px] lg:h-[155px] flex flex-col justify-between  animate-fade-in-up  ${(isMobile || isTablet) &&
+            className={`bg-white border border-gray-100 rounded-xl p-3 lg:p-5 shadow-sm h-30 md:h-33.75 lg:h-38.75 flex flex-col justify-between  animate-dashboard-fade-in-up  ${(isMobile || isTablet) &&
               index === dashboardMetrics.length - 1 &&
               dashboardMetrics.length > 4
               ? "col-span-2"
