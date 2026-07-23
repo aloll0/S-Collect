@@ -1,225 +1,244 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useSubOrders } from '../features/Orders/useSubOrders';
-import type { SubOrder, SubOrderStatus } from '../features/Orders/types/subOrder';
-import { STATUS_STYLES } from '../features/Orders/types/subOrder';
-import { OrderFilters } from '../features/Orders/components/OrderFilters';
-import { Pagination } from '../features/Orders/components/Pagination';
-import { EmptyState } from '../features/Orders/components/ EmptyState';
 import { useBreakpoint } from '../hooks/useBreakpoint';
-import MobileIncomingOrders from '../features/Orders/mobile/MobileIncomingOrders';
+import { OrderFilters } from '../features/Orders/components/OrderFilters';
+import { OrdersTable } from '../features/Orders/components/OrdersTable';
+import type { TableItem } from '../features/Orders/components/OrdersTable';
+import { Pagination } from '../features/Orders/components/Pagination';
+import { MobileOrderCard } from '../features/Orders/mobile/MobileOrderCard';
 
-const ITEMS_PER_PAGE = 8;
+// ── Mock Data for Orders ──────────────────────────────────────────────────
+const BASE_ORDERS: TableItem[] = [
+  { id: '1', code: '#ORD-77492-CS', customer: 'Yousef Al-Harbi', vendor: 'Al-Falah Crafts', total: 450, totalFormatted: '450.00 SAR', status: 'Delivered', subOrdersCount: 12, date: 'Oct 24, 2026' },
+  { id: '2', code: '#ORD-77491-CS', customer: 'Layan Mansour', vendor: 'Desert Bloom', total: 1200, totalFormatted: '1,200.00 SAR', status: 'Delivered', subOrdersCount: 5, date: 'Oct 24, 2026' },
+  { id: '3', code: '#ORD-77490-CS', customer: 'Fahad Al-Otaibi', vendor: 'Oasis Tech', total: 85, totalFormatted: '85.00 SAR', status: 'Canceled', subOrdersCount: 20, date: 'Oct 24, 2026' },
+  { id: '4', code: '#ORD-77489-CS', customer: 'Sarah Khalid', vendor: 'Red Sea Styles', total: 320, totalFormatted: '320.00 SAR', status: 'Shipped', subOrdersCount: 11, date: 'Oct 24, 2026' },
+  { id: '5', code: '#ORD-77488-CS', customer: 'Abdulrahman Ali', vendor: 'Dates & Co', total: 150, totalFormatted: '150.00 SAR', status: 'Delivered', subOrdersCount: 2, date: 'Oct 24, 2026' },
+  { id: '6', code: '#ORD-77487-CS', customer: 'Reem Abdullah', vendor: 'Urban Elegance', total: 550, totalFormatted: '550.00 SAR', status: 'Shipped', subOrdersCount: 4, date: 'Oct 24, 2026' },
+  { id: '7', code: '#ORD-77486-CS', customer: 'Khaled Al-Saeed', vendor: 'Beauty Lab', total: 240, totalFormatted: '240.00 SAR', status: 'Delivered', subOrdersCount: 3, date: 'Oct 24, 2026' },
+];
 
-const TAB_TO_STATUS: Record<string, SubOrderStatus | undefined> = {
-  allOrders:  undefined,
-  PENDING:    'PENDING',
-  PROCESSING: 'PROCESSING',
-  SHIPPED:    'SHIPPED',
-  DELIVERED:  'DELIVERED',
-  CANCELLED:  'CANCELLED',
-};
+const MOCK_ORDERS: TableItem[] = Array.from({ length: 48 }, (_, i) => {
+  const base = BASE_ORDERS[i % BASE_ORDERS.length];
+  const num = 77492 - i;
+  return {
+    ...base,
+    id: `${i + 1}`,
+    code: `#ORD-${num}-CS`,
+  };
+});
 
-// ── Status label map ───────────────────────────────────────────────────────
-const STATUS_LABEL: Record<SubOrderStatus, string> = {
-  PENDING:    'Pending',
-  PROCESSING: 'Processing',
-  SHIPPED:    'Shipped',
-  DELIVERED:  'Delivered',
-  CANCELLED:  'Cancelled',
-};
+// ── Mock Data for Refunds ─────────────────────────────────────────────────
+const BASE_REFUNDS: TableItem[] = [
+  { id: 'r1', code: '#REF-77492-CS', orderId: '#ORD-77492-CS', customer: 'Yousef Al-Harbi', vendor: 'Al-Falah Crafts', reason: 'Wrong product received', date: 'Oct 24, 2026', total: 450, totalFormatted: '450.00 SAR', status: 'Pending' },
+  { id: 'r2', code: '#REF-77491-CS', orderId: '#ORD-77491-CS', customer: 'Layan Mansour', vendor: 'Desert Bloom', reason: 'Damaged item', date: 'Oct 24, 2026', total: 1200, totalFormatted: '1,200.00 SAR', status: 'Approved' },
+  { id: 'r3', code: '#REF-77490-CS', orderId: '#ORD-77490-CS', customer: 'Fahad Al-Otaibi', vendor: 'Oasis Tech', reason: 'Canceled by customer', date: 'Oct 24, 2026', total: 85, totalFormatted: '85.00 SAR', status: 'Rejected' },
+  { id: 'r4', code: '#REF-77489-CS', orderId: '#ORD-77489-CS', customer: 'Sarah Khalid', vendor: 'Red Sea Styles', reason: 'Wrong size delivered', date: 'Oct 23, 2026', total: 320, totalFormatted: '320.00 SAR', status: 'Pending' },
+  { id: 'r5', code: '#REF-77488-CS', orderId: '#ORD-77488-CS', customer: 'Abdulrahman Ali', vendor: 'Dates & Co', reason: 'Item not needed', date: 'Oct 23, 2026', total: 150, totalFormatted: '150.00 SAR', status: 'Approved' },
+  { id: 'r6', code: '#REF-77487-CS', orderId: '#ORD-77487-CS', customer: 'Reem Abdullah', vendor: 'Urban Elegance', reason: 'Quality issue', date: 'Oct 21, 2026', total: 550, totalFormatted: '550.00 SAR', status: 'Rejected' },
+  { id: 'r7', code: '#REF-77486-CS', orderId: '#ORD-77486-CS', customer: 'Khaled Al-Saeed', vendor: 'Beauty Lab', reason: 'Duplicate order', date: 'Oct 23, 2026', total: 240, totalFormatted: '240.00 SAR', status: 'Pending' },
+];
 
+const MOCK_REFUNDS: TableItem[] = Array.from({ length: 235 }, (_, i) => {
+  const base = BASE_REFUNDS[i % BASE_REFUNDS.length];
+  const num = 77492 - i;
+  return {
+    ...base,
+    id: `r_${i + 1}`,
+    code: `#REF-${num}-CS`,
+    orderId: `#ORD-${num}-CS`,
+  };
+});
 
-// ── Skeleton loader ────────────────────────────────────────────────────────
-const TableSkeleton = () => (
-  <div className="animate-pulse">
-    {Array.from({ length: 6 }).map((_, i) => (
-      <div key={i} className="flex gap-6 items-center px-4 py-4 border-b border-gray-50 animate-pulse">
-        <div className="h-3.5 w-20 bg-gray-200 rounded" />
-        <div className="h-3.5 w-24 bg-gray-200 rounded" />
-        <div className="h-3.5 w-36 bg-gray-200 rounded flex-1" />
-        <div className="h-3.5 w-20 bg-gray-200 rounded" />
-        <div className="h-7 w-28 bg-gray-200 rounded-lg animate-pulse" />
-        <div className="h-3.5 w-16 bg-gray-200 rounded" />
-      </div>
-    ))}
-  </div>
-);
-
-// ── Desktop table ──────────────────────────────────────────────────────────
-const SubOrdersTable = ({
-  orders,
-  onViewDetails,
-}: {
-  orders: SubOrder[];
-  onViewDetails: (o: SubOrder) => void;
-}) => {
+export default function Orders() {
   const { t } = useTranslation();
-
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-gray-100 bg-gray-50">
-            {[
-              t('ordersPage.orderId'),
-              t('ordersPage.orderDate'),
-              t('ordersPage.customerName'),
-              t('ordersPage.totalAmount'),
-              t('ordersPage.orderStatus'),
-              t('ordersPage.actions'),
-            ].map((h) => (
-              <th
-                key={h}
-                className="text-left rtl:text-right py-3 px-4 text-xs text-gray-600 font-semibold"
-              >
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order, index) => {
-            const itemsTotal = order.items.reduce((s, i) => s + i.lineTotal, 0);
-            const grandTotal = itemsTotal + order.shippingRateApplied;
-            const firstProduct = order.items[0]?.productName ?? '—';
-
-            return (
-              <motion.tr
-                key={order.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: index * 0.04 }}
-                className="border-b border-gray-100 hover:bg-gray-50/60 transition-colors"
-              >
-                {/* Order ID */}
-                <td className="py-4 px-4 font-semibold text-gray-800 text-sm">
-                  #{order.id.slice(0, 8).toUpperCase()}
-                </td>
-
-                {/* Date */}
-                <td className="py-4 px-4 text-gray-500 text-sm whitespace-nowrap">
-                  {new Date(order.createdAt).toLocaleDateString('en-US', {
-                    month: 'short', day: 'numeric', year: 'numeric',
-                  })}
-                </td>
-
-                {/* First product name as "customer" substitute */}
-                <td className="py-4 px-4 text-gray-700 text-sm max-w-[200px] truncate">
-                  {firstProduct}
-                  {order.items.length > 1 && (
-                    <span className="text-gray-400 text-xs ml-1">+{order.items.length - 1}</span>
-                  )}
-                </td>
-
-                {/* Total */}
-                <td className="py-4 px-4 font-medium text-gray-900 text-sm whitespace-nowrap">
-                  {grandTotal.toLocaleString()} SAR
-                </td>
-
-                {/* Status dropdown */}
-                <td className="py-4 px-4">
-                  <span className={`px-3 py-1.5 rounded-lg text-xs font-medium ${STATUS_STYLES[order.status]}`}>
-                    {STATUS_LABEL[order.status]}
-                  </span>
-                </td>
-
-                {/* Actions */}
-                <td className="py-4 px-4">
-                  <button
-                    onClick={() => onViewDetails(order)}
-                    className="text-sm font-medium text-gray-800 underline underline-offset-2 hover:text-gray-500 cursor-pointer transition-colors whitespace-nowrap"
-                  >
-                    {t('ordersPage.viewDetails')}
-                  </button>
-                </td>
-              </motion.tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-// ── Desktop page ───────────────────────────────────────────────────────────
-const IncomingOrdersDesktop = () => {
-  const { t } = useTranslation();
+  const { isMobile } = useBreakpoint();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<string>('allOrders');
-  const [sortNewest, setSortNewest] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
 
-  const statusFilter = TAB_TO_STATUS[activeTab];
+  // Tab State
+  const [activeMainTab, setActiveMainTab] = useState<'allOrders' | 'refunds'>('allOrders');
 
-  const { data, isLoading, isError } = useSubOrders({
-    pageNum: currentPage,
-    pageSize: ITEMS_PER_PAGE,
-    status: statusFilter,
-  });
+  // Filters State
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [dateFilter, setDateFilter] = useState('last30Days');
+  const [vendorFilter, setVendorFilter] = useState('All');
 
-  const orders = data?.items ?? [];
-  const totalItems = data?.pagination?.totalItems ?? 0;
-  const totalPages = data?.pagination?.totalPages ?? 0;
+  // Pagination & Selection State
+  const [page, setPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  const sorted = sortNewest ? orders : [...orders].reverse();
+  const itemsPerPage = isMobile && activeMainTab === 'refunds' ? 10 : 7;
 
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    setCurrentPage(1);
+  // Filter Data
+  const filteredOrders = useMemo(() => {
+    return MOCK_ORDERS.filter((item) => {
+      const matchesSearch =
+        item.code.toLowerCase().includes(search.toLowerCase()) ||
+        item.customer.toLowerCase().includes(search.toLowerCase()) ||
+        (item.vendor && item.vendor.toLowerCase().includes(search.toLowerCase()));
+
+      const matchesStatus =
+        statusFilter === 'All' || item.status === statusFilter;
+
+      const matchesVendor =
+        vendorFilter === 'All' || item.vendor === vendorFilter;
+
+      return matchesSearch && matchesStatus && matchesVendor;
+    });
+  }, [search, statusFilter, vendorFilter]);
+
+  const filteredRefunds = useMemo(() => {
+    return MOCK_REFUNDS.filter((item) => {
+      const matchesSearch =
+        item.code.toLowerCase().includes(search.toLowerCase()) ||
+        (item.orderId && item.orderId.toLowerCase().includes(search.toLowerCase())) ||
+        item.customer.toLowerCase().includes(search.toLowerCase()) ||
+        (item.vendor && item.vendor.toLowerCase().includes(search.toLowerCase())) ||
+        (item.reason && item.reason.toLowerCase().includes(search.toLowerCase()));
+
+      const matchesStatus =
+        statusFilter === 'All' || item.status === statusFilter;
+
+      const matchesVendor =
+        vendorFilter === 'All' || item.vendor === vendorFilter;
+
+      return matchesSearch && matchesStatus && matchesVendor;
+    });
+  }, [search, statusFilter, vendorFilter]);
+
+  const activeDataset = activeMainTab === 'allOrders' ? filteredOrders : filteredRefunds;
+  const totalCount = activeDataset.length;
+  const totalPages = Math.max(1, Math.ceil(totalCount / itemsPerPage));
+  const safePage = Math.min(page, totalPages);
+
+  const paginatedData = useMemo(() => {
+    const start = (safePage - 1) * itemsPerPage;
+    return activeDataset.slice(start, start + itemsPerPage);
+  }, [activeDataset, safePage, itemsPerPage]);
+
+  // Selection handlers
+  const allCurrentIds = paginatedData.map((d) => d.id);
+  const selectedAll =
+    allCurrentIds.length > 0 && allCurrentIds.every((id) => selectedIds.has(id));
+
+  const handleSelectAll = () => {
+    const next = new Set(selectedIds);
+    if (selectedAll) {
+      allCurrentIds.forEach((id) => next.delete(id));
+    } else {
+      allCurrentIds.forEach((id) => next.add(id));
+    }
+    setSelectedIds(next);
+  };
+
+  const handleSelectOne = (id: string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
+    setSelectedIds(next);
+  };
+
+  const handleViewDetails = (item: TableItem) => {
+    if (activeMainTab === 'refunds') {
+      navigate(`/returns/${item.id}`);
+    } else {
+      navigate(`/incoming-orders/${item.id}`);
+    }
   };
 
   return (
-    <div className="flex-1 overflow-y-auto py-6 sidebar-page-container">
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-h6 sm:text-h5 font-bold">{t('ordersPage.title')}</h1>
+    <>
+      {/* Header Container (Matching Categories & Transactions) */}
+      <div className="sidebar-page-container-header">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h1 className="font-bold text-gray-900 heading-page-title">
+              {activeMainTab === 'allOrders'
+                ? t('ordersPage.title', 'Orders')
+                : t('ordersPage.refunds', 'Refunds')}
+            </h1>
+          </div>
+        </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
-        {/* Filters row */}
-        <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-0">
-          <OrderFilters
-            activeTab={activeTab}
-            onTabChange={handleTabChange}
-            sortNewest={sortNewest}
-            onSortChange={(v) => setSortNewest(v === 'newest')}
-          />
-        </div>
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto py-6 sidebar-page-container">
+        {/* Modular Filter Controls (Search + Main Tab Pills + Dropdowns) */}
+        <OrderFilters
+          activeMainTab={activeMainTab}
+          onMainTabChange={(tab) => {
+            setActiveMainTab(tab);
+            setStatusFilter('All');
+            setPage(1);
+          }}
+          search={search}
+          onSearchChange={(val) => {
+            setSearch(val);
+            setPage(1);
+          }}
+          statusFilter={statusFilter}
+          onStatusFilterChange={(val) => {
+            setStatusFilter(val);
+            setPage(1);
+          }}
+          dateFilter={dateFilter}
+          onDateFilterChange={(val) => {
+            setDateFilter(val);
+            setPage(1);
+          }}
+          vendorFilter={vendorFilter}
+          onVendorFilterChange={(val) => {
+            setVendorFilter(val);
+            setPage(1);
+          }}
+        />
 
-        {/* Table / states */}
-        {isLoading ? (
-          <TableSkeleton />
-        ) : isError ? (
-          <div className="py-16 text-center text-red-500 text-sm">
-            {t('ordersPage.loadError', 'Failed to load orders. Please try again.')}
-          </div>
-        ) : sorted.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <>
-            <SubOrdersTable orders={sorted} onViewDetails={(o) => navigate(`/incoming-orders/${o.id}`)} />
-            <div className="px-4 py-3 border-t border-gray-100">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={totalItems}
-                itemsPerPage={ITEMS_PER_PAGE}
-                onPageChange={setCurrentPage}
+        {/* Content Views: Mobile Cards vs Desktop Table */}
+        {isMobile ? (
+          <div>
+            {paginatedData.map((item) => (
+              <MobileOrderCard
+                key={item.id}
+                item={item}
+                type={activeMainTab}
+                onViewDetails={handleViewDetails}
               />
-            </div>
-          </>
+            ))}
+            <Pagination
+              currentPage={safePage}
+              totalPages={totalPages}
+              totalItems={totalCount}
+              itemsPerPage={itemsPerPage}
+              onPageChange={setPage}
+              isMobile
+            />
+          </div>
+        ) : (
+          <div>
+            <OrdersTable
+              items={paginatedData}
+              activeMainTab={activeMainTab}
+              selectedIds={selectedIds}
+              onSelectAll={handleSelectAll}
+              onSelectOne={handleSelectOne}
+              selectedAll={selectedAll}
+              onViewDetails={handleViewDetails}
+            />
+            <Pagination
+              currentPage={safePage}
+              totalPages={totalPages}
+              totalItems={totalCount}
+              itemsPerPage={itemsPerPage}
+              onPageChange={setPage}
+            />
+          </div>
         )}
       </div>
-    </div>
+    </>
   );
-};
-
-// ── Route component ────────────────────────────────────────────────────────
-const IncomingOrders = () => {
-  const { isMobile } = useBreakpoint();
-  return isMobile ? <MobileIncomingOrders /> : <IncomingOrdersDesktop />;
-};
-
-export default IncomingOrders;
+}

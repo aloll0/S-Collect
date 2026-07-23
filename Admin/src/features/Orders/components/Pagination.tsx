@@ -1,6 +1,5 @@
-import { useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+import React from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface PaginationProps {
   currentPage: number;
@@ -8,68 +7,88 @@ interface PaginationProps {
   totalItems: number;
   itemsPerPage: number;
   onPageChange: (page: number) => void;
+  isMobile?: boolean;
 }
 
-export const Pagination = ({
+export const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   totalItems,
   itemsPerPage,
   onPageChange,
-}: PaginationProps) => {
-  const { t } = useTranslation();
+  isMobile = false,
+}) => {
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
-  const pageNumbers = useMemo(() => {
-    const pages: number[] = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push(i);
-    }
-    return pages;
-  }, [totalPages]);
+  if (isMobile) {
+    return (
+      <div className="flex items-center justify-between mt-4 px-1">
+        <span className="text-xs text-gray-500 font-medium">
+          Showing {startItem}-{endItem} of {totalItems}
+        </span>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="w-8 h-8 rounded-lg border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          >
+            <ChevronLeft size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className="w-8 h-8 rounded-lg border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          >
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      {totalPages > 1 ? (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100"
+    <div className="flex items-center justify-between px-5 py-4 border-t border-gray-100">
+      <span className="text-xs sm:text-sm text-gray-500 font-medium">
+        Showing {startItem}-{endItem} of {totalItems} items
+      </span>
+      <div className="flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+          className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
-          <span className="text-body-sm text-gray-400">
-            {t('ordersPage.showing')} {(currentPage - 1) * itemsPerPage + 1} –{' '}
-            {Math.min(currentPage * itemsPerPage, totalItems)}{' '}
-            {t('ordersPage.of')} {totalItems} {t('ordersPage.results')}
-          </span>
-          <div className="flex gap-1">
-            {pageNumbers.map((n) => (
-              <button
-                key={n}
-                onClick={() => onPageChange(n)}
-                className={`w-8 h-8 rounded-lg text-sm font-medium border transition-colors ${
-                  n === currentPage
-                    ? 'bg-gray-900 text-white border-gray-900'
-                    : 'border-gray-200 text-gray-500 hover:bg-gray-50'
-                }`}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
-        </motion.div>
-      ) : (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100"
+          <ChevronLeft size={16} />
+        </button>
+        {Array.from({ length: totalPages }).map((_, idx) => {
+          const pageNum = idx + 1;
+          return (
+            <button
+              key={pageNum}
+              type="button"
+              onClick={() => onPageChange(pageNum)}
+              className={`w-8 h-8 rounded-lg font-medium text-xs sm:text-sm flex items-center justify-center transition-all cursor-pointer ${
+                currentPage === pageNum
+                  ? 'bg-black text-white shadow-xs'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              {pageNum}
+            </button>
+          );
+        })}
+        <button
+          type="button"
+          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages}
+          className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
-          <span className="text-body-sm text-gray-400">
-            {t('ordersPage.showing')} 1 – {totalItems} {t('ordersPage.of')}{' '}
-            {totalItems} {t('ordersPage.results')}
-          </span>
-        </motion.div>
-      )}
-    </>
+          <ChevronRight size={16} />
+        </button>
+      </div>
+    </div>
   );
 };

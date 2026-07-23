@@ -27,6 +27,7 @@ import VendorProductsPage from './pages/VendorProductsPage.js';
 import VendorReports from './pages/VendorReports.js';
 import CommissionRates from './pages/CommissionRates.js';
 import Payouts from './pages/Payouts.js';
+import Transactions from './pages/Transactions.js';
 import Categories from './pages/Categories.js';
 import Products from './pages/Products.js';
 import Reviews from './pages/Reviews.js';
@@ -67,6 +68,7 @@ function App() {
           <Route path="/vendor-reports" element={<VendorReports />} />
           <Route path="/commission-rates" element={<CommissionRates />} />
           <Route path="/payouts" element={<Payouts />} />
+          <Route path="/transactions" element={<Transactions />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/products" element={<Products />} />
           <Route path="/reviews" element={<Reviews />} />

@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface PortalDropdownProps {
   trigger: (props: { isOpen: boolean; toggle: () => void }) => ReactNode;
   children: (props: { close: () => void }) => ReactNode;
-  align?: 'left' | 'right';
+  align?: 'left' | 'right' | 'center';
   minWidth?: number;
   animate?: boolean;
   menuClassName?: string;
@@ -37,7 +37,12 @@ export default function PortalDropdown({
     if (!triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
     const menuWidth = menuRef.current?.offsetWidth || minWidth;
-    let left = align === 'left' ? rect.left : rect.right - menuWidth;
+    let left = rect.left;
+    if (align === 'right') {
+      left = rect.right - menuWidth;
+    } else if (align === 'center') {
+      left = rect.left + rect.width / 2 - menuWidth / 2;
+    }
     left = Math.max(8, Math.min(left, window.innerWidth - menuWidth - 8));
     setPosition({ top: rect.bottom + offset, left });
   }, [align, minWidth, offset]);

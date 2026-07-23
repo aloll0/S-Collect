@@ -1,197 +1,134 @@
-import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { ChevronDown } from 'lucide-react';
-import PortalDropdown from '../../../components/ui/PortalDropdown';
-import {
-  type Order,
-  type OrderStatus,
-  STATUS_STYLES,
-  ALL_STATUSES,
-} from '../types/order';
+import React from 'react';
 
-interface OrdersTableProps {
-  orders: Order[];
-  onStatusChange: (orderId: string, newStatus: OrderStatus) => void;
-  onViewDetails: (order: Order) => void;
+export interface TableItem {
+  id: string;
+  code: string;
+  customer: string;
+  vendor?: string;
+  orderId?: string;
+  total: number;
+  totalFormatted: string;
+  status: string;
+  subOrdersCount?: number;
+  reason?: string;
+  date: string;
 }
 
-// دروب داون مخصص لكل صف
-const StatusDropdown = ({
-  orderId,
-  currentStatus,
-  onStatusChange,
-  t,
-}: {
-  orderId: string;
-  currentStatus: OrderStatus;
-  onStatusChange: (orderId: string, newStatus: OrderStatus) => void;
-  t: (key: string) => string;
-}) => {
-  return (
-    <PortalDropdown
-      align="right"
-      minWidth={160}
-      animate
-      menuClassName="bg-white rounded-lg border border-gray-200 shadow-lg py-1 overflow-hidden"
-      trigger={({ isOpen, toggle }) => (
-        <button
-          onClick={toggle}
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-2 py-1.5 hover:border-gray-300 transition-colors"
-        >
-          <span
-            className={`rounded-md px-3 py-1 text-xs font-medium ${
-              STATUS_STYLES[currentStatus]
-            }`}
-          >
-            {t(`ordersPage.${currentStatus.toLowerCase()}`)}
-          </span>
-          <motion.span
-            animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <ChevronDown size={14} className="text-gray-400" />
-          </motion.span>
-        </button>
-      )}
-    >
-      {({ close }) => (
-        <>
-          {ALL_STATUSES.map((status) => (
-            <button
-              key={status}
-              onClick={() => {
-                onStatusChange(orderId, status);
-                close();
-              }}
-              className={`w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-gray-50 ${
-                status === currentStatus
-                  ? 'bg-gray-50 font-medium text-gray-900'
-                  : 'text-gray-600'
-              }`}
-            >
-              <span
-                className={`w-2 h-2 rounded-full ${
-                  status === 'Pending'
-                    ? 'bg-gray-400'
-                    : status === 'Processing'
-                      ? 'bg-blue-400'
-                      : status === 'Shipped'
-                        ? 'bg-yellow-400'
-                        : status === 'Delivered'
-                          ? 'bg-emerald-400'
-                          : 'bg-gray-400'
-                }`}
-              />
-              <span
-                className={`rounded-md px-2.5 py-1 text-xs font-medium ${
-                  STATUS_STYLES[status]
-                }`}
-              >
-                {t(`ordersPage.${status.toLowerCase()}`)}
-              </span>
-              {status === currentStatus && (
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  className="ml-auto text-gray-900"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              )}
-            </button>
-          ))}
-        </>
-      )}
-    </PortalDropdown>
-  );
-};
+interface OrdersTableProps {
+  items: TableItem[];
+  activeMainTab: 'allOrders' | 'refunds';
+  selectedIds: Set<string>;
+  onSelectAll: () => void;
+  onSelectOne: (id: string) => void;
+  selectedAll: boolean;
+  onViewDetails: (item: TableItem) => void;
+}
 
-export const OrdersTable = ({
-  orders,
-  onStatusChange,
-  onViewDetails,
-}: OrdersTableProps) => {
-  const { t } = useTranslation();
+export const StatusBadge = ({ status }: { status: string }) => {
+  let badgeStyle = 'bg-gray-100 text-gray-700';
 
-  if (orders.length === 0) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center py-12 text-gray-400"
-      >
-        {t('ordersPage.noOrders', 'No orders found.')}
-      </motion.div>
-    );
+  if (status === 'Delivered' || status === 'Approved' || status === 'Paid') {
+    badgeStyle = 'bg-emerald-100/70 text-emerald-700';
+  } else if (status === 'Canceled' || status === 'Cancelled' || status === 'Rejected') {
+    badgeStyle = 'bg-rose-100/70 text-rose-700';
+  } else if (status === 'Shipped' || status === 'Pending') {
+    badgeStyle = 'bg-amber-100/70 text-amber-700';
+  } else if (status === 'Processing') {
+    badgeStyle = 'bg-blue-100/70 text-blue-700';
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-190 text-sm bg-white border border-gray-100 rounded-2xl overflow-hidden">
-        <thead>
-          <tr className="border-b border-gray-100 bg-gray-100">
-            {[
-              t('ordersPage.orderId'),
-              t('ordersPage.orderDate'),
-              t('ordersPage.customerName'),
-              t('ordersPage.totalAmount'),
-              t('ordersPage.orderStatus'),
-              t('ordersPage.actions'),
-            ].map((h) => (
-              <th
-                key={h}
-                className="text-left rtl:text-right py-3 px-2 text-xs text-gray-950 font-bold"
-              >
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order, index) => (
-            <motion.tr
-              key={order.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.3,
-                delay: index * 0.04,
-                ease: [0.25, 0.1, 0.25, 1],
-              }}
-              className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
-            >
-              <td className="py-4 px-2 font-semibold text-gray-800">
-                #{order.id}
-              </td>
-              <td className="py-4 px-2 text-gray-500">{order.date}</td>
-              <td className="py-4 px-2 text-gray-700">{order.customer.name}</td>
-              <td className="py-4 px-2 font-medium text-gray-900">
-                {order.amount.toLocaleString()} SAR
-              </td>
-              <td className="py-4 px-2">
-                <StatusDropdown
-                  orderId={order.id}
-                  currentStatus={order.status}
-                  onStatusChange={onStatusChange}
-                  t={t}
+    <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeStyle}`}>
+      {status}
+    </span>
+  );
+};
+
+export const OrdersTable: React.FC<OrdersTableProps> = ({
+  items,
+  activeMainTab,
+  selectedIds,
+  onSelectAll,
+  onSelectOne,
+  selectedAll,
+  onViewDetails,
+}) => {
+  return (
+    <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-start border-collapse">
+          <thead>
+            <tr className="border-b border-gray-100 bg-white text-xs font-bold text-gray-900">
+              <th className="py-4 px-4 text-start w-10">
+                <input
+                  type="checkbox"
+                  checked={selectedAll}
+                  onChange={onSelectAll}
+                  className="rounded border-gray-300 text-gray-950 focus:ring-gray-950 cursor-pointer"
                 />
-              </td>
-              <td className="py-4 px-2">
-                <button
-                  onClick={() => onViewDetails(order)}
-                  className="text-sm font-medium text-gray-900 underline underline-offset-2 hover:text-gray-500 cursor-pointer transition-colors"
-                >
-                  {t('ordersPage.viewDetails')}
-                </button>
-              </td>
-            </motion.tr>
-          ))}
-        </tbody>
-      </table>
+              </th>
+              <th className="py-4 px-4 text-start font-bold">
+                {activeMainTab === 'allOrders' ? 'Order ID' : 'Refund ID'}
+              </th>
+              <th className="py-4 px-4 text-start font-bold">Customer</th>
+              <th className="py-4 px-4 text-start font-bold">
+                {activeMainTab === 'allOrders' ? 'Vendor' : 'Order ID'}
+              </th>
+              <th className="py-4 px-4 text-start font-bold">Total (SAR)</th>
+              <th className="py-4 px-4 text-start font-bold">Status</th>
+              <th className="py-4 px-4 text-start font-bold">
+                {activeMainTab === 'allOrders' ? 'Sub-orders' : 'Reason'}
+              </th>
+              <th className="py-4 px-4 text-start font-bold">Date</th>
+              <th className="py-4 px-4 text-start font-bold">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 text-sm">
+            {items.map((item) => (
+              <tr key={item.id} className="hover:bg-gray-50/60 transition-colors">
+                <td className="py-4 px-4 text-start">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(item.id)}
+                    onChange={() => onSelectOne(item.id)}
+                    className="rounded border-gray-300 text-gray-950 focus:ring-gray-950 cursor-pointer"
+                  />
+                </td>
+                <td className="py-4 px-4 font-bold text-gray-900 whitespace-nowrap">
+                  {item.code}
+                </td>
+                <td className="py-4 px-4 text-gray-700 whitespace-nowrap">
+                  {item.customer}
+                </td>
+                <td className="py-4 px-4 text-gray-500 whitespace-nowrap">
+                  {activeMainTab === 'allOrders' ? item.vendor : item.orderId}
+                </td>
+                <td className="py-4 px-4 font-bold text-gray-900 whitespace-nowrap">
+                  {item.totalFormatted}
+                </td>
+                <td className="py-4 px-4 whitespace-nowrap">
+                  <StatusBadge status={item.status} />
+                </td>
+                <td className="py-4 px-4 text-gray-500 whitespace-nowrap">
+                  {activeMainTab === 'allOrders' ? item.subOrdersCount : item.reason}
+                </td>
+                <td className="py-4 px-4 text-gray-500 whitespace-nowrap">
+                  {item.date}
+                </td>
+                <td className="py-4 px-4 whitespace-nowrap">
+                  <button
+                    type="button"
+                    onClick={() => onViewDetails(item)}
+                    className="text-blue-600 font-semibold hover:underline text-sm cursor-pointer"
+                  >
+                    View details
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
