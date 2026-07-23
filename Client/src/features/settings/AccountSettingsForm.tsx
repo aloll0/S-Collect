@@ -13,7 +13,8 @@ import {
 } from './shared';
 import { getPasswordStrength, cn, isValidEmail } from './utils';
 import type { AccountSettingsData, PasswordData } from './types';
-import { changeEmail, changePassword, confirmChangeEmail } from '../../services/auth';
+import { changeEmail, confirmChangeEmail } from '../../services/auth';
+import { useChangePassword } from './hooks/useChangePassword';
 
 type AccountSettingsFormValues = AccountSettingsData & PasswordData;
 
@@ -29,7 +30,7 @@ export function AccountSettingsForm({
   const { t } = useTranslation();
   const [pwOpen, setPwOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [pwError, setPwError] = useState<string | null>(null);
+  const changePasswordMutation = useChangePassword();
 
   // Email Change Modal State
   const [emailModalOpen, setEmailModalOpen] = useState(false);
@@ -104,20 +105,21 @@ export function AccountSettingsForm({
   };
 
   const onSubmit = (data: AccountSettingsFormValues) => {
-    setPwError(null);
     startTransition(async () => {
       try {
         if (data.currentPassword && data.newPassword) {
-          await changePassword(data.currentPassword, data.newPassword);
+          await changePasswordMutation.mutateAsync({
+            currentPassword: data.currentPassword,
+            newPassword: data.newPassword,
+          });
         }
         await onSave({ ...data, email: currentEmailDisplay });
         setValue('currentPassword', '');
         setValue('newPassword', '');
         setValue('confirmPassword', '');
         onSuccess();
-      } catch (err: any) {
-        const msg = err?.response?.data?.message || err?.message || 'Failed to save account settings';
-        setPwError(msg);
+      } catch (err) {
+        console.error('Failed to save account settings:', err);
       }
     });
   };
@@ -279,12 +281,6 @@ export function AccountSettingsForm({
                 />
               </button>
             </div>
-
-            {pwError && (
-              <div className="mt-3 p-3 text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg">
-                {pwError}
-              </div>
-            )}
 
             <div
               className={cn(

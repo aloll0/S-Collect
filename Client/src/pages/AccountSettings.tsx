@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronsRight } from 'lucide-react';
 
 import { AccountSettingsForm } from '../features/settings/AccountSettingsForm';
+import { AccountSettingsFormSkeleton } from '../features/settings/skeleton/SettingsSkeletons';
 import { useAccountSettings } from '../features/settings/hooks/useAccountSettings';
 import { SuccessToast } from '../features/settings/shared';
 import type {
@@ -61,9 +62,7 @@ export default function AccountSettingsPage({
 
         <div className="settings-surface-enter settings-stagger-1 sidebar-page-container max-w-180">
           {loading ? (
-            <div className="p-8 flex items-center justify-center bg-white rounded-xl border border-gray-200">
-              <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-900 border-t-transparent"></div>
-            </div>
+            <AccountSettingsFormSkeleton />
           ) : (
             <AccountSettingsForm
               initialData={accountData}
