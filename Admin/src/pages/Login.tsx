@@ -9,9 +9,9 @@ import {
   TimerReset,
   UserRound,
 } from 'lucide-react';
-import AuthLeftPanel from '../../components/auth/AuthLeftPanel';
-import { type LoginState, useAuthStore } from '../../store/authStore';
-import { useLogin } from '../../hooks/useLogin';
+import AuthLeftPanel from '../components/auth/AuthLeftPanel';
+import { type LoginState, useAuthStore } from '../store/authStore';
+import { useLogin } from '../hooks/useLogin';
 
 const EyeIcon = ({ open }: { open: boolean }) => (
   <svg
