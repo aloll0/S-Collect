@@ -6,6 +6,27 @@
     "trySearching": "جرب البحث: أحذية، جاكيتات، إلكترونيات..."
   },
   "dashboard": "لوحة التحكم",
+  "dashboardOverview": {
+    "hello": "مرحباً، أحمد 👋",
+    "todayDate": "الأربعاء، ٢٤ أكتوبر ٢٠٢٤",
+    "revenueOverview": "نظرة عامة على الإيرادات",
+    "salesOverview": "نظرة عامة على المبيعات",
+    "ordersByStatus": "الطلبات حسب الحالة",
+    "totalOrders": "إجمالي الطلبات",
+    "delivered": "تم التسليم",
+    "processing": "قيد المعالجة",
+    "shipped": "تم الشحن",
+    "voucherOverview": "نظرة عامة على القسائم",
+    "activeVouchers": "القسائم النشطة",
+    "totalVoucherCosts": "إجمالي تكلفة القسائم",
+    "redemptionsThisMonth": "استخدامات هذا الشهر",
+    "topPerformingVendors": "أفضل الموردين أداءً",
+    "viewAll": "عرض الكل",
+    "last30Days": "آخر 30 يوم",
+    "last7Days": "آخر 7 أيام",
+    "thisMonth": "هذا الشهر",
+    "thisYear": "هذه السنة"
+  },
   "products": "المنتجات",
   "sidebar": {
     "sections": {

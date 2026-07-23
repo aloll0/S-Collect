@@ -6,6 +6,27 @@
     "trySearching": "Try searching: shoes, jackets, electronics..."
   },
   "dashboard": "Dashboard",
+  "dashboardOverview": {
+    "hello": "Hello, Ahmed 👋",
+    "todayDate": "Wednesday, October 24, 2024",
+    "revenueOverview": "Revenue Overview",
+    "salesOverview": "Sales Overview",
+    "ordersByStatus": "Orders by Status",
+    "totalOrders": "Total Orders",
+    "delivered": "Delivered",
+    "processing": "Processing",
+    "shipped": "Shipped",
+    "voucherOverview": "Voucher Overview",
+    "activeVouchers": "Active Vouchers",
+    "totalVoucherCosts": "Total Voucher Costs",
+    "redemptionsThisMonth": "Redemptions This Month",
+    "topPerformingVendors": "Top Performing Vendors",
+    "viewAll": "View All",
+    "last30Days": "Last 30 Days",
+    "last7Days": "Last 7 Days",
+    "thisMonth": "This Month",
+    "thisYear": "This Year"
+  },
   "products": "Products",
   "orders": "Orders",
   "sidebar": {

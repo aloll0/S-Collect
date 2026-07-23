@@ -1,48 +1,120 @@
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import DashboardGrid from '../features/dashboard/DashboardGrid';
-import SalesChart from '../features/dashboard/SalesChart';
-import InventoryAlert from '../features/dashboard/InventoryAlert';
-import TopSelling from '../features/dashboard/TopSelling';
-import RecentOrdersTable from '../features/dashboard/RecentOrdersTable';
-import { useProducts } from '../features/AddProducts/useProducts';
+import { Calendar, ChevronDown } from 'lucide-react';
+import RevenueStatCards from '../features/dashboard/RevenueStatCards';
+import RevenueSalesChart from '../features/dashboard/RevenueSalesChart';
+import OrdersStatusDonut from '../features/dashboard/OrdersStatusDonut';
+import VoucherOverviewSection from '../features/dashboard/VoucherOverviewSection';
+import TopPerformingVendorsSection from '../features/dashboard/TopPerformingVendorsSection';
+import DashboardSkeleton from '../features/dashboard/DashboardSkeleton';
+import PortalDropdown from '../components/ui/PortalDropdown';
 
-const Dashboard = () => {
-  const { t } = useTranslation();
-  const { data, isLoading, error } = useProducts();
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (!data) {
-    return <div>{error ? error.message : 'Loading...'}</div>;
-  }
-  console.log(data)
+export default function Dashboard() {
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === 'ar';
+
+  const [dateRange, setDateRange] = useState('Last 30 Days');
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Trigger brief skeleton loading state on mount or date range selection
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 400);
+    return () => clearTimeout(timer);
+  }, [dateRange]);
+
+  const dateRanges = ['Last 7 Days', 'Last 30 Days', 'This Month', 'This Year'];
+
   return (
-    <div className="flex flex-col flex-1">
-      <div className="sidebar-page-container flex items-center justify-between mb-10 bg-gray-50">
-        <h1 className="text-h4 py-5">{t('dashboard')}</h1>
+    <div className="flex-1 flex flex-col font-sans bg-gray-50/50 min-h-screen" dir={isRtl ? 'rtl' : 'ltr'}>
+      {/* ── Page Header ── */}
+      <div className="sidebar-page-container pt-4 pb-4">
+        {/* Mobile-only Greeting */}
+        <div className="md:hidden mb-3">
+          <p className="text-sm font-semibold text-gray-800">
+            {t('dashboardOverview.hello', 'Hello, Ahmed 👋')}
+          </p>
+          <p className="text-xs text-gray-400 font-medium">
+            {t('dashboardOverview.todayDate', 'Wednesday, October 24, 2024')}
+          </p>
+        </div>
+
+        {/* Title & Date Selector */}
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="text-xl font-bold text-gray-900">
+            {t('dashboardOverview.revenueOverview', 'Revenue Overview')}
+          </h1>
+
+          {/* Date Range Dropdown */}
+          <PortalDropdown
+            minWidth={140}
+            animate={false}
+            menuClassName="bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden"
+            trigger={({ isOpen, toggle }) => (
+              <button
+                onClick={toggle}
+                className="flex items-center gap-2 h-9 px-3.5 border border-gray-200 rounded-xl text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                <Calendar size={14} className="text-gray-400" />
+                <span>{dateRange}</span>
+                <ChevronDown
+                  size={13}
+                  className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
+            )}
+          >
+            {({ close }) => (
+              <div className="py-1">
+                {dateRanges.map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => {
+                      setDateRange(r);
+                      close();
+                    }}
+                    className={`w-full text-start px-3.5 py-2 text-xs transition-colors cursor-pointer ${
+                      dateRange === r
+                        ? 'bg-green-50 text-green-700 font-semibold'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+            )}
+          </PortalDropdown>
+        </div>
       </div>
 
-      <main className="sidebar-page-container pb-6">
-        <DashboardGrid />
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 items-stretch mb-6">
-          <div className="col-span-1 lg:col-span-3">
-            <SalesChart />
-          </div>
-          <div className="col-span-1 lg:col-span-2">
-            <InventoryAlert />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 items-stretch">
-          <div className="col-span-1 lg:col-span-2">
-            <TopSelling />
-          </div>
-          <div className="col-span-1 lg:col-span-3">
-            <RecentOrdersTable />
-          </div>
-        </div>
+      {/* ── Main Content ── */}
+      <main className="sidebar-page-container pb-10 space-y-6">
+        {isLoading ? (
+          <DashboardSkeleton />
+        ) : (
+          <>
+            {/* Top 4 Revenue Stat Cards */}
+            <RevenueStatCards />
+
+            {/* Sales Chart & Orders Donut Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
+              <div className="lg:col-span-2">
+                <RevenueSalesChart />
+              </div>
+              <div className="lg:col-span-1">
+                <OrdersStatusDonut />
+              </div>
+            </div>
+
+            {/* Voucher Overview Section */}
+            <VoucherOverviewSection />
+
+            {/* Top Performing Vendors Section */}
+            <TopPerformingVendorsSection />
+          </>
+        )}
       </main>
     </div>
   );
-};
-
-export default Dashboard;
+}
