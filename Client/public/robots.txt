@@ -1,0 +1,6 @@
+# robots.txt – توجيه الزاحف
+User-agent: *
+Disallow: /api/
+Allow: /
+
+Sitemap: https://s-collect.vercel.app/sitemap.xml
