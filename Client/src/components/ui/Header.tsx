@@ -149,7 +149,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
           <div className="hidden sidebar:flex">
             <LanguageDropdown />
           </div>
-
+   
           <Link
             to="/login"
             aria-label={t('header.account')}
