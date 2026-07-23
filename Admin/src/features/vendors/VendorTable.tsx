@@ -1,18 +1,19 @@
-import { useState, type ChangeEvent } from 'react';
-import { ChevronLeft, ChevronRight, X, ChevronDown, RefreshCw } from 'lucide-react';
+import { useState, useEffect, type ChangeEvent } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { useVendorStore, useVendorTable } from './vendorStore';
 import VendorCategoryDropdown from './VendorCategoryDropdown';
 import VendorConfirmModal from './VendorConfirmModal';
-import Toggle from '../mangement/Toggle';
+import VendorDesktopTable from './VendorDesktopTable';
+import VendorMobileList from './VendorMobileList';
+import VendorPagination from './VendorPagination';
+import VendorBulkActionBar from './VendorBulkActionBar';
 import type { ActiveFilter, VendorTab } from './vendors';
 import PortalDropdown from '../../components/ui/PortalDropdown';
 
 export default function VendorTable() {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
-  const navigate = useNavigate();
 
   const activeTab = useVendorStore((s) => s.activeTab);
   const search = useVendorStore((s) => s.search);
@@ -43,6 +44,15 @@ export default function VendorTable() {
     paginatedIds,
   } = useVendorTable();
 
+  // ── Page & filter change skeleton loading ──────────────────────────────────
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, [page, activeTab, selectedCategory, activeFilter, search]);
+
   type ModalType = 'approve' | 'reject' | 'deactivate';
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
@@ -55,7 +65,6 @@ export default function VendorTable() {
     { key: 'pending', label: t('vendors.tabs.pending'), count: pendingCount },
     { key: 'all', label: t('vendors.tabs.all') },
   ];
-
 
   const activeFilters: { key: ActiveFilter; label: string }[] = [
     { key: 'all', label: t('vendors.table.allStatuses') },
@@ -90,7 +99,6 @@ export default function VendorTable() {
 
   const startItem = totalItems === 0 ? 0 : (page - 1) * itemsPerPage + 1;
   const endItem = Math.min(page * itemsPerPage, totalItems);
-
 
   const activeFilterLabel =
     activeFilters.find((f) => f.key === activeFilter)?.label ??
@@ -137,7 +145,7 @@ export default function VendorTable() {
             {tab.label}
             {tab.count !== undefined && tab.count > 0 && (
               <span
-                className={`inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-semibold ${
+                className={`inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full text-xs font-semibold ${
                   activeTab === tab.key
                     ? 'bg-gray-900 text-white'
                     : 'bg-gray-100 text-gray-600'
@@ -153,7 +161,7 @@ export default function VendorTable() {
       {/* Filters */}
       <div className="flex items-center gap-2.5 mb-5 flex-wrap">
         {/* Search */}
-        <div className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 bg-white h-9 flex-1 max-w-[200px]">
+        <div className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 bg-white h-9 flex-1 max-w-50">
           <i className="ti ti-search text-gray-400 text-base" aria-hidden="true" />
           <input
             type="text"
@@ -221,441 +229,57 @@ export default function VendorTable() {
             )}
           </PortalDropdown>
         )}
-
       </div>
-
-      {/* Mobile Select All Bar */}
-      {paginated.length > 0 && (
-        <div className="md:hidden flex items-center justify-between bg-white border border-gray-100 rounded-2xl px-4 py-3 mb-3.5 shadow-2xs">
-          <label className="flex items-center gap-2.5 cursor-pointer text-xs font-bold text-gray-800">
-            <input
-              type="checkbox"
-              checked={allChecked}
-              onChange={toggleAll}
-              className="accent-black w-4 h-4 cursor-pointer rounded"
-            />
-            <span>{t('selectAll', 'Select All')}</span>
-          </label>
-          {selectedCount > 0 && (
-            <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">
-              {selectedCount} selected
-            </span>
-          )}
-        </div>
-      )}
 
       {/* Desktop Table View */}
-      <div className="w-full overflow-x-auto hidden md:block">
-        <table className="w-full border-collapse text-sm bg-gray-100">
-          <thead>
-            <tr>
-              <th className="w-9 px-3 py-3 border-b border-gray-200 text-start bg-gray-50">
-                <input
-                  type="checkbox"
-                  checked={allChecked}
-                  onChange={toggleAll}
-                  className="accent-black w-4 h-4 cursor-pointer"
-                />
-              </th>
-              {tableHeaders.map((h) => (
-                <th
-                  key={h}
-                  className="px-4 py-3 border-b border-gray-200 text-start text-xs font-semibold text-gray-500 whitespace-nowrap bg-gray-50"
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {paginated.length === 0 ? (
-              <tr>
-                <td colSpan={colSpan} className="text-center py-16 text-gray-400">
-                  {activeTab === 'pending' ? (
-                    /* ── "No Pending Requests" empty state ── */
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
-                        <i className="ti ti-mail text-2xl text-gray-400" aria-hidden="true" />
-                      </div>
-                      <div>
-                        <p className="text-base font-semibold text-gray-700 mb-1">
-                          {t('vendors.table.noPendingRequests')}
-                        </p>
-                        <p className="text-sm text-gray-400 max-w-xs mx-auto">
-                          {t('vendors.table.noPendingSubtext')}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => window.location.reload()}
-                        className="mt-1 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white text-sm text-gray-600 hover:bg-gray-50 transition-colors"
-                      >
-                        <RefreshCw size={14} />
-                        {t('vendors.table.refresh')}
-                      </button>
-                    </div>
-                  ) : (
-                    /* ── Generic empty state ── */
-                    <div className="flex flex-col items-center gap-2">
-                      <i className="ti ti-building-store text-2xl block" aria-hidden="true" />
-                      <p>{t('vendors.table.noVendors')}</p>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ) : isAllTab ? (
-              // ── All Vendors: approved only with toggle, rows navigate to detail ──
-              paginated.map((vendor) => {
-                const isSelected = selectedRows.includes(vendor.id);
-                return (
-                  <tr
-                    key={vendor.id}
-                    onClick={() => navigate(`/vendors/${vendor.id}`)}
-                    className={`border-b border-gray-100 transition-colors cursor-pointer ${
-                      isSelected ? 'bg-indigo-50/60' : 'bg-white hover:bg-gray-50'
-                    }`}
-                  >
-                    <td
-                      className="px-3 py-3.5"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleRow(vendor.id)}
-                        className="accent-black w-4 h-4 cursor-pointer"
-                      />
-                    </td>
-                    <td className="px-4 py-3.5 font-semibold text-gray-900 whitespace-nowrap">
-                      {vendor.businessName}
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-600 whitespace-nowrap">
-                      {vendor.owner}
-                    </td>
-                    <td className="px-4 py-3.5 font-semibold text-gray-900 whitespace-nowrap">
-                      {(vendor.revenue ?? 0).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-500 whitespace-nowrap">
-                      {vendor.submittedDate}
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-600 whitespace-nowrap">
-                      {vendor.email}
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-600 whitespace-nowrap">
-                      {vendor.orders ?? 0}
-                    </td>
-                    <td
-                      className="px-4 py-3.5 whitespace-nowrap"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Toggle
-                        checked={vendor.active ?? true}
-                        onChange={() => {
-                          if (vendor.active) {
-                            openConfirm('deactivate', [vendor.id]);
-                          } else {
-                            toggleVendorActive(vendor.id);
-                          }
-                        }}
-                      />
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              // ── Pending: original columns ──
-              paginated.map((vendor) => {
-                const isSelected = selectedRows.includes(vendor.id);
-                return (
-                  <tr
-                    key={vendor.id}
-                    className={`border-b border-gray-100 transition-colors ${
-                      isSelected ? 'bg-indigo-50/60' : 'bg-white hover:bg-gray-50'
-                    }`}
-                  >
-                    <td className="px-3 py-3.5">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleRow(vendor.id)}
-                        className="accent-black w-4 h-4 cursor-pointer"
-                      />
-                    </td>
-                    <td className="px-4 py-3.5 font-medium text-gray-900 whitespace-nowrap">
-                      <button
-                        onClick={() => navigate(`/vendors/${vendor.id}`)}
-                        className="font-medium text-gray-900 hover:text-indigo-600 hover:underline underline-offset-2 transition-colors text-start"
-                      >
-                        {vendor.businessName}
-                      </button>
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-600 whitespace-nowrap">
-                      {vendor.owner}
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-600 whitespace-nowrap">
-                      {vendor.email}
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-500 whitespace-nowrap">
-                      {vendor.submittedDate}
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-600 whitespace-nowrap">
-                      {vendor.category}
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      {vendor.status === 'pending' ? (
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() =>
-                              openConfirm('approve', [vendor.id], vendor.businessName)
-                            }
-                            className="px-3.5 py-2 text-xs font-semibold rounded-lg bg-[#1e8528] text-white hover:bg-green-800 transition-colors shadow-2xs"
-                          >
-                            {t('vendors.table.approve')}
-                          </button>
-                          <button
-                            onClick={() =>
-                              openConfirm('reject', [vendor.id], vendor.businessName)
-                            }
-                            className="px-3.5 py-2 text-xs font-semibold rounded-lg border border-red-300 text-red-700 bg-white hover:bg-red-50 transition-colors shadow-2xs"
-                          >
-                            {t('vendors.table.reject')}
-                          </button>
-                        </div>
-                      ) : (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700">
-                          {t('vendors.table.suspendedStatus')}
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
+      <VendorDesktopTable
+        paginated={paginated}
+        tableHeaders={tableHeaders}
+        colSpan={colSpan}
+        allChecked={allChecked}
+        toggleAll={toggleAll}
+        selectedRows={selectedRows}
+        toggleRow={toggleRow}
+        activeTab={activeTab}
+        isAllTab={isAllTab}
+        openConfirm={openConfirm}
+        toggleVendorActive={toggleVendorActive}
+        isLoading={isLoading}
+      />
 
-      {/* Mobile Card List View (Optimized for Mobile) */}
-      <div className="md:hidden space-y-3.5">
-        {paginated.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center text-gray-400">
-            {activeTab === 'pending' ? (
-              <div className="flex flex-col items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                  <i className="ti ti-mail text-xl text-gray-400" />
-                </div>
-                <p className="text-sm font-semibold text-gray-700">
-                  {t('vendors.table.noPendingRequests')}
-                </p>
-              </div>
-            ) : (
-              <p>{t('vendors.table.noVendors')}</p>
-            )}
-          </div>
-        ) : (
-          paginated.map((vendor) => {
-            const isSelected = selectedRows.includes(vendor.id);
-            if (activeTab === 'pending') {
-              return (
-                <div
-                  key={vendor.id}
-                  className={`bg-white rounded-2xl border p-4 shadow-2xs space-y-3 transition-colors ${
-                    isSelected ? 'border-indigo-300 bg-indigo-50/30' : 'border-gray-100'
-                  }`}
-                >
-                  {/* Top row: Business Name + Category Badge */}
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2.5">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleRow(vendor.id)}
-                        className="accent-black w-4 h-4 cursor-pointer rounded mt-0.5"
-                      />
-                      <button
-                        onClick={() => navigate(`/vendors/${vendor.id}`)}
-                        className="text-base font-bold text-gray-900 hover:text-indigo-600 transition-colors text-start"
-                      >
-                        {vendor.businessName}
-                      </button>
-                    </div>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 shrink-0">
-                      {vendor.category}
-                    </span>
-                  </div>
-
-                  {/* Middle details stack matching screenshot */}
-                  <div className="space-y-1 text-xs text-gray-500 pt-1">
-                    <p>
-                      Owner: <span className="font-semibold text-gray-800 ms-1">{vendor.owner}</span>
-                    </p>
-                    <p>
-                      Email: <span className="font-semibold text-gray-800 ms-1">{vendor.email}</span>
-                    </p>
-                    <p>
-                      Submitted: <span className="font-semibold text-gray-800 ms-1">{vendor.submittedDate}</span>
-                    </p>
-                  </div>
-
-                  {/* Bottom action buttons matching screenshot */}
-                  <div className="flex items-center gap-2.5 pt-2">
-                    <button
-                      onClick={() => openConfirm('approve', [vendor.id], vendor.businessName)}
-                      className="flex-1 py-2.5 rounded-xl bg-[#1e8528] text-white text-xs font-semibold hover:bg-green-800 transition-colors shadow-2xs"
-                    >
-                      {t('vendors.table.approve')}
-                    </button>
-                    <button
-                      onClick={() => openConfirm('reject', [vendor.id], vendor.businessName)}
-                      className="flex-1 py-2.5 rounded-xl border border-red-300 text-red-700 bg-white text-xs font-semibold hover:bg-red-50 transition-colors shadow-2xs"
-                    >
-                      {t('vendors.table.reject')}
-                    </button>
-                  </div>
-                </div>
-              );
-            } else {
-              // All Vendors tab
-              return (
-                <div
-                  key={vendor.id}
-                  onClick={() => navigate(`/vendors/${vendor.id}`)}
-                  className={`bg-white rounded-2xl border p-4 shadow-2xs space-y-3 cursor-pointer hover:bg-gray-50/60 transition-colors ${
-                    isSelected ? 'border-indigo-300 bg-indigo-50/30' : 'border-gray-100'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5" onClick={(e) => e.stopPropagation()}>
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleRow(vendor.id)}
-                        className="accent-black w-4 h-4 cursor-pointer rounded"
-                      />
-                      <span className="text-base font-bold text-gray-900">{vendor.businessName}</span>
-                    </div>
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <Toggle
-                        checked={vendor.active ?? true}
-                        onChange={() => {
-                          if (vendor.active) openConfirm('deactivate', [vendor.id]);
-                          else toggleVendorActive(vendor.id);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-gray-500 pt-1">
-                    <p>Owner: <span className="font-semibold text-gray-800">{vendor.owner}</span></p>
-                    <p>Submitted: <span className="font-semibold text-gray-800">{vendor.submittedDate}</span></p>
-                    <p>Email: <span className="font-semibold text-gray-800 truncate block">{vendor.email}</span></p>
-                    <p>Orders: <span className="font-semibold text-gray-800">{vendor.orders ?? 0}</span></p>
-                    <p className="col-span-2">
-                      Revenue: <span className="font-bold text-gray-900">SAR {(vendor.revenue ?? 0).toLocaleString()}</span>
-                    </p>
-                  </div>
-                </div>
-              );
-            }
-          })
-        )}
-      </div>
+      {/* Mobile Card List View */}
+      <VendorMobileList
+        paginated={paginated}
+        allChecked={allChecked}
+        toggleAll={toggleAll}
+        selectedCount={selectedCount}
+        selectedRows={selectedRows}
+        toggleRow={toggleRow}
+        activeTab={activeTab}
+        openConfirm={openConfirm}
+        toggleVendorActive={toggleVendorActive}
+        isLoading={isLoading}
+      />
 
       {/* Pagination */}
-      <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
-        <span className="text-xs text-gray-400">
-          {t('vendors.table.showing', {
-            start: startItem,
-            end: endItem,
-            total: totalItems,
-          })}
-        </span>
+      <VendorPagination
+        startItem={startItem}
+        endItem={endItem}
+        totalItems={totalItems}
+        page={page}
+        totalPages={totalPages}
+        setPage={setPage}
+        isRtl={isRtl}
+      />
 
-        {totalPages > 1 && (
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setPage(Math.max(1, page - 1))}
-              disabled={page === 1}
-              className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              {isRtl ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-              <button
-                key={n}
-                onClick={() => setPage(n)}
-                className={`w-8 h-8 rounded-lg text-sm font-medium border transition-colors ${
-                  n === page
-                    ? 'bg-gray-900 text-white border-gray-900'
-                    : 'border-gray-200 text-gray-500 hover:bg-gray-50'
-                }`}
-              >
-                {n}
-              </button>
-            ))}
-            <button
-              onClick={() => setPage(Math.min(totalPages, page + 1))}
-              disabled={page === totalPages}
-              className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              {isRtl ? <ChevronLeft size={14} /> : <ChevronRight size={14} />}
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Bulk action bar */}
-      {selectedCount > 0 && (
-        <div className="fixed left-1/2 bottom-6 z-50 flex -translate-x-1/2 items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-3 shadow-lg">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-gray-900 text-sm font-semibold">
-            {selectedCount}
-          </div>
-          <span className="text-sm font-medium text-gray-900 whitespace-nowrap">
-            {t('vendors.table.selected', { count: selectedCount })}
-          </span>
-
-          {activeTab === 'pending' && (
-            <>
-              <button
-                onClick={() => openConfirm('approve', selectedRows)}
-                className="flex px-3.5 py-1 items-center justify-center rounded-md border border-green-600 text-green-600 transition-colors hover:bg-green-50 text-sm font-medium"
-              >
-                {t('vendors.table.approveSelected')}
-              </button>
-              <button
-                onClick={() => openConfirm('reject', selectedRows)}
-                className="flex px-3.5 py-1 items-center justify-center rounded-md border border-red-500 text-red-500 transition-colors hover:bg-red-50 text-sm font-medium"
-              >
-                {t('vendors.table.rejectSelected')}
-              </button>
-            </>
-          )}
-
-          {activeTab === 'all' && (
-            <button
-              onClick={() => openConfirm('deactivate', selectedRows)}
-              className="flex px-3.5 py-1 items-center justify-center rounded-md border border-red-500 text-red-600 transition-colors hover:bg-red-50 text-sm font-medium"
-            >
-              {t('vendors.table.deactivateSelected')}
-            </button>
-          )}
-
-          {activeTab === 'suspended' && (
-            <button
-              onClick={() => openConfirm('approve', selectedRows)}
-              className="flex px-3.5 py-1 items-center justify-center rounded-md border border-green-600 text-green-600 transition-colors hover:bg-green-50 text-sm font-medium"
-            >
-              {t('vendors.table.approveSelected')}
-            </button>
-          )}
-
-          <button
-            onClick={clearSelection}
-            className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50 text-gray-500 transition-colors hover:bg-gray-100"
-            aria-label={t('vendors.table.clearSelection')}
-          >
-            <X size={17} />
-          </button>
-        </div>
-      )}
+      {/* Bulk Action Bar */}
+      <VendorBulkActionBar
+        selectedCount={selectedCount}
+        selectedRows={selectedRows}
+        activeTab={activeTab}
+        openConfirm={openConfirm}
+        clearSelection={clearSelection}
+      />
 
       {/* Confirmation modal */}
       <VendorConfirmModal
@@ -669,3 +293,4 @@ export default function VendorTable() {
     </div>
   );
 }
+

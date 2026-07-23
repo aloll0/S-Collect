@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { AlertTriangle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface SuspendVendorModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export default function SuspendVendorModal({
   onConfirm,
   onCancel,
 }: SuspendVendorModalProps) {
+  const { t } = useTranslation();
   const [reason, setReason] = useState('');
   const [notify, setNotify] = useState(true);
   const [touched, setTouched] = useState(false);
@@ -64,12 +66,12 @@ export default function SuspendVendorModal({
           >
             {/* Header row: icon + title + subtitle */}
             <div className="flex items-start gap-4 mb-5">
-              <div className="w-11 h-11 rounded-full bg-amber-50 flex items-center justify-center flex-shrink-0">
+              <div className="w-11 h-11 rounded-full bg-amber-50 flex items-center justify-center shrink-0">
                 <AlertTriangle size={22} className="text-amber-500" strokeWidth={2} />
               </div>
               <div>
                 <h2 className="text-base font-bold text-gray-900 leading-tight">
-                  Suspend Vendor
+                  {t('vendors.modals.suspendTitle', 'Suspend Vendor')}
                 </h2>
                 <p className="text-sm text-gray-500 mt-0.5">{vendorName}</p>
               </div>
@@ -78,14 +80,14 @@ export default function SuspendVendorModal({
             {/* Reason textarea */}
             <div className="mb-5">
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Reason for suspension{' '}
+                {t('vendors.modals.reasonLabel', 'Reason for suspension')}{' '}
                 <span className="text-red-500">*</span>
               </label>
               <textarea
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 onBlur={() => setTouched(true)}
-                placeholder="Reason for suspension..."
+                placeholder={t('vendors.modals.reasonPlaceholder', 'Reason for suspension...')}
                 rows={4}
                 className={`w-full rounded-xl border px-3 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 resize-none outline-none transition-colors ${
                   hasError
@@ -94,18 +96,24 @@ export default function SuspendVendorModal({
                 }`}
               />
               {hasError && (
-                <p className="text-xs text-red-500 mt-1">Reason is required.</p>
+                <p className="text-xs text-red-500 mt-1">
+                  {t('vendors.modals.reasonRequired', 'Reason is required.')}
+                </p>
               )}
             </div>
 
             {/* Send notification toggle */}
             <div className="flex items-center justify-between mb-6">
-              <span className="text-sm text-gray-700">Send notification to vendor</span>
+              <span className="text-sm text-gray-700">
+                {t('vendors.modals.sendNotification', 'Send notification to vendor')}
+              </span>
               <button
+                type="button"
                 role="switch"
                 aria-checked={notify}
+                dir="ltr"
                 onClick={() => setNotify((v) => !v)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none ${
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none cursor-pointer ${
                   notify ? 'bg-green-500' : 'bg-gray-200'
                 }`}
               >
@@ -123,13 +131,13 @@ export default function SuspendVendorModal({
                 onClick={handleCancel}
                 className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                {t('vendors.table.cancel', 'Cancel')}
               </button>
               <button
                 onClick={handleConfirm}
                 className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl bg-red-600 hover:bg-red-700 transition-colors"
               >
-                Suspend Vendor
+                {t('vendors.modals.suspendBtn', 'Suspend Vendor')}
               </button>
             </div>
           </motion.div>

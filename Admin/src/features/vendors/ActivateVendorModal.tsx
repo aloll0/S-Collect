@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ActivateVendorModalProps {
   isOpen: boolean;
@@ -23,6 +24,8 @@ export default function ActivateVendorModal({
   onConfirm,
   onCancel,
 }: ActivateVendorModalProps) {
+  const { t } = useTranslation();
+
   return createPortal(
     <AnimatePresence>
       {isOpen && (
@@ -53,7 +56,7 @@ export default function ActivateVendorModal({
             </div>
 
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Activate Vendor
+              {t('vendors.modals.activateTitle', 'Activate Vendor')}
             </h2>
 
             {/* Vendor card */}
@@ -67,8 +70,7 @@ export default function ActivateVendorModal({
             </div>
 
             <p className="text-sm text-gray-500 mb-6 leading-relaxed">
-              Are you sure you want to activate <strong>{vendorName}</strong>? They will
-              regain access to sell on the platform.
+              {t('vendors.modals.activateMessage', { name: vendorName })}
             </p>
 
             <div className="flex items-center gap-3 w-full">
@@ -76,13 +78,13 @@ export default function ActivateVendorModal({
                 onClick={onCancel}
                 className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                {t('vendors.table.cancel', 'Cancel')}
               </button>
               <button
                 onClick={onConfirm}
                 className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl bg-green-700 hover:bg-green-800 transition-colors"
               >
-                Activate Vendor
+                {t('vendors.modals.activateBtn', 'Activate Vendor')}
               </button>
             </div>
           </motion.div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ChevronRight, Phone, Mail, MapPin, Hash } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -37,22 +37,6 @@ function getInitials(name: string): string {
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('');
 }
-
-// ── Status badge styles ─────────────────────────────────────────────────────────
-
-const ORDER_STATUS_STYLES: Record<MockOrder['status'], { label: string; className: string }> = {
-  active: { label: 'Active', className: 'bg-green-50 text-green-700' },
-  completed: { label: 'Completed', className: 'bg-blue-50 text-blue-700' },
-  pending: { label: 'Pending', className: 'bg-amber-50 text-amber-700' },
-  cancelled: { label: 'Cancelled', className: 'bg-red-50 text-red-600' },
-};
-
-const PAYOUT_STATUS_STYLES: Record<MockPayout['status'], { label: string; className: string }> = {
-  completed: { label: 'Completed', className: 'bg-blue-50 text-blue-700' },
-  accepted: { label: 'Accepted', className: 'bg-green-50 text-green-700' },
-  pending: { label: 'Pending', className: 'bg-amber-50 text-amber-700' },
-  rejected: { label: 'Rejected', className: 'bg-red-50 text-red-600' },
-};
 
 // ── Card wrapper ────────────────────────────────────────────────────────────────
 
@@ -104,6 +88,26 @@ export default function VendorDetails() {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
+
+  const ORDER_STATUS_STYLES: Record<MockOrder['status'], { label: string; className: string }> = useMemo(
+    () => ({
+      active: { label: t('vendors.details.statusActive', 'Active'), className: 'bg-green-50 text-green-700' },
+      completed: { label: t('vendors.details.statusCompleted', 'Completed'), className: 'bg-blue-50 text-blue-700' },
+      pending: { label: t('vendors.details.statusPending', 'Pending'), className: 'bg-amber-50 text-amber-700' },
+      cancelled: { label: t('vendors.details.statusCancelled', 'Cancelled'), className: 'bg-red-50 text-red-600' },
+    }),
+    [t]
+  );
+
+  const PAYOUT_STATUS_STYLES: Record<MockPayout['status'], { label: string; className: string }> = useMemo(
+    () => ({
+      completed: { label: t('vendors.details.statusCompleted', 'Completed'), className: 'bg-blue-50 text-blue-700' },
+      accepted: { label: t('vendors.details.statusAccepted', 'Accepted'), className: 'bg-green-50 text-green-700' },
+      pending: { label: t('vendors.details.statusPending', 'Pending'), className: 'bg-amber-50 text-amber-700' },
+      rejected: { label: t('vendors.details.statusRejected', 'Rejected'), className: 'bg-red-50 text-red-600' },
+    }),
+    [t]
+  );
 
   const vendors = useVendorStore((s) => s.vendors);
   const suspendVendor = useVendorStore((s) => s.suspendVendor);
@@ -177,7 +181,7 @@ export default function VendorDetails() {
             onClick={() => setShowActivate(true)}
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-green-200 text-green-700 bg-white text-sm font-medium hover:bg-green-50 transition-colors"
           >
-            Activate Vendor
+            {t('vendors.details.activateVendor', 'Activate Vendor')}
           </button>
         )}
       </div>
@@ -210,7 +214,9 @@ export default function VendorDetails() {
                       : 'bg-red-50 text-red-600'
                   }`}
                 >
-                  {isActive ? 'Active' : 'Inactive'}
+                  {isActive
+                    ? t('vendors.details.statusActive', 'Active')
+                    : t('vendors.details.statusInactive', 'Inactive')}
                 </span>
               </div>
               <h1 className="text-xl font-bold text-gray-900 leading-tight">
@@ -270,12 +276,10 @@ export default function VendorDetails() {
         </Card>
 
         {/* ── Stats ── */}
-        <motion.div variants={cardVariants} className="grid grid-cols-3 gap-3 mb-4">
+        <motion.div variants={cardVariants} className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
           <StatCard label={t('vendors.details.totalSales')} value={vendor.revenue ?? 0} unit="SAR" />
           <StatCard label={t('vendors.details.products')} value={vendor.products ?? 0} />
           <StatCard label={t('vendors.details.ordersCount')} value={vendor.orders ?? 0} />
-        </motion.div>
-        <motion.div variants={cardVariants} className="grid grid-cols-3 gap-3 mb-4">
           <StatCard label={t('vendors.details.totalDue')} value={vendor.totalDue ?? 0} unit="SAR" />
           <StatCard label={t('vendors.details.invoices')} value={vendor.invoices ?? 0} unit="SAR" />
           <StatCard
@@ -300,7 +304,9 @@ export default function VendorDetails() {
               <ChevronRight size={13} />
             </Link>
           </div>
-          <div className="overflow-x-auto">
+
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="border-b border-gray-100">
@@ -325,12 +331,15 @@ export default function VendorDetails() {
                 {orders.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-5 py-8 text-center text-xs text-gray-400">
-                      No orders yet
+                      {t('vendors.details.noOrdersYet', 'No orders yet')}
                     </td>
                   </tr>
                 ) : (
                   orders.map((order) => {
-                    const style = ORDER_STATUS_STYLES[order.status];
+                    const style = ORDER_STATUS_STYLES[order.status] ?? {
+                      label: order.status,
+                      className: 'bg-gray-100 text-gray-700',
+                    };
                     return (
                       <tr
                         key={order.id}
@@ -362,6 +371,51 @@ export default function VendorDetails() {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden px-4 pb-4 space-y-3">
+            {orders.length === 0 ? (
+              <p className="text-center text-xs text-gray-400 py-6">{t('vendors.details.noOrdersYet', 'No orders yet')}</p>
+            ) : (
+              orders.map((order) => {
+                const style = ORDER_STATUS_STYLES[order.status] ?? {
+                  label: order.status,
+                  className: 'bg-gray-100 text-gray-700',
+                };
+                return (
+                  <div
+                    key={order.id}
+                    className="bg-gray-50 rounded-xl border border-gray-100 p-3.5 space-y-2"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-indigo-600">{order.id}</span>
+                      <span
+                        className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold ${style.className}`}
+                      >
+                        {style.label}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1.5 text-xs text-gray-500">
+                      <p>
+                        {t('vendors.details.customerLabel', 'Customer')}:{' '}
+                        <span className="font-semibold text-gray-800">{order.customerName}</span>
+                      </p>
+                      <p>
+                        {t('vendors.details.dateLabel', 'Date')}:{' '}
+                        <span className="font-semibold text-gray-800">{order.submittedDate}</span>
+                      </p>
+                      <p className="col-span-2">
+                        {t('vendors.details.amountLabel', 'Amount')}:{' '}
+                        <span className="font-bold text-gray-900">
+                          SAR {order.price.toLocaleString()}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
         </Card>
 
         {/* ── Recent Products ── */}
@@ -378,7 +432,9 @@ export default function VendorDetails() {
               <ChevronRight size={13} />
             </Link>
           </div>
-          <div className="overflow-x-auto">
+
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="border-b border-gray-100">
@@ -400,7 +456,7 @@ export default function VendorDetails() {
                 {products.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="px-5 py-8 text-center text-xs text-gray-400">
-                      No products yet
+                      {t('vendors.details.noProductsYet', 'No products yet')}
                     </td>
                   </tr>
                 ) : (
@@ -435,6 +491,49 @@ export default function VendorDetails() {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden px-4 pb-4 space-y-3">
+            {products.length === 0 ? (
+              <p className="text-center text-xs text-gray-400 py-6">{t('vendors.details.noProductsYet', 'No products yet')}</p>
+            ) : (
+              products.map((product, idx) => (
+                <div
+                  key={`${product.name}-${idx}`}
+                  className="bg-gray-50 rounded-xl border border-gray-100 p-3.5 space-y-2"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-gray-800 truncate">
+                      {product.name}
+                    </span>
+                    <span
+                      className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold flex-shrink-0 ${
+                        product.status === 'active'
+                          ? 'bg-green-50 text-green-700'
+                          : 'bg-gray-100 text-gray-500'
+                      }`}
+                    >
+                      {product.status === 'active'
+                        ? t('vendors.details.statusActive')
+                        : t('vendors.details.statusInactive')}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1.5 text-xs text-gray-500">
+                    <p>
+                      {t('vendors.details.categoryLabel', 'Category')}:{' '}
+                      <span className="font-semibold text-gray-800">{product.category}</span>
+                    </p>
+                    <p>
+                      {t('vendors.details.priceLabel', 'Price')}:{' '}
+                      <span className="font-bold text-gray-900">
+                        SAR {product.price.toLocaleString()}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </Card>
 
         {/* ── Payouts Log ── */}
@@ -451,7 +550,9 @@ export default function VendorDetails() {
               <ChevronRight size={13} />
             </Link>
           </div>
-          <div className="overflow-x-auto">
+
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="border-b border-gray-100">
@@ -473,12 +574,15 @@ export default function VendorDetails() {
                 {payouts.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="px-5 py-8 text-center text-xs text-gray-400">
-                      No payouts yet
+                      {t('vendors.details.noPayoutsYet', 'No payouts yet')}
                     </td>
                   </tr>
                 ) : (
                   payouts.slice(0, 5).map((payout) => {
-                    const style = PAYOUT_STATUS_STYLES[payout.status];
+                    const style = PAYOUT_STATUS_STYLES[payout.status] ?? {
+                      label: payout.status,
+                      className: 'bg-gray-100 text-gray-700',
+                    };
                     return (
                       <tr
                         key={payout.id}
@@ -504,6 +608,47 @@ export default function VendorDetails() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden px-4 pb-4 space-y-3">
+            {payouts.length === 0 ? (
+              <p className="text-center text-xs text-gray-400 py-6">{t('vendors.details.noPayoutsYet', 'No payouts yet')}</p>
+            ) : (
+              payouts.slice(0, 5).map((payout) => {
+                const style = PAYOUT_STATUS_STYLES[payout.status] ?? {
+                  label: payout.status,
+                  className: 'bg-gray-100 text-gray-700',
+                };
+                return (
+                  <div
+                    key={payout.id}
+                    className="bg-gray-50 rounded-xl border border-gray-100 p-3.5 space-y-2"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-amber-600">{payout.id}</span>
+                      <span
+                        className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold ${style.className}`}
+                      >
+                        {style.label}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1.5 text-xs text-gray-500">
+                      <p>
+                        {t('vendors.details.dateLabel', 'Date')}:{' '}
+                        <span className="font-semibold text-gray-800">{payout.date}</span>
+                      </p>
+                      <p>
+                        {t('vendors.details.amountLabel', 'Amount')}:{' '}
+                        <span className="font-bold text-gray-900">
+                          SAR {payout.amount.toLocaleString()}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </Card>
       </motion.div>
