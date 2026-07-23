@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'motion/react';
+
+import { Helmet } from 'react-helmet-async';
 import { useReturnRequests } from '../features/Returns/hooks/useReturnRequests';
 import { ReturnFilterBar } from '../features/Returns/components/ReturnFilterBar';
 import { ReturnRequestsTable } from '../features/Returns/components/ReturnRequestsTable';
@@ -38,13 +39,13 @@ export default function ReturnRequestsPage() {
   return (
     <>
       {/* Title */}
-      <motion.h1
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="sidebar-page-container-header heading-page-title"
-      >
+      <Helmet>
+  <title>طلبات الإرجاع – S‑Collect</title>
+  <meta name="description" content="قائمة طلبات الإرجاع للباعة. إدارة ومراجعة الطلبات بسهولة." />
+</Helmet>
+<h1 className="sidebar-page-container-header heading-page-title">
         {t('returnsPage.title', { defaultValue: 'Return Requests' })}
-      </motion.h1>
+      </h1>
       <div className="sidebar-page-container min-h-screen">
         {/* Filter Bar */}
         <ReturnFilterBar
