@@ -7,7 +7,6 @@ import {
   Edit2,
   AlertTriangle,
   ChevronRight,
-  ChevronLeft,
   ExternalLink,
 } from 'lucide-react';
 import { useBreakpoint } from '../hooks/useBreakpoint';
