@@ -13,7 +13,14 @@ export default function Dashboard() {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
 
-  const [dateRange, setDateRange] = useState('Last 30 Days');
+  const dateRanges = [
+    { key: 'last7Days', defaultLabel: 'Last 7 Days' },
+    { key: 'last30Days', defaultLabel: 'Last 30 Days' },
+    { key: 'thisMonth', defaultLabel: 'This Month' },
+    { key: 'thisYear', defaultLabel: 'This Year' },
+  ];
+
+  const [dateRangeKey, setDateRangeKey] = useState('last30Days');
   const [isLoading, setIsLoading] = useState(true);
 
   // Trigger brief skeleton loading state on mount or date range selection
@@ -21,9 +28,7 @@ export default function Dashboard() {
     setIsLoading(true);
     const timer = setTimeout(() => setIsLoading(false), 400);
     return () => clearTimeout(timer);
-  }, [dateRange]);
-
-  const dateRanges = ['Last 7 Days', 'Last 30 Days', 'This Month', 'This Year'];
+  }, [dateRangeKey]);
 
   return (
     <div className="flex-1 flex flex-col font-sans bg-gray-50/50 min-h-screen" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -56,7 +61,9 @@ export default function Dashboard() {
                 className="flex items-center gap-2 h-9 px-3.5 border border-gray-200 rounded-xl text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 <Calendar size={14} className="text-gray-400" />
-                <span>{dateRange}</span>
+                <span>
+                  {t(`dashboardOverview.${dateRangeKey}`, dateRanges.find((r) => r.key === dateRangeKey)?.defaultLabel ?? '')}
+                </span>
                 <ChevronDown
                   size={13}
                   className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
@@ -68,18 +75,18 @@ export default function Dashboard() {
               <div className="py-1">
                 {dateRanges.map((r) => (
                   <button
-                    key={r}
+                    key={r.key}
                     onClick={() => {
-                      setDateRange(r);
+                      setDateRangeKey(r.key);
                       close();
                     }}
                     className={`w-full text-start px-3.5 py-2 text-xs transition-colors cursor-pointer ${
-                      dateRange === r
+                      dateRangeKey === r.key
                         ? 'bg-green-50 text-green-700 font-semibold'
                         : 'text-gray-700 hover:bg-gray-50'
                     }`}
                   >
-                    {r}
+                    {t(`dashboardOverview.${r.key}`, r.defaultLabel)}
                   </button>
                 ))}
               </div>

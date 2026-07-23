@@ -50,7 +50,7 @@ const InventoryCard = ({ cardData }: { cardData: CardData }) => {
       </div>
       <div className="flex flex-col  items-end pe-1.5">
         <span
-          className="px-[5px] rounded-[2px] inline-block text-[10px] "
+          className="px-1.25 rounded-xs inline-block text-[10px] "
           style={{
             background: cardData.theme.background,
             color: cardData.theme.text,

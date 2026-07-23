@@ -194,7 +194,7 @@ export default function SalesChart() {
   const chartData = dataByPeriod[period];
 
   return (
-    <Card className="lg:h-[512px] lg:flex lg:flex-col">
+    <Card className="lg:h-128 lg:flex lg:flex-col">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex flex-col space-y-1.5">
