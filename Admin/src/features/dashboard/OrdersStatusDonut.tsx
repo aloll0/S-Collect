@@ -72,22 +72,24 @@ export default function OrdersStatusDonut() {
         {/* Center Label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
           <span className="text-lg font-extrabold text-gray-900 leading-none">82%</span>
-          <span className="text-[10px] font-medium text-gray-400 mt-0.5">Success</span>
+          <span className="text-[10px] font-medium text-gray-400 mt-0.5">
+            {t('dashboardOverview.success', 'Success')}
+          </span>
         </div>
       </div>
 
       {/* Legend */}
       <div className="flex items-center justify-center gap-3 text-[11px] text-gray-600 flex-wrap">
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0" />
+          <span className="w-2.5 h-2.5 rounded-full bg-green-500 shrink-0" />
           <span>{t('dashboardOverview.delivered', 'Delivered')}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 flex-shrink-0" />
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
           <span>{t('dashboardOverview.processing', 'Processing')}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0" />
+          <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0" />
           <span>{t('dashboardOverview.shipped', 'Shipped')}</span>
         </div>
       </div>

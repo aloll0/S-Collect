@@ -133,7 +133,7 @@ const InventoryAlert = () => {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="w-full rounded-lg bg-white p-3 lg:p-8 shadow h-[450px]  lg:h-[512px]"
+      className="w-full rounded-lg bg-white p-3 lg:p-8 shadow h-112.5  lg:h-128"
     >
       {/* Header & Alert Banner appear with the container */}
       <motion.div
