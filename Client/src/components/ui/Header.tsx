@@ -87,7 +87,7 @@ const LanguageDropdown = () => {
 };
 
 const Header = ({ onMenuClick }: HeaderProps) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const today = new Date().toLocaleDateString(
     i18n.language === 'ar' ? 'ar-EG' : 'en-US',
