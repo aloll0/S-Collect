@@ -1,0 +1,513 @@
+@import 'tailwindcss';
+
+/* ============================================================
+   DESIGN TOKENS – CSS Custom Properties
+   ============================================================ */
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: var(--gray-100);
+  font-family: 'Inter', sans-serif !important;
+}
+
+@keyframes settings-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes settings-fade-scale {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes settings-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+}
+
+@keyframes settings-pop {
+  0% {
+    transform: scale(0.96);
+  }
+  60% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .settings-page-enter {
+    animation: settings-fade-up 0.45s ease-out both;
+  }
+
+  .settings-surface-enter {
+    animation: settings-fade-scale 0.3s ease-out both;
+  }
+
+  .settings-toast-enter {
+    animation: settings-toast-in 0.28s ease-out both;
+  }
+
+  .settings-pop-enter {
+    animation: settings-pop 0.2s ease-out both;
+  }
+
+  .settings-stagger-1 {
+    animation-delay: 0.04s;
+  }
+
+  .settings-stagger-2 {
+    animation-delay: 0.08s;
+  }
+
+  .settings-stagger-3 {
+    animation-delay: 0.12s;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1720px;
+  margin-inline: auto;
+}
+
+/* ============================================================
+   PHONE INPUT — Custom styling for react-phone-number-input
+   ============================================================ */
+.phone-input-custom {
+  --PhoneInput-color--focus: #090909;
+  --PhoneInput-countrySelectArrow-color: #969696;
+  --PhoneInput-countrySelectArrow-opacity: 1;
+  display: flex;
+  align-items: center;
+  border: 1px solid #e9e9e9;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition:
+    border-color 0.2s ease-out,
+    box-shadow 0.2s ease-out;
+}
+
+.phone-input-custom.phone-error {
+  border-color: #f87171;
+  background-color: #fef2f2;
+}
+
+.phone-input-custom .PhoneInputCountry {
+  display: flex;
+  align-items: center;
+  padding-right: 0.5rem;
+  margin-right: 0.5rem;
+  border-right: 1px solid #e9e9e9;
+}
+
+.phone-input-custom .PhoneInputCountryIcon {
+  width: 1.5em;
+  height: 1em;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.phone-input-custom .PhoneInputCountryIconImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.phone-input-custom .PhoneInputCountrySelectArrow {
+  margin-left: 0.3em;
+}
+
+.phone-input-custom .PhoneInputInput {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: #090909;
+  padding: 0;
+  height: 100%;
+}
+
+.phone-input-custom .PhoneInputInput::placeholder {
+  color: #9ca3af;
+}
+
+.phone-input-custom:focus-within {
+  border-color: #090909;
+  box-shadow: 0 0 0 1px #e9e9e9;
+}
+
+.phone-input-custom.phone-error:focus-within {
+  border-color: #f87171;
+  box-shadow: 0 0 0 1px #fca5a5;
+}
+
+@layer base {
+  :root {
+    /* ============================================================
+       COLORS
+       ============================================================ */
+
+    /* Neutral gray scale (originally "White" shades) */
+    --gray-50: #ffffff; /* Token: White/50  */
+    --gray-100: #f8f8f8; /* Token: White/100 */
+    --gray-200: #e9e9e9; /* Token: White/200 */
+    --gray-300: #d6d6d6; /* Token: White/300 */
+    --gray-400: #969696; /* Token: White/400 */
+    --gray-500: #737373; /* Token: White/500 */
+    --gray-600: #545454; /* Token: White/600 */
+    --gray-700: #404040; /* Token: White/700 */
+    --gray-800: #272727; /* Token: White/800 */
+    --gray-900: #181818; /* Token: White/900 */
+    --gray-950: #090909; /* Token: White/950 */
+
+    /* Semantic colors */
+    --green: #218c21; /* Token: Color green */
+    --green-light: #ecfdf8; /* Token: Light green  */
+    --red: #b91c21; /* Token: Red          */
+    --red-light: #fff1f2; /* Token: Light Red    */
+    --yellow: #f59e0b; /* Token: Yellow       */
+    --yellow-light: #fef7eb; /* Token: Light Yellow */
+    --blue: #3b82f6; /* Token: Blue         */
+    --blue-light: #3a82f681; /* Token: Light Blue   */
+    --orange: #f97316; /* Token: Orange       */
+    --orange-light: #fff7ed; /* Token: Light Orange */
+    --purple: #9333ea; /* Token: Purple       */
+    --purple-light: #faf5ff; /* Token: Light Purple */
+
+    /* Chart palette */
+    --chart-1: #218c21; /* matches --green */
+
+    /* Stroke width */
+    --icon-stroke-width: 1.5; /* Token: Icon StrockNumber */
+
+    /* ============================================================
+       TYPOGRAPHY
+       ============================================================ */
+
+    /* Font family */
+    --font-family-primary: 'Inter', sans-serif; /* Token: Family/primary */
+
+    /* Font weights */
+    --font-weight-thin: 100; /* Token: Weights/Thin       */
+    --font-weight-extralight: 200; /* Token: Weights/ExtraLight */
+    --font-weight-light: 300; /* Token: Weights/Light      */
+    --font-weight-regular: 400; /* Token: Weights/Regular    */
+    --font-weight-medium: 500; /* Token: Weights/Medium     */
+    --font-weight-semibold: 600; /* Token: Weights/SemiBold   */
+    --font-weight-bold: 700; /* Token: Weights/Bold       */
+    --font-weight-extrabold: 800; /* Token: Weights/ExtraBold  */
+    --font-weight-black: 900; /* Token: Weights/Black      */
+
+    /* ============================================================
+       Display sizes (originally "Title")
+       ============================================================ */
+    --display-1-size: 72px; /* Token: Title/Title-1 font-size      */
+    --display-1-line-height: 88px; /* Token: Title/Title-1 line-height    */
+    --display-1-letter-spacing: -0.8px; /* Token: Title/Title-1 letter-spacing */
+
+    --display-2-size: 64px; /* Token: Title/Title-2 font-size      */
+    --display-2-line-height: 76px; /* Token: Title/Title-2 line-height    */
+    --display-2-letter-spacing: -0.8px; /* Token: Title/Title-2 letter-spacing */
+
+    --display-3-size: 56px; /* Token: Title/Title-3 font-size      */
+    --display-3-line-height: 68px; /* Token: Title/Title-3 line-height    */
+    --display-3-letter-spacing: -0.6px; /* Token: Title/Title-3 letter-spacing */
+
+    /* ============================================================
+       Headings (originally "Heading")
+       ============================================================ */
+    --h1-size: 56px; /* Token: Heading/H1 font-size      */
+    --h1-line-height: 68px; /* Token: Heading/H1 line-height    */
+    --h1-letter-spacing: -0.5px; /* Token: Heading/H1 letter-spacing */
+
+    --h2-size: 48px; /* Token: Heading/H2 font-size      */
+    --h2-line-height: 58px; /* Token: Heading/H2 line-height    */
+    --h2-letter-spacing: -0.4px; /* Token: Heading/H2 letter-spacing */
+
+    --h3-size: 40px; /* Token: Heading/H3 font-size      */
+    --h3-line-height: 48px; /* Token: Heading/H3 line-height    */
+    --h3-letter-spacing: -0.3px; /* Token: Heading/H3 letter-spacing */
+
+    --h4-size: 32px; /* Token: Heading/H4 font-size      */
+    --h4-line-height: 38px; /* Token: Heading/H4 line-height    */
+    --h4-letter-spacing: -0.2px; /* Token: Heading/H4 letter-spacing */
+
+    --h5-size: 24px; /* Token: Heading/H5 font-size      */
+    --h5-line-height: 30px; /* Token: Heading/H5 line-height    */
+    --h5-letter-spacing: -0.15px; /* Token: Heading/H5 letter-spacing */
+
+    --h6-size: 20px; /* Token: Heading/H6 font-size      */
+    --h6-line-height: 24px; /* Token: Heading/H6 line-height    */
+    --h6-letter-spacing: 0; /* Token: Heading/H6 letter-spacing */
+
+    /* ============================================================
+       Labels (UI labels, buttons) – originally "Label"
+       ============================================================ */
+    --label-lg-size: 16px; /* Token: Label/Label-1 font-size      */
+    --label-lg-line-height: 22px; /* Token: Label/Label-1 line-height    */
+    --label-lg-letter-spacing: -0.18px; /* Token: Label/Label-1 letter-spacing */
+
+    --label-md-size: 14px; /* Token: Label/Label-2 font-size      */
+    --label-md-line-height: 20px; /* Token: Label/Label-2 line-height    */
+    --label-md-letter-spacing: -0.16px; /* Token: Label/Label-2 letter-spacing */
+
+    --label-sm-size: 12px; /* Token: Label/Label-3 font-size      */
+    --label-sm-line-height: 16px; /* Token: Label/Label-3 line-height    */
+    --label-sm-letter-spacing: -0.12px; /* Token: Label/Label-3 letter-spacing */
+
+    /* ============================================================
+       Body text – originally "Body"
+       ============================================================ */
+    --body-xl-size: 18px; /* Token: Body/Body-1 font-size      */
+    --body-xl-line-height: 28px; /* Token: Body/Body-1 line-height    */
+    --body-xl-letter-spacing: 0; /* Token: Body/Body-1 letter-spacing */
+
+    --body-lg-size: 16px; /* Token: Body/Body-2 font-size      */
+    --body-lg-line-height: 24px; /* Token: Body/Body-2 line-height    */
+    --body-lg-letter-spacing: 0; /* Token: Body/Body-2 letter-spacing */
+
+    --body-md-size: 14px; /* Token: Body/Body-3 font-size      */
+    --body-md-line-height: 20px; /* Token: Body/Body-3 line-height    */
+    --body-md-letter-spacing: 0; /* Token: Body/Body-3 letter-spacing */
+
+    --body-sm-size: 12px; /* Token: Body/Body-4 font-size      */
+    --body-sm-line-height: 16px; /* Token: Body/Body-4 line-height    */
+    --body-sm-letter-spacing: 0; /* Token: Body/Body-4 letter-spacing */
+
+    /* ============================================================
+       Captions – originally "Caption"
+       ============================================================ */
+    --caption-size: 10px; /* Token: Caption/Caption-1 font-size      */
+    --caption-line-height: 12px; /* Token: Caption/Caption-1 line-height    */
+    --caption-letter-spacing: 0; /* Token: Caption/Caption-1 letter-spacing */
+
+    --caption-sm-size: 9px; /* Token: Caption/Caption-2 font-size      */
+    --caption-sm-line-height: 10px; /* Token: Caption/Caption-2 line-height    */
+    --caption-sm-letter-spacing: 0; /* Token: Caption/Caption-2 letter-spacing */
+  }
+}
+
+/* ============================================================
+   TAILWIND v4 THEME – maps tokens to utility classes
+   ============================================================ */
+
+@theme {
+  /* ---------- Custom Breakpoints ---------- */
+  --breakpoint-sidebar: 1440px;
+
+  /* ---------- Colors ---------- */
+  --color-gray-50: var(--gray-50);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-gray-900: var(--gray-900);
+  --color-gray-950: var(--gray-950);
+
+  --color-green: var(--green);
+  --color-green-light: var(--green-light);
+  --color-red: var(--red);
+  --color-red-light: var(--red-light);
+  --color-yellow: var(--yellow);
+  --color-yellow-light: var(--yellow-light);
+
+  /* ---------- Font Family ---------- */
+  --font-sans: var(--font-family-primary);
+
+  /* ---------- Font Weights ---------- */
+  --font-weight-thin: var(--font-weight-thin);
+  --font-weight-extralight: var(--font-weight-extralight);
+  --font-weight-light: var(--font-weight-light);
+  --font-weight-normal: var(--font-weight-regular);
+  --font-weight-medium: var(--font-weight-medium);
+  --font-weight-semibold: var(--font-weight-semibold);
+  --font-weight-bold: var(--font-weight-bold);
+  --font-weight-extrabold: var(--font-weight-extrabold);
+  --font-weight-black: var(--font-weight-black);
+
+  /* ---------- Font Size Scales (maps to Tailwind text-* utilities) ---------- */
+  --text-display-1: var(--display-1-size);
+  --text-display-1--line-height: var(--display-1-line-height);
+  --text-display-1--letter-spacing: var(--display-1-letter-spacing);
+  --text-display-1--font-weight: var(--font-weight-bold);
+
+  --text-display-2: var(--display-2-size);
+  --text-display-2--line-height: var(--display-2-line-height);
+  --text-display-2--letter-spacing: var(--display-2-letter-spacing);
+  --text-display-2--font-weight: var(--font-weight-bold);
+
+  --text-display-3: var(--display-3-size);
+  --text-display-3--line-height: var(--display-3-line-height);
+  --text-display-3--letter-spacing: var(--display-3-letter-spacing);
+  --text-display-3--font-weight: var(--font-weight-bold);
+
+  --text-h1: var(--h1-size);
+  --text-h1--line-height: var(--h1-line-height);
+  --text-h1--letter-spacing: var(--h1-letter-spacing);
+  --text-h1--font-weight: var(--font-weight-bold);
+
+  --text-h2: var(--h2-size);
+  --text-h2--line-height: var(--h2-line-height);
+  --text-h2--letter-spacing: var(--h2-letter-spacing);
+  --text-h2--font-weight: var(--font-weight-semibold);
+
+  --text-h3: var(--h3-size);
+  --text-h3--line-height: var(--h3-line-height);
+  --text-h3--letter-spacing: var(--h3-letter-spacing);
+  --text-h3--font-weight: var(--font-weight-semibold);
+
+  --text-h4: var(--h4-size);
+  --text-h4--line-height: var(--h4-line-height);
+  --text-h4--letter-spacing: var(--h4-letter-spacing);
+  --text-h4--font-weight: var(--font-weight-semibold);
+
+  --text-h5: var(--h5-size);
+  --text-h5--line-height: var(--h5-line-height);
+  --text-h5--letter-spacing: var(--h5-letter-spacing);
+  --text-h5--font-weight: var(--font-weight-medium);
+
+  --text-h6: var(--h6-size);
+  --text-h6--line-height: var(--h6-line-height);
+  --text-h6--letter-spacing: var(--h6-letter-spacing);
+  --text-h6--font-weight: var(--font-weight-medium);
+
+  --text-label-lg: var(--label-lg-size);
+  --text-label-lg--line-height: var(--label-lg-line-height);
+  --text-label-lg--letter-spacing: var(--label-lg-letter-spacing);
+  --text-label-lg--font-weight: var(--font-weight-medium);
+
+  --text-label-md: var(--label-md-size);
+  --text-label-md--line-height: var(--label-md-line-height);
+  --text-label-md--letter-spacing: var(--label-md-letter-spacing);
+  --text-label-md--font-weight: var(--font-weight-medium);
+
+  --text-label-sm: var(--label-sm-size);
+  --text-label-sm--line-height: var(--label-sm-line-height);
+  --text-label-sm--letter-spacing: var(--label-sm-letter-spacing);
+  --text-label-sm--font-weight: var(--font-weight-medium);
+
+  --text-body-xl: var(--body-xl-size);
+  --text-body-xl--line-height: var(--body-xl-line-height);
+  --text-body-xl--letter-spacing: var(--body-xl-letter-spacing);
+
+  --text-body-lg: var(--body-lg-size);
+  --text-body-lg--line-height: var(--body-lg-line-height);
+  --text-body-lg--letter-spacing: var(--body-lg-letter-spacing);
+
+  --text-body-md: var(--body-md-size);
+  --text-body-md--line-height: var(--body-md-line-height);
+  --text-body-md--letter-spacing: var(--body-md-letter-spacing);
+
+  --text-body-sm: var(--body-sm-size);
+  --text-body-sm--line-height: var(--body-sm-line-height);
+  --text-body-sm--letter-spacing: var(--body-sm-letter-spacing);
+
+  --text-caption: var(--caption-size);
+  --text-caption--line-height: var(--caption-line-height);
+  --text-caption--letter-spacing: var(--caption-letter-spacing);
+
+  --text-caption-sm: var(--caption-sm-size);
+  --text-caption-sm--line-height: var(--caption-sm-line-height);
+  --text-caption-sm--letter-spacing: var(--caption-sm-letter-spacing);
+}
+
+/* ============================================================
+   OPTIONAL: Base layer defaults
+   ============================================================ */
+
+@layer base {
+  body {
+    @apply text-body-md text-gray-900 bg-gray-50 antialiased;
+    font-family: var(--font-family-primary);
+  }
+
+  /* Sensible heading defaults */
+  h1 {
+    @apply text-h1;
+  }
+  h2 {
+    @apply text-h2;
+  }
+  h3 {
+    @apply text-h3;
+  }
+  h4 {
+    @apply text-h4;
+  }
+  h5 {
+    @apply text-h5;
+  }
+  h6 {
+    @apply text-h6;
+  }
+}
+
+/* ============================================================
+   OPTIONAL: Custom utility classes for less common tokens
+   ============================================================ */
+
+@utility sidebar-page-container {
+  @apply px-4 lg:px-8 xl:px-14;
+}
+
+@utility icon-stroke {
+  stroke-width: var(--icon-stroke-width);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+@utility sidebar-page-container {
+  @apply px-4 lg:px-8 xl:px-14 py-4 lg:py-6;
+}
+
+@utility sidebar-page-container-header {
+  @apply px-4 lg:px-8 xl:px-14 py-6 bg-white;
+}
+@utility heading-page-title {
+  @apply text-xl md:text-2xl 2xl:text-3xl;
+}

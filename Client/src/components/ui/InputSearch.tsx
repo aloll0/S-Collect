@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Search, X } from 'lucide-react';
-import { TypeAnimation } from 'react-type-animation';
 import { useTranslation } from 'react-i18next';
 
 const InputSearch = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
 
@@ -26,25 +25,14 @@ const InputSearch = () => {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          aria-label={t('search.products')}
           className="w-full bg-[var(--gray-50)] pl-8 pr-3 py-2 rounded-lg text-[var(--gray-700)] outline-none focus:ring-2 focus:ring-gray-600"
         />
 
         {/* animated placeholder */}
         {query === '' && (
           <div className="absolute left-8 top-1/2 -translate-y-1/2 pointer-events-none text-sm text-[var(--gray-400)]">
-            <TypeAnimation
-              key={i18n.language}
-              sequence={[
-                t('search.products'),
-                2000,
-                t('search.categories'),
-                2000,
-                '',
-              ]}
-              speed={50}
-              repeat={Infinity}
-              cursor={false}
-            />
+            {t('search.products')}
           </div>
         )}
       </div>

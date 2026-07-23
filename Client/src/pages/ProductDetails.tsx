@@ -89,7 +89,9 @@ const ProductDetails = () => {
   const variant = product.variants[0];
   const image = product.images[0];
 
-  const category = categories.find((c) => c.id === product.categoryId);
+  const category = categories.find((c: any) => c.id === product.categoryId);
+
+  const productName = i18n.language === 'ar' ? product.nameAr : product.name;
 
   const categoryName =
     i18n.language === 'ar' ? category?.nameAr : category?.name;
@@ -110,23 +112,23 @@ const ProductDetails = () => {
             <ChevronsRight size={16} />
           </span>
 
-          <span className="text-[#737373]">Product Details</span>
+          <span className="text-[#737373]">{productName}</span>
         </nav>
       </div>
 
       <div className="sidebar-page-container space-y-8">
         <ProductInfo
           imageUrl={image?.url ?? ''}
-          name={product.name}
+          name={productName}
           category={categoryName ?? '-'}
           brand="-"
           sku={variant?.sku ?? '-'}
           price={variant?.price ?? 0}
-          compareAtPrice={variant?.compareAtPrice}
+          compareAtPrice={variant?.compareAtPrice ?? undefined}
           cost={undefined}
           currency="SAR"
           inStock={(variant?.stock ?? 0) > 0}
-          stockCount={variant?.stock}
+          stockCount={variant?.stock ?? 0}
           averageRating={4.7}
           totalReviews={206}
         />
