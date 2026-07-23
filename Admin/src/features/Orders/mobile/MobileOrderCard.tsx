@@ -35,7 +35,7 @@ export const MobileOrderCard: React.FC<MobileOrderCardProps> = ({
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Reason</span>
-              <span className="text-gray-600 text-end max-w-[180px]">{item.reason}</span>
+              <span className="text-gray-600 text-end max-w-45">{item.reason}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Date</span>

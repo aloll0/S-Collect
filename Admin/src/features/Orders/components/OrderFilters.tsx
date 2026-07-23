@@ -50,15 +50,15 @@ export const OrderFilters = ({
 
   return (
     <div>
-      {/* Main Tab Toggle Buttons */}
-      <div className="flex items-center gap-2 mb-5">
+      {/* Main Tab Toggle Pills Container (Matching Design Image) */}
+      <div className="inline-flex items-center p-1 bg-[#EBEBEB] rounded-2xl mb-5">
         <button
           type="button"
           onClick={() => onMainTabChange('allOrders')}
-          className={`px-4 py-2 rounded-xl text-body-sm font-bold transition-all cursor-pointer ${
+          className={`px-6 py-2.5 rounded-xl text-body-sm font-bold transition-all cursor-pointer ${
             activeMainTab === 'allOrders'
-              ? 'bg-gray-950 text-white shadow-sm'
-              : 'bg-gray-200/60 text-gray-600 hover:bg-gray-200'
+              ? 'bg-black text-white shadow-2xs'
+              : 'bg-transparent text-gray-500 hover:text-gray-900'
           }`}
         >
           {t('ordersPage.allOrders', 'All Orders')}
@@ -66,10 +66,10 @@ export const OrderFilters = ({
         <button
           type="button"
           onClick={() => onMainTabChange('refunds')}
-          className={`px-4 py-2 rounded-xl text-body-sm font-bold transition-all cursor-pointer ${
+          className={`px-6 py-2.5 rounded-xl text-body-sm font-bold transition-all cursor-pointer ${
             activeMainTab === 'refunds'
-              ? 'bg-gray-950 text-white shadow-sm'
-              : 'bg-gray-200/60 text-gray-600 hover:bg-gray-200'
+              ? 'bg-black text-white shadow-2xs'
+              : 'bg-transparent text-gray-500 hover:text-gray-900'
           }`}
         >
           {t('ordersPage.refunds', 'Refunds')}

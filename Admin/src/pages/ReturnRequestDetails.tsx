@@ -1,362 +1,534 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { CheckCircle2, Clock, Circle, ChevronRight } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { motion } from 'motion/react';
-import { MOCK_RETURNS, type ReturnItem } from '../data/mockReturns';
-import { StatusBadge } from './ReturnRequests';
-import ApproveReturnModal from '../components/returns/ApproveReturnModal';
-import RejectReturnModal from '../components/returns/RejectReturnModal';
-import { getVendorSubOrderDetails, updateVendorSubOrderStatus } from '../services/returns';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, ChevronRight, Check, X, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useBreakpoint } from '../hooks/useBreakpoint';
+
+// ── Status Pill Badge ───────────────────────────────────────────────────────
+const StatusBadge = ({ status }: { status: string }) => {
+  let badgeStyle = 'bg-gray-100 text-gray-700';
+
+  if (status === 'Approved' || status === 'COMPLETED') {
+    badgeStyle = 'bg-emerald-100/80 text-emerald-700';
+  } else if (status === 'Rejected' || status === 'REJECTED') {
+    badgeStyle = 'bg-rose-100/80 text-rose-700';
+  } else if (status === 'Pending Review' || status === 'Pending' || status === 'PENDING_REVIEW') {
+    badgeStyle = 'bg-amber-100/80 text-amber-800';
+  }
+
+  return (
+    <span className={`inline-block px-3.5 py-1.5 rounded-full text-xs font-semibold ${badgeStyle}`}>
+      {status}
+    </span>
+  );
+};
 
 export default function ReturnRequestDetailsPage() {
-  const { t } = useTranslation();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const { isMobile } = useBreakpoint();
 
-  const decodedId = id ? decodeURIComponent(id) : '#RET-20240617-001';
-  const foundItem = MOCK_RETURNS.find((r) => r.id === decodedId) || MOCK_RETURNS[0];
+  const refundIdCode = id ? (id.startsWith('#') ? id : `#${id}`) : '#REF-77492-CS';
 
-  const [item, setItem] = useState<ReturnItem>(foundItem);
+  const [status, setStatus] = useState<'Pending Review' | 'Approved' | 'Rejected'>('Pending Review');
+  const [adminNote, setAdminNote] = useState('');
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
-  const [internalNote, setInternalNote] = useState('');
 
-  // Smooth scroll to top & attempt API load when opening details
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    let isMounted = true;
-    async function loadSubOrder() {
-      const rawId = decodedId.replace('#RET-', '');
-      if (rawId && rawId.length >= 8) {
-        try {
-          const sub = await getVendorSubOrderDetails(rawId);
-          if (isMounted && sub) {
-            const firstProduct = sub.items[0] || {};
-            setItem({
-              id: `#RET-${sub.id.slice(0, 8).toUpperCase()}`,
-              orderId: `#ORD-${sub.orderId.slice(0, 8).toUpperCase()}`,
-              customerName: 'Customer',
-              productTitle: firstProduct.productName || 'Order Product',
-              productSku: firstProduct.productId || 'SKU-001',
-              productVariant: firstProduct.variantLabel || 'Default',
-              productQty: firstProduct.quantity || 1,
-              productPrice: `SAR ${(firstProduct.lineTotal || 0).toFixed(2)}`,
-              productImage: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=150',
-              reason: sub.statusOverrideReason || "Item doesn't fit",
-              requestedDate: new Date(sub.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-              status: sub.status === 'DELIVERED' ? 'COMPLETED' : sub.status === 'CANCELLED' ? 'REJECTED' : 'PENDING_REVIEW',
-            });
-          }
-        } catch (_err) {
-          // Keep mock item on error
-        }
-      }
-    }
-    loadSubOrder();
-    return () => {
-      isMounted = false;
-    };
-  }, [decodedId, id]);
-
-  const handleApprove = async () => {
-    // 1. Optimistic UI update (Instant execution)
-    const prevStatus = item.status;
-    setItem((prev) => ({ ...prev, status: 'APPROVED' }));
-    setShowApproveModal(false);
-    toast.success('Return Request Approved successfully');
-
-    // 2. Background Network Sync
-    try {
-      const rawId = item.id.replace('#RET-', '');
-      if (rawId.length >= 8) {
-        await updateVendorSubOrderStatus(rawId, { status: 'DELIVERED' });
-      }
-    } catch (_e) {
-      // If network fails, revert state
-      setItem((prev) => ({ ...prev, status: prevStatus }));
-      toast.error('Failed to sync status with server');
-    }
+  const handleApprove = () => {
+    setStatus('Approved');
+    toast.success('Refund request approved successfully');
   };
 
-  const handleReject = async (reason: string) => {
-    // 1. Optimistic UI update (Instant execution)
-    const prevStatus = item.status;
-    setItem((prev) => ({ ...prev, status: 'REJECTED' }));
-    setShowRejectModal(false);
-    toast.success(`Return Request Rejected: ${reason || 'Decision recorded'}`);
-
-    // 2. Background Network Sync
-    try {
-      const rawId = item.id.replace('#RET-', '');
-      if (rawId.length >= 8) {
-        await updateVendorSubOrderStatus(rawId, { status: 'CANCELLED' });
-      }
-    } catch (_e) {
-      // If network fails, revert state
-      setItem((prev) => ({ ...prev, status: prevStatus }));
-      toast.error('Failed to sync status with server');
-    }
+  const handleReject = () => {
+    setStatus('Rejected');
+    toast.error('Refund request rejected');
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -16 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="p-4 sm:p-6 md:p-8 min-h-screen space-y-6 pb-24 md:pb-8"
-    >
-      {/* Title & Breadcrumbs */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.05 }}
-      >
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-          {t('returnsPage.title', { defaultValue: 'Return Requests' })}
-        </h1>
-        <div className="flex items-center flex-wrap gap-1.5 text-xs sm:text-sm text-gray-500 mt-1.5">
-          <Link to="/returns" className="hover:text-gray-900 transition-colors font-medium">
-            {t('returnsPage.title', { defaultValue: 'Return Requests' })}
-          </Link>
-          <ChevronRight size={16} className="text-gray-400 shrink-0" />
-          <span className="text-gray-800 font-semibold font-mono">
-            {t('returnsPage.breadcrumb', { defaultValue: 'Return Request Details' })} {item.id}
-          </span>
+    <div className="flex-1 overflow-y-auto bg-gray-50/80 min-h-screen">
+      {/* Page Header Area */}
+      <div className="sidebar-page-container-header bg-white border-b border-gray-200/80 py-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="font-bold text-gray-900 heading-page-title">
+            Refund Request Details
+          </h1>
+          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+            <span
+              onClick={() => navigate('/incoming-orders')}
+              className="hover:underline cursor-pointer text-gray-500 font-medium"
+            >
+              Refunds
+            </span>
+            <ChevronRight size={12} />
+            <span className="text-gray-900 font-semibold">Request Details</span>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column (2 Cols on Desktop) */}
-        <motion.div
-          initial={{ opacity: 0, x: -15 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          className="lg:col-span-2 space-y-6"
+      {/* Main Body Container */}
+      <div className="sidebar-page-container py-6">
+        {/* Back Link */}
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-semibold mb-5 hover:underline cursor-pointer"
         >
-          {/* Card 1: Return Summary */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 shadow-xs">
-            <h2 className="text-base font-bold text-gray-900 mb-4">
-              {t('returnsPage.returnSummary', { defaultValue: 'Return Summary' })}
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs sm:text-sm">
-              <div>
-                <p className="text-gray-400 text-xs mb-1">{t('returnsPage.returnId', { defaultValue: 'Return ID' })}</p>
-                <p className="font-bold text-gray-900 font-mono text-sm sm:text-base">{item.id}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs mb-1">{t('returnsPage.orderId', { defaultValue: 'Order ID' })}</p>
-                <p className="font-semibold text-gray-700 font-mono">{item.orderId}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs mb-1">{t('returnsPage.status', { defaultValue: 'Status' })}</p>
-                <StatusBadge status={item.status} />
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs mb-1">{t('returnsPage.requestedDate', { defaultValue: 'Request Date' })}</p>
-                <p className="font-medium text-gray-800">{item.requestedDate}</p>
-              </div>
-            </div>
-          </div>
+          <ArrowLeft size={14} />
+          <span>Back to Refunds</span>
+        </button>
 
-          {/* Card 2: Product Information */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 shadow-xs">
-            <h2 className="text-base font-bold text-gray-900 mb-4">
-              {t('returnsPage.productInformation', { defaultValue: 'Product Information' })}
-            </h2>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <img
-                src={item.productImage}
-                alt={item.productTitle}
-                className="w-20 h-20 rounded-2xl object-cover border border-gray-200 shrink-0"
-              />
-              <div className="min-w-0 flex-1">
-                <h3 className="text-base font-bold text-gray-900 mb-1.5">{item.productTitle}</h3>
-                <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500">
-                  <span>SKU: <strong className="text-gray-700">{item.productSku}</strong></span>
-                  <span>•</span>
-                  <span>Variant: <strong className="text-gray-700">{item.productVariant}</strong></span>
-                  <span>•</span>
-                  <span>Qty: <strong className="text-gray-700">{item.productQty}</strong></span>
-                  <span>•</span>
-                  <span className="font-bold text-gray-900 text-base">{item.productPrice}</span>
+        {isMobile ? (
+          /* Mobile Stacked View */
+          <div className="space-y-4">
+            {/* 1. Top Banner Card */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 p-4 shadow-2xs">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="text-[11px] text-gray-400 font-semibold tracking-wider uppercase">
+                    Refund ID
+                  </p>
+                  <p className="font-bold text-gray-900 text-base">{refundIdCode}</p>
+                </div>
+                <StatusBadge status={status} />
+              </div>
+              <div className="space-y-1.5 text-xs border-t border-gray-100 pt-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Requested Date:</span>
+                  <span className="text-gray-700 font-medium">Oct 24, 2026, 14:32</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Payment Method:</span>
+                  <span className="text-gray-700 font-medium">
+                    Credit Card (Visa ending in 4392)
+                  </span>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Card 3: Return Reason */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 shadow-xs">
-            <h2 className="text-base font-bold text-gray-900 mb-3">
-              {t('returnsPage.returnReason', { defaultValue: 'Return Reason' })}: <span className="text-amber-600 font-bold">{item.reason}</span>
-            </h2>
-            {item.customerNote && (
-              <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 sm:p-5 text-xs sm:text-sm text-gray-700 leading-relaxed italic">
-                {item.customerNote}
+            {/* 2. Customer Explanation Card */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 p-4 shadow-2xs">
+              <h2 className="font-bold text-gray-900 text-sm mb-3">Customer Explanation</h2>
+              <div className="bg-gray-50/80 border border-gray-100 rounded-xl p-3.5 text-xs text-gray-700 leading-relaxed font-medium italic">
+                "The keyboard layout is different from what was advertised. I requested the English/Arabic dual layout version, but I received the English-only layout. The seal is still intact and keyboard is completely unused."
               </div>
-            )}
-          </div>
+            </div>
 
-          {/* Card 4: Customer Uploaded Images */}
-          {item.uploadedImages && item.uploadedImages.length > 0 && (
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 shadow-xs">
-              <h2 className="text-base font-bold text-gray-900 mb-4">
-                {t('returnsPage.uploadedImages', { defaultValue: 'Customer Uploaded Images (Product Condition)' })}
+            {/* 3. Order & Customer Info Card */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 p-4 shadow-2xs">
+              <h2 className="font-bold text-gray-900 text-sm mb-3">Order & Customer Info</h2>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Order ID</span>
+                  <span className="font-bold text-gray-900">#ORD-77492-CS</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Customer Name</span>
+                  <span className="font-bold text-gray-900">Yousef Al-Harbi</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Email Address</span>
+                  <a
+                    href="mailto:yousef.alharbi@domain.sa"
+                    className="text-blue-600 font-medium hover:underline"
+                  >
+                    yousef.alharbi@domain.sa
+                  </a>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Phone Number</span>
+                  <span className="text-gray-900 font-medium">+966 50 123 4567</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Financial Summary Card */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 p-4 shadow-2xs">
+              <h2 className="font-bold text-gray-900 text-sm mb-3">Financial Summary</h2>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Original Order Amount</span>
+                  <span className="font-bold text-gray-900">890.00 SAR</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Requested Refund Amount</span>
+                  <span className="font-bold text-gray-900">450.00 SAR</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Reason for Refund</span>
+                  <span className="text-gray-900 font-medium">Wrong product received</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Shipping Fee Refund</span>
+                  <span className="text-gray-500">0.00 SAR (Non-refundable)</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Products Requested for Refund Card */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 p-4 shadow-2xs">
+              <h2 className="font-bold text-gray-900 text-sm mb-3">
+                Products Requested for Refund
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
-                {item.uploadedImages.map((imgUrl, i) => (
+              <div className="flex items-center justify-between text-xs pt-1">
+                <div className="flex items-center gap-3">
                   <img
-                    key={i}
-                    src={imgUrl}
-                    alt={`Condition ${i + 1}`}
-                    className="w-full h-28 sm:h-32 rounded-xl object-cover border border-gray-200 shadow-xs hover:scale-[1.02] transition-transform cursor-pointer"
+                    src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=100"
+                    alt="Keyboard"
+                    className="w-12 h-12 rounded-xl object-cover border border-gray-100 shrink-0"
                   />
-                ))}
+                  <div>
+                    <p className="font-bold text-gray-900 text-xs">
+                      Wireless Mechanical Keyboard Pro v2
+                    </p>
+                    <p className="text-gray-400 text-[11px]">SKU: MECH-KEY-9941</p>
+                  </div>
+                </div>
+                <div className="text-end">
+                  <p className="text-gray-400 text-[11px]">QTY 1</p>
+                  <p className="font-bold text-gray-900 text-xs">450.00 SAR</p>
+                </div>
               </div>
             </div>
-          )}
 
-          {/* Card 5: Internal Notes */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 shadow-xs">
-            <h2 className="text-base font-bold text-gray-900 mb-3">
-              {t('returnsPage.internalNotes', { defaultValue: 'Internal Notes (Only visible to you)' })}
-            </h2>
-            <textarea
-              value={internalNote}
-              onChange={(e) => setInternalNote(e.target.value)}
-              placeholder={t('returnsPage.notesPlaceholder', { defaultValue: 'Add notes about this return request...' })}
-              className="w-full h-28 p-3.5 border border-gray-200 rounded-xl text-xs sm:text-sm outline-none focus:border-gray-900 transition-colors resize-none bg-gray-50/50"
-            />
-          </div>
-        </motion.div>
+            {/* 6. Review & Action Card */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 p-4 shadow-2xs">
+              <h2 className="font-bold text-gray-900 text-sm mb-3">Review & Action</h2>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs text-gray-500 font-medium mb-1.5">
+                    Admin private notes
+                  </label>
+                  <textarea
+                    value={adminNote}
+                    onChange={(e) => setAdminNote(e.target.value)}
+                    disabled={status !== 'Pending Review'}
+                    placeholder="Add a reason or note for this decision (visible to internal teams)..."
+                    className="w-full border border-gray-200 rounded-xl p-3 text-xs bg-white h-24 focus:outline-none focus:border-gray-900 placeholder-gray-400 resize-none disabled:bg-gray-50 disabled:text-gray-500"
+                  />
+                </div>
 
-        {/* Right Column (1 Col on Desktop) */}
-        <motion.div
-          initial={{ opacity: 0, x: 15 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: 0.15 }}
-          className="space-y-6"
-        >
-          {/* Card 1: Customer Information */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 shadow-xs space-y-4">
-            <h2 className="text-base font-bold text-gray-900">
-              {t('returnsPage.customerInformation', { defaultValue: 'Customer Information' })}
-            </h2>
-            <div className="space-y-3.5 text-xs sm:text-sm">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-400 font-medium">Name</span>
-                <span className="font-bold text-gray-900">{item.customerName}</span>
+                {status === 'Pending Review' ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setShowApproveModal(true)}
+                      className="w-full bg-gray-950 text-white hover:bg-gray-800 font-semibold py-3 rounded-xl shadow-xs flex items-center justify-center gap-2 text-xs cursor-pointer transition-all active:scale-98"
+                    >
+                      <Check size={15} />
+                      <span>Approve Refund</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowRejectModal(true)}
+                      className="w-full bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 font-semibold py-3 rounded-xl shadow-xs flex items-center justify-center gap-2 text-xs cursor-pointer transition-all active:scale-98"
+                    >
+                      <X size={15} />
+                      <span>Reject Refund</span>
+                    </button>
+                  </>
+                ) : (
+                  <div
+                    className={`p-3.5 rounded-xl border text-xs font-semibold flex items-center gap-2 justify-center ${
+                      status === 'Approved'
+                        ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                        : 'bg-rose-50 border-rose-200 text-rose-700'
+                    }`}
+                  >
+                    <span>Decision Recorded: Refund {status}</span>
+                  </div>
+                )}
               </div>
-              {item.customerEmail && (
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400 font-medium">{t('returnsPage.email', { defaultValue: 'Email' })}</span>
-                  <span className="font-semibold text-gray-800 font-mono">{item.customerEmail}</span>
+            </div>
+          </div>
+        ) : (
+          /* Desktop Layout */
+          <div className="space-y-6">
+            {/* Top Summary Banner */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs flex items-center justify-between gap-6">
+              <div className="grid grid-cols-3 gap-10 flex-1">
+                <div>
+                  <p className="text-[11px] text-gray-400 font-semibold tracking-wider uppercase mb-1">
+                    Refund ID
+                  </p>
+                  <p className="font-bold text-gray-900 text-base sm:text-lg">{refundIdCode}</p>
                 </div>
-              )}
-              {item.customerPhone && (
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400 font-medium">{t('returnsPage.phone', { defaultValue: 'Phone' })}</span>
-                  <span className="font-semibold text-gray-800 dir-ltr">{item.customerPhone}</span>
+                <div>
+                  <p className="text-[11px] text-gray-400 font-semibold tracking-wider uppercase mb-1">
+                    Requested Date
+                  </p>
+                  <p className="font-bold text-gray-900 text-sm">Oct 24, 2026, 14:32</p>
                 </div>
-              )}
-              {item.shippingAddress && (
-                <div className="pt-3 border-t border-gray-100">
-                  <span className="text-gray-400 font-medium block mb-1">{t('returnsPage.shippingAddress', { defaultValue: 'Shipping Address' })}</span>
-                  <p className="text-gray-700 whitespace-pre-line text-xs sm:text-sm leading-relaxed">
-                    {item.shippingAddress}
+                <div>
+                  <p className="text-[11px] text-gray-400 font-semibold tracking-wider uppercase mb-1">
+                    Payment Method
+                  </p>
+                  <p className="font-bold text-gray-900 text-sm">
+                    Credit Card (Visa ending in 4392)
                   </p>
                 </div>
-              )}
+              </div>
+              <div>
+                <StatusBadge status={status} />
+              </div>
             </div>
-          </div>
 
-          {/* Card 2: Return Timeline */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 shadow-xs">
-            <h2 className="text-base font-bold text-gray-900 mb-4">
-              {t('returnsPage.returnTimeline', { defaultValue: 'Return Timeline' })}
-            </h2>
-            <div className="space-y-5 relative before:absolute before:left-3.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-200">
-              {item.timeline?.map((step, idx) => (
-                <div key={idx} className="flex items-start gap-3.5 relative z-10">
-                  <div className="shrink-0 mt-0.5 bg-white rounded-full">
-                    {step.completed ? (
-                      <CheckCircle2 size={22} className="text-emerald-600 fill-emerald-100" />
-                    ) : step.active ? (
-                      <Clock size={22} className="text-amber-500 fill-amber-50" />
-                    ) : (
-                      <Circle size={22} className="text-gray-300 fill-gray-50" />
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between">
-                      <p className={`text-xs sm:text-sm font-bold ${step.completed || step.active ? 'text-gray-900' : 'text-gray-400'}`}>
-                        {step.title}
-                      </p>
-                      {step.date && <span className="text-xs text-gray-400">{step.date}</span>}
+            {/* Main Desktop Grid */}
+            <div className="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-6 items-start">
+              {/* Left Main Column */}
+              <div className="space-y-6">
+                {/* 1. Order & Customer Info */}
+                <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs">
+                  <h2 className="font-bold text-gray-900 text-base mb-4">
+                    Order & Customer Info
+                  </h2>
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Order ID</span>
+                      <span className="font-bold text-gray-900">#ORD-77492-CS</span>
                     </div>
-                    {step.subtext && (
-                      <p className="text-xs text-gray-500 mt-0.5">{step.subtext}</p>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Customer Name</span>
+                      <span className="font-bold text-gray-900">Yousef Al-Harbi</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Email Address</span>
+                      <a
+                        href="mailto:yousef.alharbi@domain.sa"
+                        className="text-blue-600 font-medium hover:underline"
+                      >
+                        yousef.alharbi@domain.sa
+                      </a>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Phone Number</span>
+                      <span className="text-gray-900 font-medium">+966 50 123 4567</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Financial Summary */}
+                <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs">
+                  <h2 className="font-bold text-gray-900 text-base mb-4">Financial Summary</h2>
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Original Order Amount</span>
+                      <span className="font-bold text-gray-900">890.00 SAR</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Requested Refund Amount</span>
+                      <span className="font-bold text-gray-900">450.00 SAR</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Reason for Refund</span>
+                      <span className="text-gray-900 font-medium">Wrong product received</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Shipping Fee Refund</span>
+                      <span className="text-gray-500">0.00 SAR (Non-refundable)</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. Products Requested for Refund */}
+                <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs">
+                  <h2 className="font-bold text-gray-900 text-base mb-4">
+                    Products Requested for Refund
+                  </h2>
+                  <div className="flex items-center justify-between text-xs border-t border-gray-100 pt-4">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=100"
+                        alt="Keyboard"
+                        className="w-12 h-12 rounded-xl object-cover border border-gray-100 shrink-0"
+                      />
+                      <div>
+                        <p className="font-bold text-gray-900 text-sm">
+                          Wireless Mechanical Keyboard Pro v2
+                        </p>
+                        <p className="text-gray-400 text-xs">SKU: MECH-KEY-9941</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-12 text-end">
+                      <div>
+                        <p className="text-[11px] text-gray-400 font-semibold uppercase">QTY</p>
+                        <p className="font-bold text-gray-900 text-xs">1</p>
+                      </div>
+                      <div>
+                        <p className="text-[11px] text-gray-400 font-semibold uppercase">UNIT PRICE</p>
+                        <p className="font-bold text-gray-900 text-sm">450.00 SAR</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column Sidebar */}
+              <div className="space-y-6">
+                {/* 1. Customer Explanation Card */}
+                <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs">
+                  <h2 className="font-bold text-gray-900 text-base mb-3">
+                    Customer Explanation
+                  </h2>
+                  <div className="bg-gray-50/80 border border-gray-100 rounded-xl p-4 text-xs text-gray-700 leading-relaxed font-medium italic">
+                    "The keyboard layout is different from what was advertised. I requested the English/Arabic dual layout version, but I received the English-only layout. The seal is still intact and keyboard is completely unused."
+                  </div>
+                </div>
+
+                {/* 2. Review & Action Card */}
+                <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs">
+                  <h2 className="font-bold text-gray-900 text-base mb-4">Review & Action</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs text-gray-500 font-medium mb-1.5">
+                        Admin private notes
+                      </label>
+                      <textarea
+                        value={adminNote}
+                        onChange={(e) => setAdminNote(e.target.value)}
+                        disabled={status !== 'Pending Review'}
+                        placeholder="Add a reason or note for this decision (visible to internal teams)..."
+                        className="w-full border border-gray-200 rounded-xl p-3 text-xs bg-white h-24 focus:outline-none focus:border-gray-900 placeholder-gray-400 resize-none disabled:bg-gray-50 disabled:text-gray-500"
+                      />
+                    </div>
+
+                    {status === 'Pending Review' ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => setShowApproveModal(true)}
+                          className="w-full bg-gray-950 text-white hover:bg-gray-800 font-semibold py-3 rounded-xl shadow-xs flex items-center justify-center gap-2 text-xs cursor-pointer transition-all active:scale-98"
+                        >
+                          <Check size={15} />
+                          <span>Approve Refund</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShowRejectModal(true)}
+                          className="w-full bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 font-semibold py-3 rounded-xl shadow-xs flex items-center justify-center gap-2 text-xs cursor-pointer transition-all active:scale-98"
+                        >
+                          <X size={15} />
+                          <span>Reject Refund</span>
+                        </button>
+                      </>
+                    ) : (
+                      <div
+                        className={`p-3.5 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 ${
+                          status === 'Approved'
+                            ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                            : 'bg-rose-50 border-rose-200 text-rose-700'
+                        }`}
+                      >
+                        <span>Decision Recorded: Refund {status}</span>
+                      </div>
                     )}
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
+        )}
+      </div>
 
-          {/* Desktop Action Buttons */}
-          <div className="hidden md:flex items-center justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={() => setShowRejectModal(true)}
-              className="py-3 px-6 rounded-xl border border-red-200 text-red-600 text-sm font-bold hover:bg-red-50 transition-colors cursor-pointer active:scale-95"
-            >
-              {t('returnsPage.rejectReturn', { defaultValue: 'Reject Return' })}
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowApproveModal(true)}
-              className="py-3 px-6 rounded-xl bg-gray-950 text-white text-sm font-bold hover:bg-gray-800 transition-colors cursor-pointer shadow-md active:scale-95"
-            >
-              {t('returnsPage.approveReturn', { defaultValue: 'Approve Return' })}
-            </button>
+      {/* ── Approve Refund Confirmation Modal Popup ─────────────────── */}
+      {showApproveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-md bg-white rounded-2xl p-6 shadow-2xl relative">
+            <div className="flex justify-center mb-4">
+              <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
+                <Check size={24} className="stroke-[3]" />
+              </div>
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+              Approve Refund Request
+            </h3>
+            <p className="text-xs text-gray-500 text-center leading-relaxed mb-5">
+              Are you sure you want to approve this refund request? Once approved, the refund status will change to Approved and the refund amount of <strong className="text-gray-900">450.00 SAR</strong> will be processed.
+            </p>
+            <div className="bg-gray-50 border border-gray-100 rounded-xl p-3.5 space-y-2 mb-6 text-xs">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Refund ID</span>
+                <span className="font-semibold text-gray-900 font-mono">{refundIdCode}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Customer</span>
+                <span className="font-semibold text-gray-900">Yousef Al-Harbi</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Refund Amount</span>
+                <span className="font-semibold text-gray-900">450.00 SAR</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setShowApproveModal(false)}
+                className="py-2.5 px-4 rounded-xl border border-gray-300 text-gray-700 text-xs font-semibold hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  handleApprove();
+                  setShowApproveModal(false);
+                }}
+                className="py-2.5 px-4 rounded-xl bg-gray-950 text-white text-xs font-semibold hover:bg-gray-800 transition-colors cursor-pointer"
+              >
+                Approve Refund
+              </button>
+            </div>
           </div>
-        </motion.div>
-      </div>
+        </div>
+      )}
 
-      {/* Fixed Sticky Action Bar for Mobile */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-gray-200 z-40 flex items-center gap-3 shadow-lg">
-        <button
-          type="button"
-          onClick={() => setShowRejectModal(true)}
-          className="flex-1 py-3 px-4 rounded-xl border border-red-200 text-red-600 text-xs sm:text-sm font-bold hover:bg-red-50 transition-colors cursor-pointer active:scale-95"
-        >
-          {t('returnsPage.rejectReturn', { defaultValue: 'Reject Return' })}
-        </button>
-        <button
-          type="button"
-          onClick={() => setShowApproveModal(true)}
-          className="flex-1 py-3 px-4 rounded-xl bg-gray-950 text-white text-xs sm:text-sm font-bold hover:bg-gray-800 transition-colors cursor-pointer shadow-md active:scale-95"
-        >
-          {t('returnsPage.approveReturn', { defaultValue: 'Approve Return' })}
-        </button>
-      </div>
-
-      {/* Modals */}
-      <ApproveReturnModal
-        isOpen={showApproveModal}
-        onClose={() => setShowApproveModal(false)}
-        onConfirm={handleApprove}
-        item={item}
-      />
-      <RejectReturnModal
-        isOpen={showRejectModal}
-        onClose={() => setShowRejectModal(false)}
-        onConfirm={handleReject}
-        item={item}
-      />
-    </motion.div>
+      {/* ── Reject Refund Confirmation Modal Popup ──────────────────── */}
+      {showRejectModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-md bg-white rounded-2xl p-6 shadow-2xl relative">
+            <div className="flex justify-center mb-4">
+              <div className="w-12 h-12 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600">
+                <AlertTriangle size={24} />
+              </div>
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+              Reject Refund Request
+            </h3>
+            <p className="text-xs text-gray-500 text-center leading-relaxed mb-4">
+              Are you sure you want to reject this refund request for customer <strong className="text-gray-900">Yousef Al-Harbi</strong>?
+            </p>
+            <div className="bg-gray-50 border border-gray-100 rounded-xl p-3.5 space-y-2 mb-6 text-xs">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Refund ID</span>
+                <span className="font-semibold text-gray-900 font-mono">{refundIdCode}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Customer</span>
+                <span className="font-semibold text-gray-900">Yousef Al-Harbi</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setShowRejectModal(false)}
+                className="py-2.5 px-4 rounded-xl border border-gray-300 text-gray-700 text-xs font-semibold hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  handleReject();
+                  setShowRejectModal(false);
+                }}
+                className="py-2.5 px-4 rounded-xl bg-rose-600 text-white text-xs font-semibold hover:bg-rose-700 transition-colors cursor-pointer"
+              >
+                Reject Refund
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

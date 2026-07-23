@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useBreakpoint } from '../hooks/useBreakpoint';
@@ -7,6 +7,8 @@ import { OrdersTable } from '../features/Orders/components/OrdersTable';
 import type { TableItem } from '../features/Orders/components/OrdersTable';
 import { Pagination } from '../features/Orders/components/Pagination';
 import { MobileOrderCard } from '../features/Orders/mobile/MobileOrderCard';
+import { EmptyState } from '../features/Orders/components/EmptyState';
+import { OrdersSkeleton } from '../features/Orders/components/OrdersSkeleton';
 
 // ── Mock Data for Orders ──────────────────────────────────────────────────
 const BASE_ORDERS: TableItem[] = [
@@ -65,9 +67,16 @@ export default function Orders() {
   const [dateFilter, setDateFilter] = useState('last30Days');
   const [vendorFilter, setVendorFilter] = useState('All');
 
-  // Pagination & Selection State
+  // Pagination State
   const [page, setPage] = useState(1);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Trigger skeleton loading animation on filter changes
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, [search, statusFilter, dateFilter, vendorFilter, page, activeMainTab]);
 
   const itemsPerPage = isMobile && activeMainTab === 'refunds' ? 10 : 7;
 
@@ -117,31 +126,6 @@ export default function Orders() {
     const start = (safePage - 1) * itemsPerPage;
     return activeDataset.slice(start, start + itemsPerPage);
   }, [activeDataset, safePage, itemsPerPage]);
-
-  // Selection handlers
-  const allCurrentIds = paginatedData.map((d) => d.id);
-  const selectedAll =
-    allCurrentIds.length > 0 && allCurrentIds.every((id) => selectedIds.has(id));
-
-  const handleSelectAll = () => {
-    const next = new Set(selectedIds);
-    if (selectedAll) {
-      allCurrentIds.forEach((id) => next.delete(id));
-    } else {
-      allCurrentIds.forEach((id) => next.add(id));
-    }
-    setSelectedIds(next);
-  };
-
-  const handleSelectOne = (id: string) => {
-    const next = new Set(selectedIds);
-    if (next.has(id)) {
-      next.delete(id);
-    } else {
-      next.add(id);
-    }
-    setSelectedIds(next);
-  };
 
   const handleViewDetails = (item: TableItem) => {
     if (activeMainTab === 'refunds') {
@@ -198,44 +182,52 @@ export default function Orders() {
           }}
         />
 
-        {/* Content Views: Mobile Cards vs Desktop Table */}
-        {isMobile ? (
+        {/* Content Views: Skeleton vs Mobile Cards vs Desktop Table */}
+        {isLoading ? (
+          <OrdersSkeleton isMobile={isMobile} />
+        ) : isMobile ? (
           <div>
-            {paginatedData.map((item) => (
-              <MobileOrderCard
-                key={item.id}
-                item={item}
-                type={activeMainTab}
-                onViewDetails={handleViewDetails}
-              />
-            ))}
-            <Pagination
-              currentPage={safePage}
-              totalPages={totalPages}
-              totalItems={totalCount}
-              itemsPerPage={itemsPerPage}
-              onPageChange={setPage}
-              isMobile
-            />
+            {paginatedData.length === 0 ? (
+              <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
+                <EmptyState />
+              </div>
+            ) : (
+              <>
+                {paginatedData.map((item) => (
+                  <MobileOrderCard
+                    key={item.id}
+                    item={item}
+                    type={activeMainTab}
+                    onViewDetails={handleViewDetails}
+                  />
+                ))}
+                <Pagination
+                  currentPage={safePage}
+                  totalPages={totalPages}
+                  totalItems={totalCount}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={setPage}
+                  isMobile
+                />
+              </>
+            )}
           </div>
         ) : (
           <div>
             <OrdersTable
               items={paginatedData}
               activeMainTab={activeMainTab}
-              selectedIds={selectedIds}
-              onSelectAll={handleSelectAll}
-              onSelectOne={handleSelectOne}
-              selectedAll={selectedAll}
               onViewDetails={handleViewDetails}
             />
-            <Pagination
-              currentPage={safePage}
-              totalPages={totalPages}
-              totalItems={totalCount}
-              itemsPerPage={itemsPerPage}
-              onPageChange={setPage}
-            />
+            {totalCount > 0 && (
+              <Pagination
+                currentPage={safePage}
+                totalPages={totalPages}
+                totalItems={totalCount}
+                itemsPerPage={itemsPerPage}
+                onPageChange={setPage}
+              />
+            )}
           </div>
         )}
       </div>
