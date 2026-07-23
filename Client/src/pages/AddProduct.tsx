@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,7 +11,7 @@ import TagInput from '../features/AddProducts/TagInput';
 import PricingFields from '../features/AddProducts/PricingFields';
 import SuccessPopup from '../features/AddProducts/SuccessPopup';
 import MobileAddProduct from '../features/AddProducts/mobile/MobileAddProduct';
-import { mapFormToMultipartFormData, mapProductToFormData } from '../features/AddProducts/utils';
+import { mapFormToMultipartFormData } from '../features/AddProducts/utils';
 import type { ProductFormData } from '../features/AddProducts/types';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { useCategories } from '../hooks/useCategories';
@@ -49,13 +49,14 @@ const AddProduct = () => {
   const { categories: categoriesList } = useCategories();
   const { mutate: createProduct, isPending: isCreatePending } = useCreateProduct();
   const { mutate: updateProduct, isPending: isUpdatePending } = useUpdateProduct();
-  const { data: productData, isLoading: isProductLoading } = useProduct(productId);
+  const { data: productFormData, isLoading: isProductLoading } = useProduct(productId);
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [showReview, setShowReview] = useState(false);
   const [createdThumbnail, setCreatedThumbnail] = useState<string | undefined>(undefined);
 
   const methods = useForm<ProductFormData>({
+    values: isEdit && productFormData ? productFormData : undefined,
     defaultValues: {
       nameAr: '',
       nameEn: '',
@@ -72,15 +73,6 @@ const AddProduct = () => {
       colors: [],
     },
   });
-
-  // Populate form when product data is fetched in edit mode
-  useEffect(() => {
-    if (isEdit && productData) {
-      mapProductToFormData(productData).then((formData) => {
-        methods.reset(formData);
-      });
-    }
-  }, [isEdit, productData, methods]);
 
   const enabled = methods.watch('enabled') ?? true;
   const quantity = methods.watch('quantity') ?? 0;
@@ -102,13 +94,7 @@ const AddProduct = () => {
     methods.setValue(fieldName, prev.filter((_, i) => i !== index));
   };
 
-  const onSubmit = (data: ProductFormData) => {
-    console.log('Form data submitted for review:', data);
-    const multipartData = mapFormToMultipartFormData(data);
-    console.log('Prepared multipart/form-data:');
-    console.log('- name:', multipartData.get('name'));
-    console.log('- nameAr:', multipartData.get('nameAr'));
-    console.log('- categoryId:', multipartData.get('categoryId'));
+  const onSubmit = () => {
     setShowReview(true);
   };
 

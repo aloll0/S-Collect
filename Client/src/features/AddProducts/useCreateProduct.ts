@@ -23,7 +23,6 @@ export const useCreateProduct = () => {
       const firstImageId = unwrapped?.images?.[0]?.id;
       if (productId && firstImageId) {
         try {
-          console.log(`Setting first image (${firstImageId}) as thumbnail for product (${productId})...`);
           await setProductThumbnail(productId, firstImageId);
         } catch (thumbError) {
           console.error('Failed to set thumbnail automatically:', thumbError);
