@@ -87,7 +87,7 @@ const LanguageDropdown = () => {
 };
 
 const Header = ({ onMenuClick }: HeaderProps) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const today = new Date().toLocaleDateString(
     i18n.language === 'ar' ? 'ar-EG' : 'en-US',
@@ -137,10 +137,10 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             <h1 className="text-2xl font-bold">
               {i18n.language === 'ar' ? `مرحباً, ${userName} 👋` : `Hello, ${userName} 👋`}
             </h1>
-            <p className="text-sm text-gray-400">{today}</p>
+            <p className="text-sm text-gray-200">{today}</p>
           </div>
         </div>
-
+  
         <div className="items-center gap-3 sidebar:gap-4 sidebar:flex hidden">
           <div className="flex-1 sidebar:flex-none sidebar:block hidden">
             <InputSearch />
@@ -149,10 +149,11 @@ const Header = ({ onMenuClick }: HeaderProps) => {
           <div className="hidden sidebar:flex">
             <LanguageDropdown />
           </div>
-
+   
           <Link
             to="/login"
-            className="hidden text-2xl hover:text-gray-300 sidebar:block"
+            aria-label={t('header.account')}
+            className="hidden text-2xl hover:text-gray-300 sidebar:block focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
           >
             <User />
           </Link>

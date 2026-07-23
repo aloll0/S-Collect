@@ -1,0 +1,295 @@
+import { useState, useEffect, type ChangeEvent } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useVendorStore, useVendorTable } from '../store/vendorStore';
+import VendorCategoryDropdown from './VendorCategoryDropdown';
+import VendorConfirmModal from '../modals/VendorConfirmModal';
+import VendorDesktopTable from './VendorDesktopTable';
+import VendorMobileList from './VendorMobileList';
+import VendorPagination from './VendorPagination';
+import VendorBulkActionBar from './VendorBulkActionBar';
+import type { ActiveFilter, VendorTab } from '../types/vendors';
+import PortalDropdown from '../../../components/ui/PortalDropdown';
+
+export default function VendorTable() {
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === 'ar';
+
+  const activeTab = useVendorStore((s) => s.activeTab);
+  const search = useVendorStore((s) => s.search);
+  const selectedCategory = useVendorStore((s) => s.selectedCategory);
+  const activeFilter = useVendorStore((s) => s.activeFilter);
+  const setActiveTab = useVendorStore((s) => s.setActiveTab);
+  const setSearch = useVendorStore((s) => s.setSearch);
+  const setSelectedCategory = useVendorStore((s) => s.setSelectedCategory);
+  const setActiveFilter = useVendorStore((s) => s.setActiveFilter);
+  const setPage = useVendorStore((s) => s.setPage);
+  const bulkApprove = useVendorStore((s) => s.bulkApprove);
+  const bulkReject = useVendorStore((s) => s.bulkReject);
+  const toggleVendorActive = useVendorStore((s) => s.toggleVendorActive);
+  const toggleRow = useVendorStore((s) => s.toggleRow);
+  const setSelectedRows = useVendorStore((s) => s.setSelectedRows);
+  const clearSelection = useVendorStore((s) => s.clearSelection);
+
+  const {
+    paginated,
+    totalItems,
+    totalPages,
+    page,
+    itemsPerPage,
+    pendingCount,
+    selectedRows,
+    selectedCount,
+    allChecked,
+    paginatedIds,
+  } = useVendorTable();
+
+  // ── Page & filter change skeleton loading ──────────────────────────────────
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, [page, activeTab, selectedCategory, activeFilter, search]);
+
+  type ModalType = 'approve' | 'reject' | 'deactivate';
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    type: ModalType;
+    ids: number[];
+    vendorName?: string;
+  }>({ isOpen: false, type: 'approve', ids: [] });
+
+  const tabs: { key: VendorTab; label: string; count?: number }[] = [
+    { key: 'pending', label: t('vendors.tabs.pending'), count: pendingCount },
+    { key: 'all', label: t('vendors.tabs.all') },
+  ];
+
+  const activeFilters: { key: ActiveFilter; label: string }[] = [
+    { key: 'all', label: t('vendors.table.allStatuses') },
+    { key: 'active', label: t('vendors.table.active') },
+    { key: 'inactive', label: t('vendors.table.inactive') },
+  ];
+
+  // Columns differ by tab
+  const isAllTab = activeTab === 'all';
+
+  const pendingSuspendedHeaders = [
+    t('vendors.table.businessName'),
+    t('vendors.table.owner'),
+    t('vendors.table.email'),
+    t('vendors.table.submittedDate'),
+    t('vendors.table.category'),
+    t('vendors.table.actions'),
+  ];
+
+  const allVendorHeaders = [
+    t('vendors.table.vendorName'),
+    t('vendors.table.owner'),
+    t('vendors.table.revenue'),
+    t('vendors.table.submittedDate'),
+    t('vendors.table.email'),
+    t('vendors.table.orders'),
+    t('vendors.table.status'),
+  ];
+
+  const tableHeaders = isAllTab ? allVendorHeaders : pendingSuspendedHeaders;
+  const colSpan = tableHeaders.length + 1; // +1 for checkbox
+
+  const startItem = totalItems === 0 ? 0 : (page - 1) * itemsPerPage + 1;
+  const endItem = Math.min(page * itemsPerPage, totalItems);
+
+  const activeFilterLabel =
+    activeFilters.find((f) => f.key === activeFilter)?.label ??
+    t('vendors.table.statusFilter');
+
+  const toggleAll = (e: ChangeEvent<HTMLInputElement>) =>
+    setSelectedRows(e.target.checked ? paginatedIds : []);
+
+  const openConfirm = (type: ModalType, ids: number[], vendorName?: string) =>
+    setConfirmModal({ isOpen: true, type, ids, vendorName });
+
+  const handleConfirm = () => {
+    const { type, ids } = confirmModal;
+    if (type === 'approve') bulkApprove(ids);
+    else if (type === 'reject') bulkReject(ids);
+    else {
+      ids.forEach((id) => {
+        const store = useVendorStore.getState();
+        const vendor = store.vendors.find((v) => v.id === id);
+        if (vendor?.active) store.toggleVendorActive(id);
+      });
+      clearSelection();
+    }
+    setConfirmModal({ isOpen: false, type: 'approve', ids: [] });
+  };
+
+  const handleCancel = () =>
+    setConfirmModal({ isOpen: false, type: 'approve', ids: [] });
+
+  return (
+    <div className="font-sans text-gray-800" dir={isRtl ? 'rtl' : 'ltr'}>
+      {/* Tabs */}
+      <div className="flex items-center gap-6 border-b border-gray-200 mb-5">
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`flex items-center gap-2 pb-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+              activeTab === tab.key
+                ? 'border-gray-900 text-gray-900'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            {tab.label}
+            {tab.count !== undefined && tab.count > 0 && (
+              <span
+                className={`inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full text-xs font-semibold ${
+                  activeTab === tab.key
+                    ? 'bg-gray-900 text-white'
+                    : 'bg-gray-100 text-gray-600'
+                }`}
+              >
+                {tab.count}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Filters */}
+      <div className="flex items-center gap-2.5 mb-5 flex-wrap">
+        {/* Search */}
+        <div className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 bg-white h-9 flex-1 max-w-50">
+          <i className="ti ti-search text-gray-400 text-base" aria-hidden="true" />
+          <input
+            type="text"
+            placeholder={t('vendors.table.search')}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border-none outline-none bg-transparent text-sm w-full placeholder:text-gray-400"
+          />
+        </div>
+
+        {/* Category filter — only for non-all tabs (pending / suspended) */}
+        {!isAllTab && (
+          <VendorCategoryDropdown
+            selected={selectedCategory}
+            onChange={setSelectedCategory}
+          />
+        )}
+
+        {/* Status filter — only for All Vendors tab */}
+        {isAllTab && (
+          <PortalDropdown
+            minWidth={150}
+            animate={false}
+            menuClassName="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden"
+            trigger={({ isOpen, toggle }) => (
+              <button
+                className="flex items-center gap-1.5 h-9 px-3 border border-gray-200 rounded-lg bg-white text-sm cursor-pointer hover:bg-gray-50 whitespace-nowrap"
+                onClick={toggle}
+              >
+                <span className="font-medium">{t('vendors.table.statusFilter')}</span>
+                {activeFilter !== 'all' && (
+                  <span className="text-xs text-indigo-600 font-semibold">
+                    · {activeFilterLabel}
+                  </span>
+                )}
+                <ChevronDown
+                  size={14}
+                  color="black"
+                  className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
+            )}
+          >
+            {({ close }) => (
+              <>
+                {activeFilters.map((f) => (
+                  <div
+                    key={f.key}
+                    className="flex items-center gap-2.5 px-3.5 py-2.5 text-sm cursor-pointer hover:bg-gray-50"
+                    onClick={() => {
+                      setActiveFilter(f.key);
+                      close();
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      readOnly
+                      checked={activeFilter === f.key}
+                      className="accent-black w-3.5 h-3.5"
+                    />
+                    <span>{f.label}</span>
+                  </div>
+                ))}
+              </>
+            )}
+          </PortalDropdown>
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <VendorDesktopTable
+        paginated={paginated}
+        tableHeaders={tableHeaders}
+        colSpan={colSpan}
+        allChecked={allChecked}
+        toggleAll={toggleAll}
+        selectedRows={selectedRows}
+        toggleRow={toggleRow}
+        activeTab={activeTab}
+        isAllTab={isAllTab}
+        openConfirm={openConfirm}
+        toggleVendorActive={toggleVendorActive}
+        isLoading={isLoading}
+      />
+
+      {/* Mobile Card List View */}
+      <VendorMobileList
+        paginated={paginated}
+        allChecked={allChecked}
+        toggleAll={toggleAll}
+        selectedCount={selectedCount}
+        selectedRows={selectedRows}
+        toggleRow={toggleRow}
+        activeTab={activeTab}
+        openConfirm={openConfirm}
+        toggleVendorActive={toggleVendorActive}
+        isLoading={isLoading}
+      />
+
+      {/* Pagination */}
+      <VendorPagination
+        startItem={startItem}
+        endItem={endItem}
+        totalItems={totalItems}
+        page={page}
+        totalPages={totalPages}
+        setPage={setPage}
+        isRtl={isRtl}
+      />
+
+      {/* Bulk Action Bar */}
+      <VendorBulkActionBar
+        selectedCount={selectedCount}
+        selectedRows={selectedRows}
+        activeTab={activeTab}
+        openConfirm={openConfirm}
+        clearSelection={clearSelection}
+      />
+
+      {/* Confirmation modal */}
+      <VendorConfirmModal
+        isOpen={confirmModal.isOpen}
+        type={confirmModal.type}
+        count={confirmModal.ids.length}
+        vendorName={confirmModal.vendorName}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
+    </div>
+  );
+}

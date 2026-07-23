@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Tag, TrendingUp, Gift } from 'lucide-react';
+import { Tag, TrendingUp, Gift, ArrowRight } from 'lucide-react';
 
 interface VoucherItem {
   code: string;
-  type: string;
+  typeKey: string;
+  defaultType: string;
   discount: string;
   usage: string;
   expiry: string;
@@ -12,10 +13,10 @@ interface VoucherItem {
 }
 
 const VOUCHER_DATA: VoucherItem[] = [
-  { code: 'WELCOME20', type: 'Percentage', discount: '20%', usage: '145/500', expiry: '2025-03-01', status: 'active' },
-  { code: 'FREESHIP', type: 'Free Shipping', discount: 'Free', usage: '88/200', expiry: '2025-02-15', status: 'active' },
-  { code: 'SAVE50', type: 'Amount', discount: 'SAR 50', usage: '200/200', expiry: '2025-01-30', status: 'expired' },
-  { code: 'VIP10', type: 'Percentage', discount: '10%', usage: '58/100', expiry: '2025-04-01', status: 'active' },
+  { code: 'WELCOME20', typeKey: 'percentage', defaultType: 'Percentage', discount: '20%', usage: '145/500', expiry: '2025-03-01', status: 'active' },
+  { code: 'FREESHIP', typeKey: 'freeShipping', defaultType: 'Free Shipping', discount: 'Free', usage: '88/200', expiry: '2025-02-15', status: 'active' },
+  { code: 'SAVE50', typeKey: 'amount', defaultType: 'Amount', discount: 'SAR 50', usage: '200/200', expiry: '2025-01-30', status: 'expired' },
+  { code: 'VIP10', typeKey: 'percentage', defaultType: 'Percentage', discount: '10%', usage: '58/100', expiry: '2025-04-01', status: 'active' },
 ];
 
 export default function VoucherOverviewSection() {
@@ -32,12 +33,12 @@ export default function VoucherOverviewSection() {
           to="/vouchers"
           className="text-xs font-semibold text-gray-500 hover:text-gray-900 flex items-center gap-1 transition-colors"
         >
-          {t('dashboardOverview.viewAll', 'View All')} →
+          <span>{t('dashboardOverview.viewAll', 'View All')}</span>
+          <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180 transition-transform" />
         </Link>
       </div>
 
       {/* 3 Stat Cards Row */}
-      {/* Mobile: 2 top cards + 1 full card below / Desktop: 3 cards row */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
         {/* Active Vouchers */}
         <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-2xs flex items-center justify-between">
@@ -65,7 +66,7 @@ export default function VoucherOverviewSection() {
             <span className="text-xs font-normal text-gray-400 ms-1">SAR</span>
           </div>
           <p className="text-[10px] text-gray-400 font-medium mt-1">
-            Platform Marketing Expense
+            {t('dashboardOverview.platformMarketingExpense', 'Platform Marketing Expense')}
           </p>
         </div>
 
@@ -78,8 +79,9 @@ export default function VoucherOverviewSection() {
             </div>
             <p className="text-2xl font-bold text-gray-900">347</p>
           </div>
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-green-100 text-green-700">
-            ⇱ +18%
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-green-100 text-green-700">
+            <TrendingUp className="w-3 h-3 text-green-700" />
+            +18%
           </span>
         </div>
       </div>
@@ -91,12 +93,12 @@ export default function VoucherOverviewSection() {
           <table className="w-full text-xs border-collapse">
             <thead>
               <tr className="bg-gray-50/80 border-b border-gray-100 text-gray-400">
-                <th className="px-5 py-3.5 text-start font-semibold">Code</th>
-                <th className="px-5 py-3.5 text-start font-semibold">Type</th>
-                <th className="px-5 py-3.5 text-start font-semibold">Discount</th>
-                <th className="px-5 py-3.5 text-start font-semibold">Usage</th>
-                <th className="px-5 py-3.5 text-start font-semibold">Expiry</th>
-                <th className="px-5 py-3.5 text-start font-semibold">Status</th>
+                <th className="px-5 py-3.5 text-start font-semibold">{t('dashboardOverview.tableHeaders.code', 'Code')}</th>
+                <th className="px-5 py-3.5 text-start font-semibold">{t('dashboardOverview.tableHeaders.type', 'Type')}</th>
+                <th className="px-5 py-3.5 text-start font-semibold">{t('dashboardOverview.tableHeaders.discount', 'Discount')}</th>
+                <th className="px-5 py-3.5 text-start font-semibold">{t('dashboardOverview.tableHeaders.usage', 'Usage')}</th>
+                <th className="px-5 py-3.5 text-start font-semibold">{t('dashboardOverview.tableHeaders.expiry', 'Expiry')}</th>
+                <th className="px-5 py-3.5 text-start font-semibold">{t('dashboardOverview.tableHeaders.status', 'Status')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 text-gray-700">
@@ -105,7 +107,9 @@ export default function VoucherOverviewSection() {
                   <td className="px-5 py-3.5 font-bold text-gray-900 font-mono">
                     {v.code}
                   </td>
-                  <td className="px-5 py-3.5 text-gray-500 font-medium">{v.type}</td>
+                  <td className="px-5 py-3.5 text-gray-500 font-medium">
+                    {t(`dashboardOverview.tableHeaders.${v.typeKey}`, v.defaultType)}
+                  </td>
                   <td className="px-5 py-3.5 font-bold text-gray-900">{v.discount}</td>
                   <td className="px-5 py-3.5 text-gray-400 font-medium">{v.usage}</td>
                   <td className="px-5 py-3.5 text-gray-400 font-medium">{v.expiry}</td>
@@ -117,7 +121,9 @@ export default function VoucherOverviewSection() {
                           : 'bg-red-100 text-red-600'
                       }`}
                     >
-                      {v.status === 'active' ? 'Active' : 'Expired'}
+                      {v.status === 'active'
+                        ? t('dashboardOverview.tableHeaders.active', 'Active')
+                        : t('dashboardOverview.tableHeaders.expired', 'Expired')}
                     </span>
                   </td>
                 </tr>
@@ -139,20 +145,22 @@ export default function VoucherOverviewSection() {
                       : 'bg-red-100 text-red-600'
                   }`}
                 >
-                  {v.status === 'active' ? 'Active' : 'Expired'}
+                  {v.status === 'active'
+                    ? t('dashboardOverview.tableHeaders.active', 'Active')
+                    : t('dashboardOverview.tableHeaders.expired', 'Expired')}
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-1 text-[11px] text-gray-500 pt-1">
                 <div>
-                  <p className="text-[10px] text-gray-400">Discount Type</p>
-                  <p className="font-semibold text-gray-800">{v.type}</p>
+                  <p className="text-[10px] text-gray-400">{t('dashboardOverview.tableHeaders.discountType', 'Discount Type')}</p>
+                  <p className="font-semibold text-gray-800">{t(`dashboardOverview.tableHeaders.${v.typeKey}`, v.defaultType)}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-gray-400">Discount</p>
+                  <p className="text-[10px] text-gray-400">{t('dashboardOverview.tableHeaders.discount', 'Discount')}</p>
                   <p className="font-bold text-gray-900">{v.discount}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-gray-400">Usage / Expiry</p>
+                  <p className="text-[10px] text-gray-400">{t('dashboardOverview.tableHeaders.usageExpiry', 'Usage / Expiry')}</p>
                   <p className="font-medium text-gray-800">
                     {v.usage} • {v.expiry}
                   </p>

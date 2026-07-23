@@ -1,131 +1,264 @@
-import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import PortalDropdown from '../../../components/ui/PortalDropdown';
 
-interface OrderFiltersProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-  onSortChange: (value: 'newest' | 'oldest') => void;
-  sortNewest: boolean;
+export interface OrderFiltersProps {
+  activeMainTab: 'allOrders' | 'refunds';
+  onMainTabChange: (tab: 'allOrders' | 'refunds') => void;
+  search: string;
+  onSearchChange: (val: string) => void;
+  statusFilter: string;
+  onStatusFilterChange: (val: string) => void;
+  dateFilter: string;
+  onDateFilterChange: (val: string) => void;
+  vendorFilter: string;
+  onVendorFilterChange: (val: string) => void;
 }
 
 export const OrderFilters = ({
-  activeTab,
-  onTabChange,
-  onSortChange,
-  sortNewest,
+  activeMainTab,
+  onMainTabChange,
+  search,
+  onSearchChange,
+  statusFilter,
+  onStatusFilterChange,
+  dateFilter,
+  onDateFilterChange,
+  vendorFilter,
+  onVendorFilterChange,
 }: OrderFiltersProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === 'ar';
 
-  const SORT_OPTIONS = [
-    { value: 'newest' as const, label: t('ordersPage.newestFirst') },
-    { value: 'oldest' as const, label: t('ordersPage.oldestFirst') },
+  const vendorOptions = [
+    'All',
+    'Al-Falah Crafts',
+    'Desert Bloom',
+    'Oasis Tech',
+    'Red Sea Styles',
+    'Dates & Co',
+    'Urban Elegance',
+    'Beauty Lab',
   ];
 
-  const FILTER_TABS = [
-    { key: 'allOrders',  label: t('ordersPage.allOrders') },
-    { key: 'PENDING',    label: t('ordersPage.pending') },
-    { key: 'PROCESSING', label: t('ordersPage.processing') },
-    { key: 'SHIPPED',    label: t('ordersPage.shipped') },
-    { key: 'DELIVERED',  label: t('ordersPage.delivered') },
-    { key: 'CANCELLED',  label: t('ordersPage.cancelled', 'Cancelled') },
+  const dateOptions = [
+    { key: 'last7Days', labelKey: 'ordersPage.dateOptions.last7Days', defaultLabel: 'Last 7 Days' },
+    { key: 'last30Days', labelKey: 'ordersPage.dateOptions.last30Days', defaultLabel: 'Last 30 Days' },
+    { key: 'thisMonth', labelKey: 'ordersPage.dateOptions.thisMonth', defaultLabel: 'This Month' },
+    { key: 'thisYear', labelKey: 'ordersPage.dateOptions.thisYear', defaultLabel: 'This Year' },
   ];
 
-  const currentSort = sortNewest ? 'newest' : 'oldest';
+  const currentStatusDisplay =
+    statusFilter === 'All'
+      ? t('ordersPage.all', 'All')
+      : t(`ordersPage.statuses.${statusFilter}`, statusFilter);
+
+  const currentDateOption = dateOptions.find((d) => d.key === dateFilter);
+  const currentDateDisplay = currentDateOption
+    ? t(currentDateOption.labelKey, currentDateOption.defaultLabel)
+    : t('ordersPage.dateOptions.last30Days', 'Last 30 Days');
+
+  const currentVendorDisplay =
+    vendorFilter === 'All' ? t('ordersPage.all', 'All') : vendorFilter;
 
   return (
-    <div className="flex flex-col gap-4 mb-6 lg:flex-row lg:items-center lg:justify-between">
-      <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
-        {FILTER_TABS.map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => onTabChange(tab.key)}
-            className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
-              activeTab === tab.key
-                ? 'text-white'
-                : 'border border-gray-200 text-gray-500 hover:bg-gray-50'
-            }`}
-          >
-            {/* Active tab background with smooth layout animation */}
-            {activeTab === tab.key && (
-              <motion.div
-                layoutId="orders-active-tab"
-                className="absolute inset-0 bg-gray-900 rounded-lg"
-                transition={{
-                  type: 'spring',
-                  stiffness: 400,
-                  damping: 35,
-                  mass: 0.8,
-                }}
-              />
-            )}
-            <span className="relative z-10">{tab.label}</span>
-          </button>
-        ))}
+    <div>
+      {/* Main Tab Toggle Pills Container (Matching Design Image) */}
+      <div className="inline-flex items-center p-1 bg-[#EBEBEB] rounded-2xl mb-5">
+        <button
+          type="button"
+          onClick={() => onMainTabChange('allOrders')}
+          className={`px-6 py-2.5 rounded-xl text-body-sm font-bold transition-all cursor-pointer ${
+            activeMainTab === 'allOrders'
+              ? 'bg-black text-white shadow-2xs'
+              : 'bg-transparent text-gray-500 hover:text-gray-900'
+          }`}
+        >
+          {t('ordersPage.allOrders', 'All Orders')}
+        </button>
+        <button
+          type="button"
+          onClick={() => onMainTabChange('refunds')}
+          className={`px-6 py-2.5 rounded-xl text-body-sm font-bold transition-all cursor-pointer ${
+            activeMainTab === 'refunds'
+              ? 'bg-black text-white shadow-2xs'
+              : 'bg-transparent text-gray-500 hover:text-gray-900'
+          }`}
+        >
+          {t('ordersPage.refunds', 'Refunds')}
+        </button>
       </div>
 
-      <div className="flex items-center gap-2">
-        <span className="text-gray-400 text-xs">{t('ordersPage.sortBy')}:</span>
+      {/* Filter & Search Bar */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mb-5">
+        {/* Search Input */}
+        <div className="relative flex-1 max-w-sm">
+          <Search
+            size={16}
+            className={`absolute top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none ${
+              isRtl ? 'right-3.5' : 'left-3.5'
+            }`}
+          />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder={
+              activeMainTab === 'allOrders'
+                ? t('ordersPage.searchOrders', 'Search orders...')
+                : t('ordersPage.searchRefunds', 'Search refunds...')
+            }
+            className={`w-full py-2 rounded-xl border border-gray-200 text-body-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all bg-white ${
+              isRtl ? 'pr-10 pl-4' : 'pl-10 pr-4'
+            }`}
+          />
+        </div>
 
-        <PortalDropdown
-          align="right"
-          minWidth={160}
-          animate
-          menuClassName="bg-white rounded-lg border border-gray-200 shadow-lg py-1 overflow-hidden"
-          trigger={({ isOpen, toggle }) => (
-            <button
-              onClick={toggle}
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer sm:w-fit w-full justify-center"
-            >
-              {sortNewest
-                ? t('ordersPage.newestFirst')
-                : t('ordersPage.oldestFirst')}
-              <motion.span
-                animate={{ rotate: isOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
+        {/* Dropdowns Row */}
+        <div className="grid grid-cols-3 gap-2 md:flex md:items-center md:gap-3 shrink-0">
+          {/* Status Dropdown */}
+          <PortalDropdown
+            minWidth={150}
+            animate={false}
+            menuClassName="bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden z-50 py-1"
+            trigger={({ isOpen, toggle }) => (
+              <button
+                type="button"
+                onClick={toggle}
+                className="flex items-center justify-between md:justify-start gap-2 py-2 px-3 rounded-xl border border-gray-200 text-body-sm text-gray-700 focus:outline-none hover:border-gray-300 transition-all bg-white cursor-pointer whitespace-nowrap w-full md:w-auto"
               >
-                <ChevronDown size={14} className="text-gray-400" />
-              </motion.span>
-            </button>
-          )}
-        >
-          {({ close }) => (
-            <>
-              {SORT_OPTIONS.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => {
-                    onSortChange(option.value);
-                    close();
-                  }}
-                  className={`w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-gray-50 ${
-                    option.value === currentSort
-                      ? 'bg-gray-50 font-medium text-gray-900'
-                      : 'text-gray-600'
+                <span className="truncate">
+                  {t('ordersPage.statusFilter', 'Status')}: {currentStatusDisplay}
+                </span>
+                <ChevronDown
+                  size={14}
+                  className={`text-gray-400 shrink-0 transition-transform duration-200 ${
+                    isOpen ? 'rotate-180' : ''
                   }`}
-                >
-                  {option.label}
-                  {option.value === currentSort && (
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="ml-auto text-gray-900"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  )}
-                </button>
-              ))}
-            </>
-          )}
-        </PortalDropdown>
+                />
+              </button>
+            )}
+          >
+            {({ close }) => (
+              <div>
+                {(activeMainTab === 'allOrders'
+                  ? ['All', 'Delivered', 'Canceled', 'Shipped', 'Pending', 'Processing']
+                  : ['All', 'Pending', 'Approved', 'Rejected']
+                ).map((st) => (
+                  <button
+                    key={st}
+                    type="button"
+                    onClick={() => {
+                      onStatusFilterChange(st);
+                      close();
+                    }}
+                    className={`w-full text-start px-3.5 py-2 text-xs font-medium transition-colors hover:bg-gray-50 cursor-pointer ${
+                      statusFilter === st
+                        ? 'bg-gray-100 text-gray-900 font-semibold'
+                        : 'text-gray-700'
+                    }`}
+                  >
+                    {st === 'All'
+                      ? t('ordersPage.all', 'All')
+                      : t(`ordersPage.statuses.${st}`, st)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </PortalDropdown>
+
+          {/* Date Dropdown */}
+          <PortalDropdown
+            minWidth={165}
+            animate={false}
+            menuClassName="bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden z-50 py-1"
+            trigger={({ isOpen, toggle }) => (
+              <button
+                type="button"
+                onClick={toggle}
+                className="flex items-center justify-between md:justify-start gap-2 py-2 px-3 rounded-xl border border-gray-200 text-body-sm text-gray-700 focus:outline-none hover:border-gray-300 transition-all bg-white cursor-pointer whitespace-nowrap w-full md:w-auto"
+              >
+                <span className="truncate">
+                  {t('ordersPage.dateFilter', 'Date')}: {currentDateDisplay}
+                </span>
+                <ChevronDown
+                  size={14}
+                  className={`text-gray-400 shrink-0 transition-transform duration-200 ${
+                    isOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+            )}
+          >
+            {({ close }) => (
+              <div>
+                {dateOptions.map((d) => (
+                  <button
+                    key={d.key}
+                    type="button"
+                    onClick={() => {
+                      onDateFilterChange(d.key);
+                      close();
+                    }}
+                    className={`w-full text-start px-3.5 py-2 text-xs font-medium transition-colors hover:bg-gray-50 cursor-pointer ${
+                      dateFilter === d.key
+                        ? 'bg-gray-100 text-gray-900 font-semibold'
+                        : 'text-gray-700'
+                    }`}
+                  >
+                    {t(d.labelKey, d.defaultLabel)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </PortalDropdown>
+
+          {/* Vendor Dropdown */}
+          <PortalDropdown
+            minWidth={160}
+            animate={false}
+            menuClassName="bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden z-50 py-1"
+            trigger={({ isOpen, toggle }) => (
+              <button
+                type="button"
+                onClick={toggle}
+                className="flex items-center justify-between md:justify-start gap-2 py-2 px-3 rounded-xl border border-gray-200 text-body-sm text-gray-700 focus:outline-none hover:border-gray-300 transition-all bg-white cursor-pointer whitespace-nowrap w-full md:w-auto"
+              >
+                <span className="truncate">
+                  {t('ordersPage.vendorFilter', 'Vendor')}: {currentVendorDisplay}
+                </span>
+                <ChevronDown
+                  size={14}
+                  className={`text-gray-400 shrink-0 transition-transform duration-200 ${
+                    isOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+            )}
+          >
+            {({ close }) => (
+              <div>
+                {vendorOptions.map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => {
+                      onVendorFilterChange(v);
+                      close();
+                    }}
+                    className={`w-full text-start px-3.5 py-2 text-xs font-medium transition-colors hover:bg-gray-50 cursor-pointer ${
+                      vendorFilter === v
+                        ? 'bg-gray-100 text-gray-900 font-semibold'
+                        : 'text-gray-700'
+                    }`}
+                  >
+                    {v === 'All' ? t('ordersPage.all', 'All') : v}
+                  </button>
+                ))}
+              </div>
+            )}
+          </PortalDropdown>
+        </div>
       </div>
     </div>
   );
