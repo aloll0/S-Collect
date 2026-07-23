@@ -137,7 +137,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             <h1 className="text-2xl font-bold">
               {i18n.language === 'ar' ? `مرحباً, ${userName} 👋` : `Hello, ${userName} 👋`}
             </h1>
-            <p className="text-sm text-gray-400">{today}</p>
+            <p className="text-sm text-gray-200">{today}</p>
           </div>
         </div>
 
@@ -152,7 +152,8 @@ const Header = ({ onMenuClick }: HeaderProps) => {
 
           <Link
             to="/login"
-            className="hidden text-2xl hover:text-gray-300 sidebar:block"
+            aria-label={t('header.account')}
+            className="hidden text-2xl hover:text-gray-300 sidebar:block focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
           >
             <User />
           </Link>

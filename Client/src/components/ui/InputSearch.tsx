@@ -25,6 +25,7 @@ const InputSearch = () => {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          aria-label={t('search.products')}
           className="w-full bg-[var(--gray-50)] pl-8 pr-3 py-2 rounded-lg text-[var(--gray-700)] outline-none focus:ring-2 focus:ring-gray-600"
         />
 
