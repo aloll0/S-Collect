@@ -11,6 +11,7 @@ import {
   type UpdateShippingPayload,
 } from '../../../services/shipping';
 import type { ShippingSettingsValues, Region } from '../Shippingsettingsform';
+import { getErrorMessage } from '../../../types/api';
 
 export const VENDOR_SHIPPING_QUERY_KEY = ['vendorShippingSettings'];
 
@@ -73,10 +74,9 @@ export const useUpdateVendorShipping = () => {
         t('settings.toast.shippingSaved', { defaultValue: 'Shipping settings saved successfully' })
       );
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       console.error('Failed to save shipping settings:', err);
-      const msg =
-        err?.response?.data?.message || err?.message || 'Failed to save shipping settings';
+      const msg = getErrorMessage(err, 'Failed to save shipping settings');
       toast.error(msg);
     },
   });
@@ -90,10 +90,9 @@ export const useUpdateFlatShippingRate = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: VENDOR_SHIPPING_QUERY_KEY });
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       console.error('Failed to update flat shipping rate:', err);
-      const msg =
-        err?.response?.data?.message || err?.message || 'Failed to update flat shipping rate';
+      const msg = getErrorMessage(err, 'Failed to update flat shipping rate');
       toast.error(msg);
     },
   });
@@ -108,10 +107,9 @@ export const useUpsertZoneShippingRate = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: VENDOR_SHIPPING_QUERY_KEY });
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       console.error('Failed to upsert zone shipping rate:', err);
-      const msg =
-        err?.response?.data?.message || err?.message || 'Failed to update zone shipping rate';
+      const msg = getErrorMessage(err, 'Failed to update zone shipping rate');
       toast.error(msg);
     },
   });

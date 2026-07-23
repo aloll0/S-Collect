@@ -15,6 +15,7 @@ import { getPasswordStrength, cn, isValidEmail } from './utils';
 import type { AccountSettingsData, PasswordData } from './types';
 import { changeEmail, confirmChangeEmail } from '../../services/auth';
 import { useChangePassword } from './hooks/useChangePassword';
+import { getErrorMessage } from '../../types/api';
 
 type AccountSettingsFormValues = AccountSettingsData & PasswordData;
 
@@ -71,8 +72,8 @@ export function AccountSettingsForm({
     try {
       await changeEmail(newEmail);
       setEmailStep('verify');
-    } catch (err: any) {
-      setEmailError(err?.response?.data?.message || err?.message || 'Failed to send email change request');
+    } catch (err: unknown) {
+      setEmailError(getErrorMessage(err, 'Failed to send email change request'));
     } finally {
       setEmailLoading(false);
     }
@@ -97,8 +98,8 @@ export function AccountSettingsForm({
         setOtpCode('');
         setEmailSuccessMsg(null);
       }, 1500);
-    } catch (err: any) {
-      setEmailError(err?.response?.data?.message || err?.message || 'Invalid or expired OTP code');
+    } catch (err: unknown) {
+      setEmailError(getErrorMessage(err, 'Invalid or expired OTP code'));
     } finally {
       setEmailLoading(false);
     }
