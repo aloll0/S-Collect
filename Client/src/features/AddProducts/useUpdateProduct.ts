@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateProductFull, setProductThumbnail } from '../../services/products';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { ApiAxiosError, ValidationErrorItem } from '../../types/api';
+import type { ApiAxiosError, ValidationErrorItem } from '../../types/api';
 import axios from 'axios';
 
 export const useUpdateProduct = () => {

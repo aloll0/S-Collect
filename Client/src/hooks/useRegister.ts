@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
-import { UseFormSetError } from 'react-hook-form';
+import type { UseFormSetError } from 'react-hook-form';
 import axios from 'axios';
 import { applyVendorOnboarding } from '../services/auth';
-import { ApiAxiosError, ValidationErrorItem } from '../types/api';
+import type { ApiAxiosError, ValidationErrorItem } from '../types/api';
 
 export interface RegisterFormData {
   firstName: string;
