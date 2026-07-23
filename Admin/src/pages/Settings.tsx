@@ -16,7 +16,6 @@ import { SuccessToast } from '../features/settings/shared';
 import { cn } from '../features/settings/utils';
 import { StoreProfileForm } from '../features/settings/StoreProfileForm';
 import type { StoreProfileData } from '../features/settings/types';
-import { getVendorOnboardingStatus } from '../services/auth';
 import {
   getVendorShippingSettings,
   updateFlatShippingRate,
@@ -40,6 +39,20 @@ const defaultStoreProfile: StoreProfileData = {
   phoneNumber: '',
   storeLogoUrl: null,
   storeLogoFileName: null,
+};
+
+interface ApiErrorResponse {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+}
+
+const getErrorMessage = (err: unknown, fallback: string) => {
+  const error = err as ApiErrorResponse;
+  return error.response?.data?.message || error.message || fallback;
 };
 
 function TabBtn({
@@ -91,28 +104,15 @@ export default function SettingsPage({
   const [shippingLoading, setShippingLoading] = useState(true);
   const [shippingSaving, setShippingSaving] = useState(false);
 
-  // Fetch Store Profile & Shipping Settings
+  // Fetch Shipping Settings
   useEffect(() => {
     let isMounted = true;
     const loadData = async () => {
       try {
-        const [onboardingData, shippingData] = await Promise.allSettled([
-          getVendorOnboardingStatus(),
-          getVendorShippingSettings(),
-        ]);
+        const shippingData = await getVendorShippingSettings();
 
-        if (isMounted && onboardingData.status === 'fulfilled' && onboardingData.value) {
-          const v = onboardingData.value;
-          setFetchedStoreProfile({
-            storeName: v.storeName || '',
-            storeDescription: typeof v.storeDescription === 'string' ? v.storeDescription : '',
-            publicEmail: v.email || '',
-            phoneNumber: v.phoneNumber || '',
-          });
-        }
-
-        if (isMounted && shippingData.status === 'fulfilled' && shippingData.value) {
-          const s = shippingData.value;
+        if (isMounted && shippingData) {
+          const s = shippingData;
           const regRates: Record<string, number | undefined> = {};
           if (s.zoneRates && Array.isArray(s.zoneRates)) {
             s.zoneRates.forEach((zr) => {
@@ -178,10 +178,9 @@ export default function SettingsPage({
       setShippingConfigured(true);
       onShippingSave?.(values);
       setToast(t('settings.toast.shippingSaved') || 'Shipping settings saved successfully');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to save shipping settings:', err);
-      const msg = err?.response?.data?.message || err?.message || 'Failed to save shipping settings';
-      setErrorToast(msg);
+      setErrorToast(getErrorMessage(err, 'Failed to save shipping settings'));
     } finally {
       setShippingSaving(false);
     }
