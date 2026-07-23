@@ -210,7 +210,7 @@ export const CategoryFormModal = ({
   onClose,
   onSave,
 }: CategoryFormModalProps) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [nameEn, setNameEn] = useState(category?.nameEn ?? '');
   const [nameAr, setNameAr] = useState(category?.nameAr ?? '');
   const [slug, setSlug] = useState(category?.slug ?? '');
