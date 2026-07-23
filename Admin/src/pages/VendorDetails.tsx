@@ -162,7 +162,7 @@ export default function VendorDetails() {
           <Link to="/vendors" className="hover:text-gray-700 transition-colors">
             {t('vendors.details.breadcrumbParent')}
           </Link>
-          <ChevronRight size={14} className="text-gray-400 flex-shrink-0" />
+          <ChevronRight size={14} className="text-gray-400 shrink-0" />
           <span className="text-gray-900 font-medium">
             {t('vendors.details.breadcrumbCurrent')}
           </span>
@@ -197,7 +197,7 @@ export default function VendorDetails() {
         {/* ── Vendor header card ── */}
         <Card className="p-5 mb-4">
           <div className="flex items-start gap-4">
-            <div className="w-14 h-14 rounded-full bg-gray-800 flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
+            <div className="w-14 h-14 rounded-full bg-gray-800 flex items-center justify-center text-white text-lg font-bold shrink-0">
               {initials}
             </div>
 
@@ -507,7 +507,7 @@ export default function VendorDetails() {
                       {product.name}
                     </span>
                     <span
-                      className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold flex-shrink-0 ${
+                      className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold shrink-0 ${
                         product.status === 'active'
                           ? 'bg-green-50 text-green-700'
                           : 'bg-gray-100 text-gray-500'

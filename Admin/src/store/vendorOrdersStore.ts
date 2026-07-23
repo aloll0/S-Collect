@@ -33,7 +33,7 @@ const DEFAULT_TO   = '2026-12-31';
 
 // ── Store ────────────────────────────────────────────────────────────────────
 
-export const useVendorOrdersStore = create<VendorOrdersStore>((set, get) => ({
+export const useVendorOrdersStore = create<VendorOrdersStore>((set) => ({
   appliedFrom: DEFAULT_FROM,
   appliedTo:   DEFAULT_TO,
   statusFilter: 'all',
