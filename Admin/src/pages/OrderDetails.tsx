@@ -232,7 +232,7 @@ export default function OrderDetailsPage() {
                 {/* Connecting line */}
                 <div
                   className={`absolute top-2 bottom-2 w-0.5 bg-gray-200 ${
-                    isRtl ? 'right-[7px]' : 'left-[7px]'
+                    isRtl ? 'right-1.75' : 'left-1.75'
                   }`}
                 />
                 
@@ -650,7 +650,7 @@ export default function OrderDetailsPage() {
                   {/* Vertical connector line */}
                   <div
                     className={`absolute top-2 bottom-2 w-0.5 bg-gray-200 ${
-                      isRtl ? 'right-[7px]' : 'left-[7px]'
+                      isRtl ? 'right-1.75' : 'left-1.75'
                     }`}
                   />
 

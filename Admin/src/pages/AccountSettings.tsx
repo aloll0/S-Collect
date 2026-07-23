@@ -54,7 +54,7 @@ export default function AccountSettingsPage({
         </nav>
       </div>
 
-      <div className="settings-surface-enter settings-stagger-1 p-2 md:p-4 md:px-8 md:py-7 max-w-[720px]">
+      <div className="settings-surface-enter settings-stagger-1 p-2 md:p-4 md:px-8 md:py-7 max-w-180">
         <AccountSettingsForm
           initialData={accountData}
           onSave={onAccountSettingsSave}

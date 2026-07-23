@@ -440,7 +440,7 @@ export default function ReturnRequestDetailsPage() {
           <div className="w-full max-w-md bg-white rounded-2xl p-6 shadow-2xl relative">
             <div className="flex justify-center mb-4">
               <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
-                <Check size={24} className="stroke-[3]" />
+                <Check size={24} className="stroke-3" />
               </div>
             </div>
             <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
