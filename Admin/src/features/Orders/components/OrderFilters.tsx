@@ -42,11 +42,24 @@ export const OrderFilters = ({
   ];
 
   const dateOptions = [
-    { key: 'last7Days', label: 'Last 7 Days' },
-    { key: 'last30Days', label: 'Last 30 Days' },
-    { key: 'thisMonth', label: 'This Month' },
-    { key: 'thisYear', label: 'This Year' },
+    { key: 'last7Days', labelKey: 'ordersPage.dateOptions.last7Days', defaultLabel: 'Last 7 Days' },
+    { key: 'last30Days', labelKey: 'ordersPage.dateOptions.last30Days', defaultLabel: 'Last 30 Days' },
+    { key: 'thisMonth', labelKey: 'ordersPage.dateOptions.thisMonth', defaultLabel: 'This Month' },
+    { key: 'thisYear', labelKey: 'ordersPage.dateOptions.thisYear', defaultLabel: 'This Year' },
   ];
+
+  const currentStatusDisplay =
+    statusFilter === 'All'
+      ? t('ordersPage.all', 'All')
+      : t(`ordersPage.statuses.${statusFilter}`, statusFilter);
+
+  const currentDateOption = dateOptions.find((d) => d.key === dateFilter);
+  const currentDateDisplay = currentDateOption
+    ? t(currentDateOption.labelKey, currentDateOption.defaultLabel)
+    : t('ordersPage.dateOptions.last30Days', 'Last 30 Days');
+
+  const currentVendorDisplay =
+    vendorFilter === 'All' ? t('ordersPage.all', 'All') : vendorFilter;
 
   return (
     <div>
@@ -114,7 +127,9 @@ export const OrderFilters = ({
                 onClick={toggle}
                 className="flex items-center justify-between md:justify-start gap-2 py-2 px-3 rounded-xl border border-gray-200 text-body-sm text-gray-700 focus:outline-none hover:border-gray-300 transition-all bg-white cursor-pointer whitespace-nowrap w-full md:w-auto"
               >
-                <span className="truncate">Status: {statusFilter}</span>
+                <span className="truncate">
+                  {t('ordersPage.statusFilter', 'Status')}: {currentStatusDisplay}
+                </span>
                 <ChevronDown
                   size={14}
                   className={`text-gray-400 shrink-0 transition-transform duration-200 ${
@@ -143,7 +158,9 @@ export const OrderFilters = ({
                         : 'text-gray-700'
                     }`}
                   >
-                    {st === 'All' ? 'All' : st}
+                    {st === 'All'
+                      ? t('ordersPage.all', 'All')
+                      : t(`ordersPage.statuses.${st}`, st)}
                   </button>
                 ))}
               </div>
@@ -155,25 +172,23 @@ export const OrderFilters = ({
             minWidth={165}
             animate={false}
             menuClassName="bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden z-50 py-1"
-            trigger={({ isOpen, toggle }) => {
-              const currentLabel =
-                dateOptions.find((d) => d.key === dateFilter)?.label || 'Last 30 Days';
-              return (
-                <button
-                  type="button"
-                  onClick={toggle}
-                  className="flex items-center justify-between md:justify-start gap-2 py-2 px-3 rounded-xl border border-gray-200 text-body-sm text-gray-700 focus:outline-none hover:border-gray-300 transition-all bg-white cursor-pointer whitespace-nowrap w-full md:w-auto"
-                >
-                  <span className="truncate">Date: {currentLabel}</span>
-                  <ChevronDown
-                    size={14}
-                    className={`text-gray-400 shrink-0 transition-transform duration-200 ${
-                      isOpen ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-              );
-            }}
+            trigger={({ isOpen, toggle }) => (
+              <button
+                type="button"
+                onClick={toggle}
+                className="flex items-center justify-between md:justify-start gap-2 py-2 px-3 rounded-xl border border-gray-200 text-body-sm text-gray-700 focus:outline-none hover:border-gray-300 transition-all bg-white cursor-pointer whitespace-nowrap w-full md:w-auto"
+              >
+                <span className="truncate">
+                  {t('ordersPage.dateFilter', 'Date')}: {currentDateDisplay}
+                </span>
+                <ChevronDown
+                  size={14}
+                  className={`text-gray-400 shrink-0 transition-transform duration-200 ${
+                    isOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+            )}
           >
             {({ close }) => (
               <div>
@@ -191,7 +206,7 @@ export const OrderFilters = ({
                         : 'text-gray-700'
                     }`}
                   >
-                    {d.label}
+                    {t(d.labelKey, d.defaultLabel)}
                   </button>
                 ))}
               </div>
@@ -209,7 +224,9 @@ export const OrderFilters = ({
                 onClick={toggle}
                 className="flex items-center justify-between md:justify-start gap-2 py-2 px-3 rounded-xl border border-gray-200 text-body-sm text-gray-700 focus:outline-none hover:border-gray-300 transition-all bg-white cursor-pointer whitespace-nowrap w-full md:w-auto"
               >
-                <span className="truncate">Vendor: {vendorFilter}</span>
+                <span className="truncate">
+                  {t('ordersPage.vendorFilter', 'Vendor')}: {currentVendorDisplay}
+                </span>
                 <ChevronDown
                   size={14}
                   className={`text-gray-400 shrink-0 transition-transform duration-200 ${
@@ -235,7 +252,7 @@ export const OrderFilters = ({
                         : 'text-gray-700'
                     }`}
                   >
-                    {v === 'All' ? 'All' : v}
+                    {v === 'All' ? t('ordersPage.all', 'All') : v}
                   </button>
                 ))}
               </div>

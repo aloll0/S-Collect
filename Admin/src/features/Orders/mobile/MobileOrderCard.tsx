@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { StatusBadge } from '../components/OrdersTable';
 import type { TableItem } from '../components/OrdersTable';
 
@@ -13,6 +14,8 @@ export const MobileOrderCard: React.FC<MobileOrderCardProps> = ({
   type,
   onViewDetails,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-white rounded-2xl border border-gray-200/90 p-4 shadow-2xs mb-3">
       {/* Top Card Row */}
@@ -26,38 +29,38 @@ export const MobileOrderCard: React.FC<MobileOrderCardProps> = ({
         {type === 'refunds' ? (
           <>
             <div className="flex justify-between">
-              <span className="text-gray-400">Order ID</span>
+              <span className="text-gray-400">{t('ordersPage.orderId', 'Order ID')}</span>
               <span className="font-bold text-gray-900">{item.orderId}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Customer</span>
+              <span className="text-gray-400">{t('ordersPage.customer', 'Customer')}</span>
               <span className="font-medium text-gray-800">{item.customer}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Reason</span>
+              <span className="text-gray-400">{t('ordersPage.reason', 'Reason')}</span>
               <span className="text-gray-600 text-end max-w-45">{item.reason}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Date</span>
+              <span className="text-gray-400">{t('ordersPage.date', 'Date')}</span>
               <span className="text-gray-500">{item.date}</span>
             </div>
           </>
         ) : (
           <>
             <div className="flex justify-between">
-              <span className="text-gray-400">Customer</span>
+              <span className="text-gray-400">{t('ordersPage.customer', 'Customer')}</span>
               <span className="font-medium text-gray-800">{item.customer}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Vendor</span>
+              <span className="text-gray-400">{t('ordersPage.vendor', 'Vendor')}</span>
               <span className="text-gray-600">{item.vendor}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Sub-orders</span>
+              <span className="text-gray-400">{t('ordersPage.subOrders', 'Sub-orders')}</span>
               <span className="text-gray-600">{item.subOrdersCount}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Date</span>
+              <span className="text-gray-400">{t('ordersPage.date', 'Date')}</span>
               <span className="text-gray-500">{item.date}</span>
             </div>
           </>
@@ -74,7 +77,7 @@ export const MobileOrderCard: React.FC<MobileOrderCardProps> = ({
           onClick={() => onViewDetails(item)}
           className="text-blue-600 font-semibold text-xs sm:text-sm hover:underline cursor-pointer"
         >
-          View details
+          {t('ordersPage.viewDetails', 'View details')}
         </button>
       </div>
     </div>

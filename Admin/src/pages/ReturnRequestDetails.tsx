@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ChevronRight, Check, X, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
 // ── Status Pill Badge ───────────────────────────────────────────────────────
 const StatusBadge = ({ status }: { status: string }) => {
+  const { t } = useTranslation();
   let badgeStyle = 'bg-gray-100 text-gray-700';
 
   if (status === 'Approved' || status === 'COMPLETED') {
@@ -18,7 +20,7 @@ const StatusBadge = ({ status }: { status: string }) => {
 
   return (
     <span className={`inline-block px-3.5 py-1.5 rounded-full text-xs font-semibold ${badgeStyle}`}>
-      {status}
+      {t(`ordersPage.statuses.${status}`, status)}
     </span>
   );
 };
@@ -27,6 +29,8 @@ export default function ReturnRequestDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { isMobile } = useBreakpoint();
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === 'ar';
 
   const refundIdCode = id ? (id.startsWith('#') ? id : `#${id}`) : '#REF-77492-CS';
 
@@ -51,17 +55,17 @@ export default function ReturnRequestDetailsPage() {
       <div className="sidebar-page-container-header bg-white border-b border-gray-200/80 py-4">
         <div className="flex flex-col gap-1">
           <h1 className="font-bold text-gray-900 heading-page-title">
-            Refund Request Details
+            {t('ordersPage.refunds', 'Refunds')}
           </h1>
           <div className="flex items-center gap-1.5 text-xs text-gray-400">
             <span
               onClick={() => navigate('/incoming-orders')}
               className="hover:underline cursor-pointer text-gray-500 font-medium"
             >
-              Refunds
+              {t('ordersPage.refunds', 'Refunds')}
             </span>
-            <ChevronRight size={12} />
-            <span className="text-gray-900 font-semibold">Request Details</span>
+            <ChevronRight size={12} className={isRtl ? 'rotate-180' : ''} />
+            <span className="text-gray-900 font-semibold">{refundIdCode}</span>
           </div>
         </div>
       </div>
@@ -74,8 +78,8 @@ export default function ReturnRequestDetailsPage() {
           onClick={() => navigate(-1)}
           className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-semibold mb-5 hover:underline cursor-pointer"
         >
-          <ArrowLeft size={14} />
-          <span>Back to Refunds</span>
+          <ArrowLeft size={14} className={isRtl ? 'rotate-180' : ''} />
+          <span>{t('ordersPage.backToOrders', 'Back to Orders')}</span>
         </button>
 
         {isMobile ? (

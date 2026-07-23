@@ -1,10 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface OrdersSkeletonProps {
   isMobile?: boolean;
 }
 
 export const OrdersSkeleton: React.FC<OrdersSkeletonProps> = ({ isMobile = false }) => {
+  const { t } = useTranslation();
+
   if (isMobile) {
     return (
       <div className="space-y-3">
@@ -46,14 +49,14 @@ export const OrdersSkeleton: React.FC<OrdersSkeletonProps> = ({ isMobile = false
         <table className="w-full text-start border-collapse">
           <thead>
             <tr className="border-b border-gray-100 bg-white text-xs font-bold text-gray-900">
-              <th className="py-4 px-4 text-start font-bold">Order ID</th>
-              <th className="py-4 px-4 text-start font-bold">Customer</th>
-              <th className="py-4 px-4 text-start font-bold">Vendor</th>
-              <th className="py-4 px-4 text-start font-bold">Total (SAR)</th>
-              <th className="py-4 px-4 text-start font-bold">Status</th>
-              <th className="py-4 px-4 text-start font-bold">Sub-orders</th>
-              <th className="py-4 px-4 text-start font-bold">Date</th>
-              <th className="py-4 px-4 text-start font-bold">Actions</th>
+              <th className="py-4 px-4 text-start font-bold">{t('ordersPage.orderId', 'Order ID')}</th>
+              <th className="py-4 px-4 text-start font-bold">{t('ordersPage.customer', 'Customer')}</th>
+              <th className="py-4 px-4 text-start font-bold">{t('ordersPage.vendor', 'Vendor')}</th>
+              <th className="py-4 px-4 text-start font-bold">{t('ordersPage.totalSar', 'Total (SAR)')}</th>
+              <th className="py-4 px-4 text-start font-bold">{t('ordersPage.status', 'Status')}</th>
+              <th className="py-4 px-4 text-start font-bold">{t('ordersPage.subOrders', 'Sub-orders')}</th>
+              <th className="py-4 px-4 text-start font-bold">{t('ordersPage.date', 'Date')}</th>
+              <th className="py-4 px-4 text-start font-bold">{t('ordersPage.actions', 'Actions')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 text-sm">

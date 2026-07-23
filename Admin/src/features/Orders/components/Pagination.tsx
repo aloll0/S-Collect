@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface PaginationProps {
   currentPage: number;
@@ -18,14 +19,24 @@ export const Pagination: React.FC<PaginationProps> = ({
   onPageChange,
   isMobile = false,
 }) => {
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === 'ar';
+
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+  const PrevIcon = isRtl ? ChevronRight : ChevronLeft;
+  const NextIcon = isRtl ? ChevronLeft : ChevronRight;
 
   if (isMobile) {
     return (
       <div className="flex items-center justify-between mt-4 px-1">
         <span className="text-xs text-gray-500 font-medium">
-          Showing {startItem}-{endItem} of {totalItems}
+          {t('ordersPage.showingItems', 'Showing {{start}}-{{end}} of {{total}} items', {
+            start: startItem,
+            end: endItem,
+            total: totalItems,
+          })}
         </span>
         <div className="flex items-center gap-1">
           <button
@@ -34,7 +45,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             disabled={currentPage === 1}
             className="w-8 h-8 rounded-lg border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           >
-            <ChevronLeft size={16} />
+            <PrevIcon size={16} />
           </button>
           <button
             type="button"
@@ -42,7 +53,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             disabled={currentPage === totalPages}
             className="w-8 h-8 rounded-lg border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           >
-            <ChevronRight size={16} />
+            <NextIcon size={16} />
           </button>
         </div>
       </div>
@@ -52,7 +63,11 @@ export const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="flex items-center justify-between px-5 py-4 border-t border-gray-100">
       <span className="text-xs sm:text-sm text-gray-500 font-medium">
-        Showing {startItem}-{endItem} of {totalItems} items
+        {t('ordersPage.showingItems', 'Showing {{start}}-{{end}} of {{total}} items', {
+          start: startItem,
+          end: endItem,
+          total: totalItems,
+        })}
       </span>
       <div className="flex items-center gap-1.5">
         <button
@@ -61,7 +76,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           disabled={currentPage === 1}
           className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
-          <ChevronLeft size={16} />
+          <PrevIcon size={16} />
         </button>
         {Array.from({ length: totalPages }).map((_, idx) => {
           const pageNum = idx + 1;
@@ -86,7 +101,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           disabled={currentPage === totalPages}
           className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
-          <ChevronRight size={16} />
+          <NextIcon size={16} />
         </button>
       </div>
     </div>
