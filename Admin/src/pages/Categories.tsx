@@ -30,7 +30,7 @@ import {
 
 // ─── Main Categories Page ──────────────────────────────────────────────────────
 const Categories = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isMobile } = useBreakpoint();
 
   // ── Store State ──
@@ -113,37 +113,50 @@ const Categories = () => {
 
       <CategoryHeader />
     </div>
-    <div className="flex-1 overflow-y-auto py-6 sidebar-page-container">
+    <div className={`flex-1 overflow-y-auto pt-6 sidebar-page-container transition-all ${selectedIds.size > 0 ? 'pb-28' : 'pb-6'}`}>
       {/* Page Header */}
 
       {/* Search & Filters */}
       <CategoryFilterBar />
 
       {/* Content */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        {isMobile ? (
-          <div>
-            <AnimatePresence>
-              {paginated.map((cat) => (
-                <MobileCard
-                  key={cat.id}
-                  category={cat}
-                  selected={selectedIds.has(cat.id)}
-                  onSelect={() => handleSelectOne(cat.id)}
-                  onEdit={openEdit}
-                  onDelete={openDelete}
-                  onToggleActive={handleToggleActiveRequest}
-                />
-              ))}
-            </AnimatePresence>
-            {paginated.length === 0 && (
-              <div className="py-16 text-center">
-                <Tag size={36} className="mx-auto text-gray-300 mb-3" />
-                <p className="text-gray-500 text-sm">No categories found</p>
-              </div>
-            )}
-          </div>
-        ) : (
+      {isMobile ? (
+        <div className="space-y-3">
+          <AnimatePresence>
+            {paginated.map((cat) => (
+              <MobileCard
+                key={cat.id}
+                category={cat}
+                selected={selectedIds.has(cat.id)}
+                onSelect={() => handleSelectOne(cat.id)}
+                onEdit={openEdit}
+                onDelete={openDelete}
+                onToggleActive={handleToggleActiveRequest}
+              />
+            ))}
+          </AnimatePresence>
+
+          {paginated.length === 0 && (
+            <div className="py-16 text-center bg-white rounded-2xl border border-gray-100 shadow-sm">
+              <Tag size={36} className="mx-auto text-gray-300 mb-3" />
+              <p className="text-gray-500 text-sm">{t('categories.emptyState')}</p>
+            </div>
+          )}
+
+          {filtered.length > 0 && (
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mt-3">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={filtered.length}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <CategoryTable
               categories={paginated}
@@ -155,19 +168,18 @@ const Categories = () => {
               onToggleActive={handleToggleActiveRequest}
             />
           </DndContext>
-        )}
 
-        {/* Pagination */}
-        {filtered.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            totalItems={filtered.length}
-            itemsPerPage={ITEMS_PER_PAGE}
-            onPageChange={setCurrentPage}
-          />
-        )}
-      </div>
+          {filtered.length > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={filtered.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              onPageChange={setCurrentPage}
+            />
+          )}
+        </div>
+      )}
 
       {/* Bulk Delete Bottom Navbar */}
       <BulkNavbar
