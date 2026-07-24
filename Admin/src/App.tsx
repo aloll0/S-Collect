@@ -13,9 +13,8 @@ import './App.css';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import Orders from './pages/Orders.js';
-import SubOrderDetails from './pages/SubOrderDetails.js';
+import OrderDetails from './pages/OrderDetails.js';
 import ProductDetails from './pages/ProductDetails.js';
-import Receivables from './pages/Receivables.js';
 
 import ReturnRequests from './pages/ReturnRequests.js';
 import ReturnRequestDetails from './pages/ReturnRequestDetails.js';
@@ -31,7 +30,6 @@ import Transactions from './pages/Transactions.js';
 import Categories from './pages/Categories.js';
 import Products from './pages/Products.js';
 import Reviews from './pages/Reviews.js';
-import OrdersListing from './pages/OrdersListing.js';
 import Buyers from './pages/Buyers.js';
 import AdminSettings from './pages/AdminSettings.js';
 
@@ -55,11 +53,10 @@ function App() {
           <Route path="/management" element={<Management />} />
           <Route path="/add-product" element={<AddProduct />} />
           <Route path="/product-details" element={<ProductDetails />} />
-          <Route path="/receivables" element={<Receivables />} />
           <Route path="/incoming-orders" element={<Orders />} />
           <Route path="/returns" element={<ReturnRequests />} />
           <Route path="/returns/:id" element={<ReturnRequestDetails />} />
-          <Route path="/incoming-orders/:id" element={<SubOrderDetails />} />
+          <Route path="/incoming-orders/:id" element={<OrderDetails />} />
           <Route path="/vendors" element={<Vendors />} />
           <Route path="/vendors/:id" element={<VendorDetails />} />
           <Route path="/vendors/:id/payouts" element={<VendorPayoutsPage />} />
@@ -72,7 +69,8 @@ function App() {
           <Route path="/categories" element={<Categories />} />
           <Route path="/products" element={<Products />} />
           <Route path="/reviews" element={<Reviews />} />
-          <Route path="/orders" element={<OrdersListing />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders/:id" element={<OrderDetails />} />
           <Route path="/buyers" element={<Buyers />} />
           <Route path="/admin-settings" element={<AdminSettings />} />
           <Route path="*" element={<NotFound />} />
