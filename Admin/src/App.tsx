@@ -15,7 +15,6 @@ import { useEffect } from 'react';
 import Orders from './pages/Orders.js';
 import OrderDetails from './pages/OrderDetails.js';
 import ProductDetails from './pages/ProductDetails.js';
-import Receivables from './pages/Receivables.js';
 
 import ReturnRequests from './pages/ReturnRequests.js';
 import ReturnRequestDetails from './pages/ReturnRequestDetails.js';
@@ -54,7 +53,6 @@ function App() {
           <Route path="/management" element={<Management />} />
           <Route path="/add-product" element={<AddProduct />} />
           <Route path="/product-details" element={<ProductDetails />} />
-          <Route path="/receivables" element={<Receivables />} />
           <Route path="/incoming-orders" element={<Orders />} />
           <Route path="/returns" element={<ReturnRequests />} />
           <Route path="/returns/:id" element={<ReturnRequestDetails />} />
